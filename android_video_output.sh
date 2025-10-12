@@ -1,0 +1,1 @@
+scrcpy --v4l2-sink=/dev/video2 # -m 1080
