@@ -1,0 +1,19 @@
+BJRules: 
+ - dealer_checks_blackjack: True
+ - dealer_hits_soft_17: False
+ - allow_late_surrender: True
+ - allow_early_surrender_on_ten: False
+ - allow_early_surrender_on_ace: False
+ - allow_early_surrender_on_all: True
+ - dealer_shows_card_on_surrender: False
+ - allow_insurance_vs_ace: True
+ - natural_blackjack_payout: 1.5
+ - surrender_payout: 0.5
+ - insurance_payout: 2.0
+ - max_splits_allowed: None
+ - allow_action_on_split_aces: True
+ - allow_double_after_split: True
+ - allow_double_on_soft: True
+ - allow_split_different_tens: True
+ - no_natural_bj_on_split: True
+

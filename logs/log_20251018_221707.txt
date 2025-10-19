@@ -1,0 +1,7524 @@
+BJRules: 
+ - dealer_checks_blackjack: True
+ - dealer_hits_soft_17: False
+ - allow_late_surrender: False
+ - allow_early_surrender_on_ten: False
+ - allow_early_surrender_on_ace: False
+ - allow_early_surrender_on_all: True
+ - dealer_shows_card_on_surrender: True
+ - allow_insurance_vs_ace: False
+ - natural_blackjack_payout: 1.5
+ - surrender_payout: 0.5
+ - insurance_payout: 2.0
+ - max_splits_allowed: 5
+ - allow_action_on_split_aces: False
+ - allow_double_after_split: False
+ - allow_double_on_soft: False
+ - allow_split_different_tens: True
+ - no_natural_bj_on_split: False
+
+New round with random seed 2663317346
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.K.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 7.K.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 7.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.K. (20)
+Player 7.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2667286763
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.Q.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player K.Q.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player K.Q.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE SPLIT]
+Dealer 3.X
+Player K.Q.(20)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player K.Q.5.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.7. (10)
+Player K.Q.5.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.7.J. (20)
+Player K.Q.5.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2667996031
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.J.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 2.J.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 2.J.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 3.X
+Player 2.J.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.K. (13)
+Player 2.J.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.K.5. (18)
+Player 2.J.(12) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2668614613
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.T.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 6.T.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 6.T.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 6.T.(16)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 6.T.6.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7. (11)
+Player 6.T.6.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7.9. (20)
+Player 6.T.6.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2669364918
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.6.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player T.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.6. (17)
+Player T.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2669831075
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.Q.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 9.Q.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 9.Q.(19)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - no bj)
+Player 9.Q.(19)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer A.X (checked - no bj)
+Player 9.Q.(19) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A 9 8 7 6 5 4 3 2]
+Dealer A.4. (15)
+Player 9.Q.(19) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.4.3. (18)
+Player 9.Q.(19) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2670867740
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.4.(6)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 2.4.(6)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 2.4.(6)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player 2.4.(6)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer T.X (checked - no bj)
+Player 2.4.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X (checked - no bj)
+Player 2.4.4.(10)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer T.X (checked - no bj)
+Player 2.4.4.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X (checked - no bj)
+Player 2.4.4.2.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer T.X (checked - no bj)
+Player 2.4.4.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.9. (19)
+Player 2.4.4.2.(12) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2672475954
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.J.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 5.J.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 5.J.(15)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - bj)
+Player 5.J.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [K Q J T]
+Dealer A.T. (21)
+Player 5.J.(15)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2673064145
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.5.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 6.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.9. (13)
+Player 6.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2673541780
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.T.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 3.T.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 3.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.6. (9)
+Player 3.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2674130491
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.J.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player K.J.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player K.J.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick SPLIT from [STAND HIT DOUBLE SPLIT]
+Dealer 7.X
+Player K.(10)[$10] | J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player K.Q.(20)[$10] | J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player K.Q.(20)[$10] | J.2.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT SPLIT]
+Dealer 7.X
+Player K.Q.(20) - stand[$10] | J.2.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 7.X
+Player K.Q.(20) - stand[$10] | J.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.Q. (17)
+Player K.Q.(20) - stand[$10] | J.2.(12) - stand[$10]
+Player total bet: 20
+Player total payout: 20
+Player net: 0
+
+New round with random seed 2674993088
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.9.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 9.X
+Player 8.9.(17) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.T. (19)
+Player 8.9.(17) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2675483197
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player J.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player J.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2. (6)
+Player J.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2675878791
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.J.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 6.J.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 6.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6. (8)
+Player 6.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2676295371
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.5.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 4.5.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 4.5.(9)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 4.5.(9) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2. (6)
+Player 4.5.(9) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2.Q. (16)
+Player 4.5.(9) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2.Q.Q. (bust)
+Player 4.5.(9) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2677006310
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.7.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 7.7.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 7.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.Q. (14)
+Player 7.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2677404149
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player J.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player J.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.4. (13)
+Player J.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2677805098
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.5.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player Q.5.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player Q.5.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player Q.5.(15)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player Q.5.4.(19) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7. (11)
+Player Q.5.4.(19) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7.9. (20)
+Player Q.5.4.(19) - stand[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2678485265
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player T.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player T.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.5. (12)
+Player T.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2678876530
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.2.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 5.2.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 5.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.T. (15)
+Player 5.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2679325719
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.6.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 7.6.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 7.6.(13)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - no bj)
+Player 7.6.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer J.X (checked - no bj)
+Player 7.6.(13)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X (checked - no bj)
+Player 7.6.9.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.8. (18)
+Player 7.6.9.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2679977876
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.T.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 8.T.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 8.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.Q. (12)
+Player 8.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2680375054
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.6.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 6.6.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 6.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2. (9)
+Player 6.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2680777751
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.K.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 8.K.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 8.K.(18)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - bj)
+Player 8.K.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer K.A. (21)
+Player 8.K.(18)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2681220077
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.9. (18)
+Player J.A.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2681550930
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.K.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 6.K.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 6.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.9. (19)
+Player 6.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2681929660
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.5.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 9.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 6.5.5.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 9.X
+Player 6.5.5.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.8. (17)
+Player 6.5.5.(16) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2682596997
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.K.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 5.K.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 5.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.6. (16)
+Player 5.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2682990153
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.8.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 9.8.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 9.8. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.4. (14)
+Player 9.8. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2683388099
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.Q.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player T.Q.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player T.Q. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.Q. (17)
+Player T.Q. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2683852056
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.2.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player 5.2.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player 5.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.3. (13)
+Player 5.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2684266952
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.9.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 6.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.J. (19)
+Player 6.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2684659445
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.Q.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 6.Q.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 6.Q.(16)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - no bj)
+Player 6.Q.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer K.X (checked - no bj)
+Player 6.Q.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.T. (20)
+Player 6.Q.(16) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2685198877
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.8.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player J.8.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player J.8. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.Q. (20)
+Player J.8. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2685567717
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player Q.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player Q.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.5. (7)
+Player Q.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2685954882
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 6.A. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.4. (10)
+Player 6.A. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2686367926
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.(11/1)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.T.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player A.T.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.3. (12)
+Player A.T.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2686769753
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.Q.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 3.Q.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 3.Q.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 3.Q.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7. (11)
+Player 3.Q.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7.3. (14)
+Player 3.Q.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7.3.6. (20)
+Player 3.Q.(13) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2687811154
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.(11/1)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.4.(15/5)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player A.4.(15/5)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player A.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.8. (19)
+Player A.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2688459486
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.K.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 4.K.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 4.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.2. (5)
+Player 4.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2689123026
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.6.(8)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 2.6.(8)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player 2.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.6. (14)
+Player 2.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2689541360
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.2.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player J.2.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player J.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.T. (13)
+Player J.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2689954083
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.T.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 2.T.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 2.T.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 2.X
+Player 2.T.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6. (8)
+Player 2.T.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6.7. (15)
+Player 2.T.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6.7.9. (bust)
+Player 2.T.(12) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2690681025
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.3.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 6.3.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 6.3.(9)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - bj)
+Player 6.3.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer J.A. (21)
+Player 6.3.(9)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2691148272
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.Q.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player T.Q.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player T.Q.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE SPLIT]
+Dealer 9.X
+Player T.Q.(20)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player T.Q.3.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.3. (12)
+Player T.Q.3.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.3.Q. (bust)
+Player T.Q.3.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2691796014
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.T.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player K.T.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player K.T.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE SPLIT]
+Dealer 8.X
+Player K.T.(20)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player K.T.8.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.3. (11)
+Player K.T.8.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.3.7. (18)
+Player K.T.8.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2692464930
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.9.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 4.9.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 4.9.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 6.X
+Player 4.9.(13)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 4.9.5.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.K. (16)
+Player 4.9.5.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.K.9. (bust)
+Player 4.9.5.(18) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2693138533
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player K.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player K.7.(17)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - bj)
+Player K.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer K.A. (21)
+Player K.7.(17)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2693564953
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 9.X
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2. (11)
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2.8. (19)
+Player K.4.(14) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2694152787
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.Q.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 5.Q.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 5.Q. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.T. (13)
+Player 5.Q. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2694562163
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.9.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 9.9.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 9.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.K. (20)
+Player 9.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2694935026
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.J.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player K.J.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player K.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.9. (19)
+Player K.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2695314176
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.Q. (12)
+Player J.A.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2695653894
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.Q.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 6.Q.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 6.Q. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.J. (12)
+Player 6.Q. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2696055339
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player Q.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.6. (15)
+Player Q.A.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2696381514
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.6.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 3.6.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 3.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.J. (16)
+Player 3.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2696785423
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player J.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.6. (16)
+Player J.A.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2697191389
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.T.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 3.T.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 3.T.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 6.X
+Player 3.T.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.9. (15)
+Player 3.T.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.9.9. (bust)
+Player 3.T.(13) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2697776535
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.8.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 7.8.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 7.8. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.Q. (20)
+Player 7.8. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2698155774
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.4.(10)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 6.4.(10)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 6.4.(10)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 6.X
+Player 6.4.(10) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.3. (9)
+Player 6.4.(10) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.3.6. (15)
+Player 6.4.(10) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.3.6.9. (bust)
+Player 6.4.(10) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2698853324
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.7.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 2.7.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 2.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6. (8)
+Player 2.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2699276007
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.A.(13/3)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 2.A.(13/3)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player 2.A.(13/3)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 8.X
+Player 2.A.(13/3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 2.A.2.(15/5)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 8.X
+Player 2.A.2.(15/5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 2.A.2.5.(20/10)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 8.X
+Player 2.A.2.5.(20/10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 2.A.2.5.2.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 8.X
+Player 2.A.2.5.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.6. (14)
+Player 2.A.2.5.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.6.8. (bust)
+Player 2.A.2.5.2.(12) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2700342575
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.Q.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player Q.Q.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player Q.Q.(20)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - no bj)
+Player Q.Q.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE SPLIT]
+Dealer A.X (checked - no bj)
+Player Q.Q.(20)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X (checked - no bj)
+Player Q.Q.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A 9 8 7 6 5 4 3 2]
+Dealer A.2. (13)
+Player Q.Q.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.2.7. (20)
+Player Q.Q.8.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2701086009
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player K.4.(14)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - no bj)
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer J.X (checked - no bj)
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X (checked - no bj)
+Player K.4.2.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer J.X (checked - no bj)
+Player K.4.2.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.4. (14)
+Player K.4.2.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.4.A. (15)
+Player K.4.2.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.4.A.J. (bust)
+Player K.4.2.(16) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2701945990
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.2.(5)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 3.2.(5)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 3.2.(5)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 3.2.(5)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 3.2.7.(12) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.4. (8)
+Player 3.2.7.(12) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.4.8. (16)
+Player 3.2.7.(12) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.4.8.J. (bust)
+Player 3.2.7.(12) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2702762160
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.J.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 9.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 4.J.4.(18)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 9.X
+Player 4.J.4.(18)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 4.J.4.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.J. (19)
+Player 4.J.4.7.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2703756125
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.(11/1)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.8.(19/9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player A.8.(19/9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player A.8.(19/9)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 7.X
+Player A.8.(19/9 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.3. (10)
+Player A.8.(19/9 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.3.A. (21)
+Player A.8.(19/9 - stand)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2704764910
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.7.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 8.7.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 8.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.7. (17)
+Player 8.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2705474193
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player T.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.4. (8)
+Player T.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2706038046
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.J.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player K.J.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player K.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.T. (13)
+Player K.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2706431491
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.9.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player J.9.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player J.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.K. (17)
+Player J.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2706816961
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.7.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 2.7.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 2.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.7. (16)
+Player 2.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2707232442
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player K.4.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 5.X
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4. (9)
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4.3. (12)
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4.3.2. (14)
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4.3.2.A. (15)
+Player K.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4.3.2.A.3. (18)
+Player K.4.(14) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2708203540
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player J.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player J.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.J. (20)
+Player J.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2708572433
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.T.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 5.T.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 5.T.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 7.X
+Player 5.T.(15)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 5.T.Q.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2. (9)
+Player 5.T.Q.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2.K. (19)
+Player 5.T.Q.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2709252127
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.6.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 6.6.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 6.6.(12)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - bj)
+Player 6.6.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer J.A. (21)
+Player 6.6.(12)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2709721461
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.J.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 2.J.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 2.J.(12)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - bj)
+Player 2.J.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer T.A. (21)
+Player 2.J.(12)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2710184076
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.2.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player T.2.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player T.2.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 6.X
+Player T.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.2. (8)
+Player T.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.2.3. (11)
+Player T.2.(12) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.2.3.7. (18)
+Player T.2.(12) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2710887290
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE SPLIT]
+Dealer 2.X
+Player K.K.(20)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player K.K.A.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.K. (12)
+Player K.K.A.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.K.3. (15)
+Player K.K.A.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.K.3.8. (bust)
+Player K.K.A.(21) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2711614777
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.4.(10)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 6.4.(10)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 6.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.4. (15)
+Player 6.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2712014671
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.5.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 2.5.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 2.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.6. (16)
+Player 2.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2712413460
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.(11/1)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.Q.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player A.Q.(bj)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player A.Q.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.K. (20)
+Player A.Q.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2712793587
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.5.(8)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 3.5.(8)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 3.5.(8)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 9.X
+Player 3.5.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 3.5.Q.(18)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 9.X
+Player 3.5.Q.(18)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 3.5.Q.4.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.6. (15)
+Player 3.5.Q.4.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.6.K. (bust)
+Player 3.5.Q.4.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2713629859
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.2.(4)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 2.2.(4)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 2.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2. (11)
+Player 2.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2714054387
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.T.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 2.T.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 2.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.K. (14)
+Player 2.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2714443823
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.T.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 4.T.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 4.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.Q. (20)
+Player 4.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2714823585
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.5.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 7.5.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 7.5.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 7.5.(12)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 7.5.2.(14) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.J. (14)
+Player 7.5.2.(14) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.J.J. (bust)
+Player 7.5.2.(14) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2715508499
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.2.(6)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 4.2.(6)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 4.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.5. (15)
+Player 4.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2715913199
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.9.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 9.X
+Player 6.9.(15)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 6.9.3.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2. (11)
+Player 6.9.3.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2.6. (17)
+Player 6.9.3.(18) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2716599870
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.A.(19/9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 8.A.(19/9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 8.A.(19/9)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 3.X
+Player 8.A.(19/9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 8.A.5.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 3.X
+Player 8.A.5.(14)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 8.A.5.6.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 3.X
+Player 8.A.5.6.(20)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 8.A.5.6.A.(21) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.7. (10)
+Player 8.A.5.6.A.(21) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.7.2. (12)
+Player 8.A.5.6.A.(21) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.7.2.8. (20)
+Player 8.A.5.6.A.(21) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2717699948
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.4.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 3.4.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 3.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2. (9)
+Player 3.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2718123064
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 5.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player T.4.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.9. (14)
+Player T.4.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.9.2. (16)
+Player T.4.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.9.2.J. (bust)
+Player T.4.8.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2718874580
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 7.X
+Player Q.3.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2. (9)
+Player Q.3.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2.8. (17)
+Player Q.3.(13) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2719474411
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.5.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player K.5.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player K.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.Q. (18)
+Player K.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2719955990
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.6.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player J.6.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player J.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.9. (19)
+Player J.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2720597839
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.6.(10)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 4.6.(10)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 4.6.(10)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 5.X
+Player 4.6.(10)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 4.6.K.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.6. (11)
+Player 4.6.K.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.6.T. (21)
+Player 4.6.K.(20) - stand[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2721586037
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.2.(6)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 4.2.(6)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 4.2.(6)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 3.X
+Player 4.2.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 4.2.T.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 3.X
+Player 4.2.T.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.A. (14)
+Player 4.2.T.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.A.T. (14)
+Player 4.2.T.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.A.T.7. (21)
+Player 4.2.T.(16) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2722437549
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.3.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 4.3.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 4.3.(7)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 3.X
+Player 4.3.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 4.3.A.(18/8)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 3.X
+Player 4.3.A.(18/8 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.6. (9)
+Player 4.3.A.(18/8 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.6.4. (13)
+Player 4.3.A.(18/8 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.6.4.6. (19)
+Player 4.3.A.(18/8 - stand)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2723349500
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.9.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 4.9.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 4.9.(13)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - bj)
+Player 4.9.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer K.A. (21)
+Player 4.9.(13)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2723792076
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.6.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 7.6.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 7.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.T. (20)
+Player 7.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2724187082
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player T.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player T.7.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 9.X
+Player T.7.(17) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.K. (19)
+Player T.7.(17) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2724643455
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.J.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 5.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 4.J.9.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.9. (14)
+Player 4.J.9.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.9.K. (bust)
+Player 4.J.9.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2725307481
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.9.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 6.9.(15)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 6.9.Q.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.6. (10)
+Player 6.9.Q.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.6.9. (19)
+Player 6.9.Q.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2725987962
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.Q.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 6.Q.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 6.Q. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2. (11)
+Player 6.Q. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2726387511
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.2.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 9.2.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 9.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.9. (20)
+Player 9.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2726757537
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.5.(8)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 3.5.(8)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 3.5.(8)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - no bj)
+Player 3.5.(8)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer K.X (checked - no bj)
+Player 3.5.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X (checked - no bj)
+Player 3.5.A.(19/9)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer K.X (checked - no bj)
+Player 3.5.A.(19/9 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.J. (20)
+Player 3.5.A.(19/9 - stand)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2727447506
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.8.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player K.8.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player K.8.(18)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 8.X
+Player K.8.(18)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player K.8.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.8. (16)
+Player K.8.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.8.T. (bust)
+Player K.8.7.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2728037622
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.T.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 8.T.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 8.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.2. (4)
+Player 8.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2728434385
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.5.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player T.5.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player T.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.Q. (19)
+Player T.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2728802072
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.4.(6)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 2.4.(6)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 2.4.(6)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 2.4.(6)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 2.4.2.(8) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2. (6)
+Player 2.4.2.(8) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2.J. (16)
+Player 2.4.2.(8) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.2.J.8. (bust)
+Player 2.4.2.(8) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2729590463
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.K.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 3.K.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 3.K.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 6.X
+Player 3.K.(13)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 3.K.T.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.7. (13)
+Player 3.K.T.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.7.9. (bust)
+Player 3.K.T.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2730215806
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.9.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 6.9.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 3.X
+Player 6.9.(15)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 6.9.7.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.T. (13)
+Player 6.9.7.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.T.Q. (bust)
+Player 6.9.7.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2730831149
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 2.X
+Player T.4.(14)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player T.4.T.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.7. (9)
+Player T.4.T.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.7.A. (20)
+Player T.4.T.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2731487604
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.9.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player J.9.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player J.9.(19)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 7.X
+Player J.9.(19) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.4. (11)
+Player J.9.(19) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.4.A. (12)
+Player J.9.(19) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.4.A.9. (21)
+Player J.9.(19) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2732127620
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.8.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 9.8.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 9.8.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 9.8.(17)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 9.8.K.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.3. (7)
+Player 9.8.K.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.3.8. (15)
+Player 9.8.K.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.3.8.K. (bust)
+Player 9.8.K.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2732843157
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.Q.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 9.Q.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player 9.Q.(19)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 8.X
+Player 9.Q.(19)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 9.Q.2.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.T. (18)
+Player 9.Q.2.(21) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2733377749
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player Q.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player Q.7.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 8.X
+Player Q.7.(17)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player Q.7.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.7. (15)
+Player Q.7.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.7.T. (bust)
+Player Q.7.7.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2733992635
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player J.3.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player J.3. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.9. (20)
+Player J.3. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2734355983
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.2.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player 9.2.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player 9.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.T. (20)
+Player 9.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2734720253
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.T.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 6.T.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 6.T.(16)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player 6.T.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer T.X (checked - no bj)
+Player 6.T.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.4. (14)
+Player 6.T.(16) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.4.6. (20)
+Player 6.T.(16) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2735359354
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.5.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 7.5.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 7.5.(12)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - no bj)
+Player 7.5.(12)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer K.X (checked - no bj)
+Player 7.5.(12)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X (checked - no bj)
+Player 7.5.2.(14) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.2. (12)
+Player 7.5.2.(14) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.2.2. (14)
+Player 7.5.2.(14) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.2.2.3. (17)
+Player 7.5.2.(14) - stand[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2736213176
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.9.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player J.9.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player J.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.Q. (18)
+Player J.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2736839761
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.2.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player Q.2.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player Q.2.(12)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - bj)
+Player Q.2.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer T.A. (21)
+Player Q.2.(12)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2737455272
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.(11/1)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.8.(19/9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player A.8.(19/9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player A.8. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.9. (15)
+Player A.8. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2737841194
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 2.X
+Player 6.A.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.3. (5)
+Player 6.A.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.3.2. (7)
+Player 6.A.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.3.2.K. (17)
+Player 6.A.(17/7 - stand)[$10]
+Player total bet: 10
+Player total payout: 10
+Player net: 0
+
+New round with random seed 2738544562
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.4.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 5.4.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 5.4.(9)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 2.X
+Player 5.4.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 5.4.6.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 2.X
+Player 5.4.6.(15) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6. (8)
+Player 5.4.6.(15) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6.A. (19)
+Player 5.4.6.(15) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2739358368
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.7.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player 5.7.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player 5.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.J. (20)
+Player 5.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2739739447
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player J.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player J.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.Q. (20)
+Player J.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2740103989
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.9.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 5.9.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 5.9.(14)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - bj)
+Player 5.9.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer J.A. (21)
+Player 5.9.(14)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2740542993
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - no bj)
+Player 6.A.(17/7)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer A.X (checked - no bj)
+Player 6.A.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A 9 8 7 6 5 4 3 2]
+Dealer A.3. (14)
+Player 6.A.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.3.K. (14)
+Player 6.A.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.3.K.6. (20)
+Player 6.A.(17/7 - stand)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2741305678
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.4.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 3.4.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 3.4.(7)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player 3.4.(7)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer T.X (checked - no bj)
+Player 3.4.(7)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X (checked - no bj)
+Player 3.4.2.(9) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.8. (18)
+Player 3.4.2.(9) - stand[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2741981608
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.Q.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player Q.Q.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player Q.Q.(20)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - no bj)
+Player Q.Q.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE SPLIT]
+Dealer A.X (checked - no bj)
+Player Q.Q.(20)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X (checked - no bj)
+Player Q.Q.9.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A 9 8 7 6 5 4 3 2]
+Dealer A.8. (19)
+Player Q.Q.9.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2742876199
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.5.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player Q.5.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player Q.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.J. (20)
+Player Q.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2743345698
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.J.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 3.J.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 3.J.(13)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - no bj)
+Player 3.J.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer A.X (checked - no bj)
+Player 3.J.(13)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X (checked - no bj)
+Player 3.J.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A 9 8 7 6 5 4 3 2]
+Dealer A.3. (14)
+Player 3.J.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.3.A. (15)
+Player 3.J.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.3.A.Q. (15)
+Player 3.J.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.3.A.Q.J. (bust)
+Player 3.J.Q.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2744286373
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.6.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 5.X
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player T.6.4.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 5.X
+Player T.6.4.(20) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.K. (15)
+Player T.6.4.(20) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.K.K. (bust)
+Player T.6.4.(20) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2744965843
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player K.K.(20)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - no bj)
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE SPLIT]
+Dealer J.X (checked - no bj)
+Player K.K.(20)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X (checked - no bj)
+Player K.K.K.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.3. (13)
+Player K.K.K.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.3.4. (17)
+Player K.K.K.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2745649710
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.3.(6)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 3.3.(6)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 3.3. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.2. (11)
+Player 3.3. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2746057267
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.4.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 8.4.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 8.4.(12)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - bj)
+Player 8.4.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer K.A. (21)
+Player 8.4.(12)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2746477851
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player K.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player K.7.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 9.X
+Player K.7.(17)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player K.7.A.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.7. (16)
+Player K.7.A.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.7.Q. (bust)
+Player K.7.A.(18) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2747084785
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.T.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 9.T.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 9.T.(19)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 7.X
+Player 9.T.(19)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 9.T.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.8. (15)
+Player 9.T.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.8.3. (18)
+Player 9.T.8.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2747709106
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.J.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 9.J.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 9.J.(19)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 7.X
+Player 9.J.(19) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.T. (17)
+Player 9.J.(19) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2748163110
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.9.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 5.9.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 5.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.T. (15)
+Player 5.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2748544521
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.A.(20/10)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 9.A.(20/10)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 9.A. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.J. (20)
+Player 9.A. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2748898571
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.2.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player J.2.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player J.2.(12)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - bj)
+Player J.2.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer J.A. (21)
+Player J.2.(12)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2749358497
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.8.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player J.8.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player J.8.(18)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - bj)
+Player J.8.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [K Q J T]
+Dealer A.Q. (21)
+Player J.8.(18)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2749854108
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.K.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 3.K.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 3.K.(13)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player 3.K.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer T.X (checked - no bj)
+Player 3.K.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.J. (20)
+Player 3.K.(13) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2750395724
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 6.X
+Player Q.3.(13)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player Q.3.5.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.9. (15)
+Player Q.3.5.(18) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.9.2. (17)
+Player Q.3.5.(18) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2751035524
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.9.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player 2.9.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player 2.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.J. (20)
+Player 2.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2751411098
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player Q.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.4. (11)
+Player Q.A.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2751726346
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.7.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 9.7.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 9.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.T. (20)
+Player 9.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2752101257
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.7.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 7.7.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 7.7.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick SPLIT from [STAND HIT DOUBLE SPLIT]
+Dealer 5.X
+Player 7.(7)[$10] | 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 7.6.(13)[$10] | 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 7.6.(13)[$10] | 7.8.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 5.X
+Player 7.6.(13) - stand[$10] | 7.8.(15)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT]
+Dealer 5.X
+Player 7.6.(13) - stand[$10] | 7.8.(15)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 7.6.(13) - stand[$10] | 7.8.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4. (9)
+Player 7.6.(13) - stand[$10] | 7.8.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4.5. (14)
+Player 7.6.(13) - stand[$10] | 7.8.8.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.4.5.3. (17)
+Player 7.6.(13) - stand[$10] | 7.8.8.(bust)[$10]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2753569306
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.A.(13/3)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 2.A.(13/3)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 2.A. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.T. (15)
+Player 2.A. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2754080878
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.8.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player Q.8.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player Q.8. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.A. (20)
+Player Q.8. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2754450885
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.9.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 7.X
+Player 8.9.(17)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 8.9.3.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.3. (10)
+Player 8.9.3.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.3.4. (14)
+Player 8.9.3.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.3.4.7. (21)
+Player 8.9.3.(20) - stand[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2755381482
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.6.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 5.6.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 5.6.(11)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer A.X (checked - no bj)
+Player 5.6.(11)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer A.X (checked - no bj)
+Player 5.6.(11)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X (checked - no bj)
+Player 5.6.7.(18)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer A.X (checked - no bj)
+Player 5.6.7.(18) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A 9 8 7 6 5 4 3 2]
+Dealer A.4. (15)
+Player 5.6.7.(18) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.4.T. (15)
+Player 5.6.7.(18) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.4.T.Q. (bust)
+Player 5.6.7.(18) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2756351400
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer Q.X (checked - bj)
+Player Q.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer Q.A. (21)
+Player Q.3.(13)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2756760916
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.J.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 3.J.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 3.J.(13)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 7.X
+Player 3.J.(13) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.A. (18)
+Player 3.J.(13) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2757236908
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player T.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer K.X (checked - bj)
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer K.A. (21)
+Player T.7.(17)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2757634347
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.9.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player Q.9.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player Q.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.T. (20)
+Player Q.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2757986301
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.J.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 7.J.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 7.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.2. (9)
+Player 7.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2758371577
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.K.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.X
+Player 8.K.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 3.X
+Player 8.K.(18)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 3.X
+Player 8.K.(18) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.J. (13)
+Player 8.K.(18) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.J.A. (14)
+Player 8.K.(18) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 3.J.A.4. (18)
+Player 8.K.(18) - stand[$10]
+Player total bet: 10
+Player total payout: 10
+Player net: 0
+
+New round with random seed 2759009588
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.T.(19)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 9.T.(19)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 9.T.(19)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 5.X
+Player 9.T.(19)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 9.T.9.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.K. (15)
+Player 9.T.9.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.K.8. (bust)
+Player 9.T.9.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2759606906
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.6.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 5.6.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player 5.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.2. (10)
+Player 5.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2759992073
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.2.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 9.2.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 9.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.7. (11)
+Player 9.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2760374617
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.T.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player J.T.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player J.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.8. (15)
+Player J.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2760729768
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.J.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 4.J.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 4.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.T. (20)
+Player 4.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2761092552
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.4.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 3.4.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 3.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.9. (19)
+Player 3.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2761454360
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.8.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 9.8.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 4.X
+Player 9.8.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 4.X
+Player 9.8.(17)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.X
+Player 9.8.4.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.3. (7)
+Player 9.8.4.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.3.9. (16)
+Player 9.8.4.(21) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 4.3.9.4. (20)
+Player 9.8.4.(21) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2762202677
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.T.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player J.T.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player J.T. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.6. (16)
+Player J.T. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2762549442
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.2.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player 9.2.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player 9.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.2. (12)
+Player 9.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2762916204
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player Q.3.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player Q.3. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.9. (19)
+Player Q.3. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2763279876
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.5.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 7.X
+Player 6.5.(11) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.T. (17)
+Player 6.5.(11) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2764264532
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.2.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 7.2.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 7.2. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.6. (17)
+Player 7.2. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2764800576
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.K.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player 5.K.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player 5.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.3. (13)
+Player 5.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2765283723
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.K.(15)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 5.K.(15)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 5.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.6. (8)
+Player 5.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2765771085
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.J.(18)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 8.J.(18)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 8.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.5. (7)
+Player 8.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2766351760
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.9.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 3.9.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 3.9. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.3. (9)
+Player 3.9. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2766760202
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.4.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player T.4.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 5.X
+Player T.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.T. (15)
+Player T.4.(14) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.T.Q. (bust)
+Player T.4.(14) - stand[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2767347452
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player Q.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player Q.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player Q.K. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.3. (5)
+Player Q.K. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2767732703
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.9.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 9.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer 9.X
+Player 8.9.(17)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.X
+Player 8.9.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.3. (12)
+Player 8.9.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.3.4. (16)
+Player 8.9.Q.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 9.3.4.8. (bust)
+Player 8.9.Q.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2768487893
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.(9)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 9.A.(20/10)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 9.A.(20/10)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 9.A. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.7. (12)
+Player 9.A. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2768864327
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.9.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 2.9.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player 2.9.(11)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 5.X
+Player 2.9.(11)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 9 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player 2.9.9.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.8. (13)
+Player 2.9.9.(20) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.8.J. (bust)
+Player 2.9.9.(20) - stand[$20]
+Player total bet: 20
+Player total payout: 40
+Player net: +20
+
+New round with random seed 2769549605
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.J.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 6.J.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player 6.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.4. (12)
+Player 6.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2769963690
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.2.(7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player 5.2.(7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player 5.2.(7)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer 2.X
+Player 5.2.(7) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.A. (13)
+Player 5.2.(7) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.A.4. (17)
+Player 5.2.(7) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2770933138
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.Q.(14)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 4.Q.(14)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 4.Q.(14)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE]
+Dealer 6.X
+Player 4.Q.(14)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 4.Q.3.(17) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.J. (16)
+Player 4.Q.3.(17) - stand[$20]
+
+Stage BJStage.DEALER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.J.3. (19)
+Player 4.Q.3.(17) - stand[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2771635569
+
+Stage BJStage.PLAYER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.(8)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 8.2.(10)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player 8.2.(10)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player 8.2.(10)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - no bj)
+Player 8.2.(10)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer J.X (checked - no bj)
+Player 8.2.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X (checked - no bj)
+Player 8.2.A.(21/11 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.6. (16)
+Player 8.2.A.(21/11 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.6.A. (17)
+Player 8.2.A.(21/11 - stand)[$10]
+Player total bet: 10
+Player total payout: 20
+Player net: +10
+
+New round with random seed 2772420259
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.(11/1)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player A.6.(17/7)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.X
+Player A.6.(17/7)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 5.X
+Player A.6.(17/7)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT]
+Dealer 5.X
+Player A.6.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.2. (7)
+Player A.6.(17/7 - stand)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 5.2.T. (17)
+Player A.6.(17/7 - stand)[$10]
+Player total bet: 10
+Player total payout: 10
+Player net: 0
+
+New round with random seed 2773023202
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.6.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.X
+Player 6.6.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer K.X
+Player 6.6. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer K.2. (12)
+Player 6.6. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2773422718
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.(5)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 5.4.(9)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 5.4.(9)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 5.4. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.7. (18)
+Player 5.4. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2773815824
+
+Stage BJStage.PLAYER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.(4)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 4.7.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.X
+Player 4.7.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer A.X
+Player 4.7. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer A.7. (18)
+Player 4.7. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2774220563
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.(6)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 6.5.(11)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player 6.5.(11)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 8.X
+Player 6.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.2. (10)
+Player 6.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2774614422
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player K.K.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 2.X
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE SPLIT]
+Dealer 2.X
+Player K.K.(20)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.X
+Player K.K.K.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.A. (13)
+Player K.K.K.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.A.J. (13)
+Player K.K.K.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 2.A.J.T. (bust)
+Player K.K.K.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2775335420
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player J.3.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player J.3.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player J.3. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.Q. (20)
+Player J.3. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2775705148
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.(3)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 3.J.(13)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.X
+Player 3.J.(13)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 6.X
+Player 3.J. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick 4 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 6.4. (10)
+Player 3.J. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2776107846
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.J.(20)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player T.J.(20)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer 7.X
+Player T.J.(20)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick DOUBLE from [STAND HIT DOUBLE SPLIT]
+Dealer 7.X
+Player T.J.(20)[$20]
+
+Stage BJStage.PLAYER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.X
+Player T.J.K.(bust)[$20]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 7.J. (17)
+Player T.J.K.(bust)[$20]
+Player total bet: 20
+Player total payout: 0
+Player net: -20
+
+New round with random seed 2776647157
+
+Stage BJStage.PLAYER_CARD
+Pick 2 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.(2)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 3 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 2.3.(5)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 2.3.(5)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 2.3.(5)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer T.X (checked - no bj)
+Player 2.3.(5)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick STAND from [STAND HIT DOUBLE]
+Dealer T.X (checked - no bj)
+Player 2.3.(5) - stand[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.J. (20)
+Player 2.3.(5) - stand[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2777261038
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.(7)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 5 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player 7.5.(12)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.X
+Player 7.5.(12)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer T.X
+Player 7.5. (early surrender)
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer T.Q. (20)
+Player 7.5. (early surrender)
+Player total bet: 10
+Player total payout: 5.0
+Player net: -5.0
+
+New round with random seed 2777901743
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick Q from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer Q.X
+Player T.7.(17)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer Q.X
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer Q.X (checked - bj)
+Player T.7.(17)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick A from [A]
+Dealer Q.A. (21)
+Player T.7.(17)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
+New round with random seed 2778540804
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick A from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.X
+Player T.A.(bj)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 8 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer 8.8. (16)
+Player T.A.(bj)[$10]
+Player total bet: 10
+Player total payout: 25.0
+Player net: +15.0
+
+New round with random seed 2778890322
+
+Stage BJStage.PLAYER_CARD
+Pick T from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.(10)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 6 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer (no cards)
+Player T.6.(16)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick J from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_OFFERED_EARLY_SURRENDER
+Pick DECLINE_EARLY_SURRENDER from [SURRENDER DECLINE_EARLY_SURRENDER]
+Dealer J.X
+Player T.6.(16)[$10]
+
+Stage BJStage.DEALER_CHECK_BJ
+Pick CONFIRM_NO_BLACKJACK from [CONFIRM_BLACKJACK CONFIRM_NO_BLACKJACK]
+Dealer J.X (checked - no bj)
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_ACTION
+Pick HIT from [STAND HIT DOUBLE]
+Dealer J.X (checked - no bj)
+Player T.6.(16)[$10]
+
+Stage BJStage.PLAYER_CARD
+Pick 7 from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.X (checked - no bj)
+Player T.6.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick 5 from [K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.5. (15)
+Player T.6.7.(bust)[$10]
+
+Stage BJStage.DEALER_CARD
+Pick K from [A K Q J T 9 8 7 6 5 4 3 2]
+Dealer J.5.K. (bust)
+Player T.6.7.(bust)[$10]
+Player total bet: 10
+Player total payout: 0
+Player net: -10
+
