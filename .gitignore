@@ -3,3 +3,4 @@ old_blackjack
 __pycache__
 frames
 *png
+logs/*
