@@ -6,3 +6,4 @@ frames
 logs/*
 build/
 .vscode
+activate
