@@ -1,8 +1,26 @@
 from blackjack.cards import Card, Rank
 import numpy as np
 
+"""
+Global RNG for the shoe module. New ProbabilisticRankShoe instances
+will use this generator by default unless an explicit rng is provided.
+This centralizes randomness and improves reproducibility.
+"""
+_global_rng: np.random.Generator = np.random.default_rng()
+
+def set_shoe_rng(rng: np.random.Generator) -> None:
+    global _global_rng
+    _global_rng = rng
+
+def seed_shoe_rng(seed: int | None) -> None:
+    global _global_rng
+    _global_rng = np.random.default_rng(seed)
+
+
+
+
 class ProbabilisticRankShoe:
-    def __init__(self, n_decks = 8):
+    def __init__(self, n_decks = 8, rng: np.random.Generator | None = None):
         self.n_decks = n_decks
         self.n_total = 52 * self.n_decks
         self.rank_value_counts = {
@@ -12,13 +30,15 @@ class ProbabilisticRankShoe:
             rv = r.rank_value()
             self.rank_value_counts[rv] += self.n_total / len(Rank)
         self.given_dealer_card_is_not_value = None
+        # Use a dedicated RNG for reproducibility; default to module-level SHOE_RNG
+        self.rng: np.random.Generator = rng if rng is not None else _global_rng
 
  
     def sample_rank(self, given_rank_values_set=None):
         probabilities = self.get_rank_value_probabilities(given_rank_values_set)
         rank_values = list(probabilities.keys())
         probs = [probabilities[rv] for rv in rank_values]
-        sampled_rank_value = np.random.choice(rank_values, p=probs)
+        sampled_rank_value = self.rng.choice(rank_values, p=probs)
         return sampled_rank_value
 
 
@@ -29,7 +49,8 @@ class ProbabilisticRankShoe:
 
 
     def copy(self):
-        new_shoe = ProbabilisticRankShoe(self.n_decks)
+        # Keep the same RNG reference to maintain a single source of randomness unless overridden
+        new_shoe = ProbabilisticRankShoe(self.n_decks, rng=self.rng)
         new_shoe.n_total = self.n_total
         new_shoe.rank_value_counts = self.rank_value_counts.copy()
         new_shoe.given_dealer_card_is_not_value = self.given_dealer_card_is_not_value

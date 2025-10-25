@@ -1,8 +1,6 @@
 from abc import ABC, abstractmethod
-from enum import Enum, auto 
-from blackjack.blackjack_round import BJStage
+from blackjack.blackjack_round import BJStage, BJRound
 from blackjack.actions import DealerAction
-from blackjack.cards import Card, Rank
 import numpy as np
 
 
@@ -10,11 +8,12 @@ class AbstractBJTreeNode(ABC):
     """Abstract base class for blackjack game tree nodes."""
     
     def __init__(self, bj_round, shoe, parent=None, copy_data=True):
-        self.bj_round = bj_round.copy() if copy_data else bj_round
+        self.bj_round : BJRound = bj_round.copy() if copy_data else bj_round
         self.shoe = shoe.copy() if copy_data else shoe
         self.parent = parent
         self.children = []
         self.children_prob = []
+        self.children_events = []
         self.value = 0
         self.has_built_children = False
         self.has_completed_tree = False
@@ -50,7 +49,7 @@ class AbstractBJTreeNode(ABC):
 
 
     @abstractmethod
-    def create_child(self, child_bj_round, child_shoe, prob=0):
+    def create_child(self, child_bj_round, child_shoe, event, prob=0):
         """Create a child node. Must be implemented by subclasses."""
         pass
 
@@ -58,6 +57,27 @@ class AbstractBJTreeNode(ABC):
     def build_tree(self):
         """Build complete tree without depth limit."""
         self.build_tree_layer(depth=None)
+
+    def recompute_tree_value(self):
+        """
+            Recompute the values of the tree.
+
+            If children were not built yet, throws an exception
+            
+            If new children were added, their subtrees will also be built.
+            
+            If children have not changed, no new children will be created and their values will be reused.
+        """
+        if not self.has_built_children:
+            raise RuntimeError("Cannot recompute tree value before building children")
+
+        for child in self.children:
+            child.build_tree()
+        if self.children_trees_completed():
+            self._compute_node_value()
+            self.has_completed_tree = True  
+        else:
+            raise RuntimeError("Cannot recompute tree value, some children have incomplete trees")
 
 
     def build_tree_layer(self, depth):
@@ -73,10 +93,11 @@ class AbstractBJTreeNode(ABC):
             child.build_tree_layer(child_depth)
     
         if self.children_trees_completed():
-            self._complete_node()
+            self._compute_node_value()
+            self.has_completed_tree = True  
 
 
-    def _complete_node(self):
+    def _compute_node_value(self):
         """Complete the node based on its stage type."""
         stage = self.bj_round.get_stage()
         
@@ -85,20 +106,20 @@ class AbstractBJTreeNode(ABC):
             BJStage.PLAYER_OFFERED_EARLY_SURRENDER,
             BJStage.PLAYER_OFFERED_INSURANCE
         ):
-            self._action_node_completion()
+            self._compute_action_node_value()
         elif stage in (
             BJStage.DEALER_CARD,
             BJStage.PLAYER_CARD,
             BJStage.DEALER_CHECK_BJ
         ):
-            self._chance_node_completion()
+            self._compute_chance_node_value()
         elif stage == BJStage.ROUND_OVER:
-            self._terminal_node_completion()
+            self._compute_terminal_node_value()
         else:
             raise RuntimeError(f"Unexpected game stage {stage} after building children")
 
 
-    def _action_node_completion(self):
+    def _compute_action_node_value(self):
         """Complete an action node by selecting best action."""
         values = [child.get_value() for child in self.children]
         action_id = np.argmax(values)
@@ -106,20 +127,17 @@ class AbstractBJTreeNode(ABC):
             self.children_prob[i] = 0
         self.children_prob[action_id] = 1
         self.value = values[action_id]
-        self.has_completed_tree = True
 
 
-    def _chance_node_completion(self):
+    def _compute_chance_node_value(self):
         """Complete a chance node by computing expected value."""
         values = [child.get_value() for child in self.children]
         self.value = sum([p * v for p, v in zip(self.children_prob, values)])
-        self.has_completed_tree = True
 
 
-    def _terminal_node_completion(self):
+    def _compute_terminal_node_value(self):
         """Complete a terminal node by setting its value."""
         self.value = self.bj_round.get_player_value()
-        self.has_completed_tree = True
 
 
     def build_children(self):
@@ -159,6 +177,7 @@ class AbstractBJTreeNode(ABC):
         """Build children for card dealing stages. Must be implemented by subclasses."""
         pass
 
+
     def _build_children_dealer_check_bj(self):
         """Build children for dealer blackjack check."""
         dealer_value = self.bj_round.dealer_hand.get_best_value()
@@ -180,8 +199,14 @@ class AbstractBJTreeNode(ABC):
         bj_round_no_dealer_bj = self.bj_round.copy()
         bj_round_no_dealer_bj.take_action(DealerAction.CONFIRM_NO_BLACKJACK)
 
-        self.create_child(bj_round_dealer_bj, self.shoe.copy(), p_dealer_blackjack)
-        self.create_child(bj_round_no_dealer_bj, shoe_no_bj, 1 - p_dealer_blackjack)
+        self.create_child(
+            bj_round_dealer_bj, self.shoe.copy(), 
+            DealerAction.CONFIRM_BLACKJACK, p_dealer_blackjack
+        )
+        self.create_child(
+            bj_round_no_dealer_bj, shoe_no_bj,
+            DealerAction.CONFIRM_NO_BLACKJACK, 1 - p_dealer_blackjack
+        )
 
 
     def _build_children_player_action(self):
@@ -190,7 +215,7 @@ class AbstractBJTreeNode(ABC):
         for a in actions:
             bj_round_copy = self.bj_round.copy()
             bj_round_copy.take_action(a)
-            self.create_child(bj_round_copy, self.shoe.copy())
+            self.create_child(bj_round_copy, self.shoe.copy(), a)
 
 
     def get_value(self):
@@ -258,7 +283,7 @@ class BJTreeNode(AbstractBJTreeNode):
         for rv, p in card_value_probabilities.items():
             if p == 0:
                 continue
-            card = Card(Rank.from_value(rv))
+            card = rv
 
             bj_round_copy = self.bj_round.copy()
             shoe_copy = self.shoe.copy()
@@ -287,6 +312,16 @@ class MonteCarloNode(AbstractBJTreeNode):
         self.children_prob.append(prob)
 
 
+    def _build_children_player_card(self):
+        """Build single child by sampling a card."""
+        shoe_sample = self.shoe.copy()
+        card_rank = shoe_sample.sample_and_burn_rank()
+        card = Card(Rank.from_value(card_rank))
+        bj_round_copy = self.bj_round.copy()
+        bj_round_copy.take_card(card)
+        self.create_child(bj_round_copy, shoe_sample, 1)
+
+
     def _build_children_dealer_card(self):
         if self.bj_round.dealer_expects_to_show_blackjack():
             self._build_child_dealer_blackjack()    
@@ -305,16 +340,6 @@ class MonteCarloNode(AbstractBJTreeNode):
         bj_round_copy = self.bj_round.copy()
         bj_round_copy.take_card(card)
         self.create_child(bj_round_copy, shoe_copy, 1)
-
-
-    def _build_children_player_card(self):
-        """Build single child by sampling a card."""
-        shoe_sample = self.shoe.copy()
-        card_rank = shoe_sample.sample_and_burn_rank()
-        card = Card(Rank.from_value(card_rank))
-        bj_round_copy = self.bj_round.copy()
-        bj_round_copy.take_card(card)
-        self.create_child(bj_round_copy, shoe_sample, 1)
 
 
     def _run_dealer_cards_simulations(self):
@@ -388,6 +413,7 @@ class SimulationResultNode:
     def __init__(self, value, parent=None):
         self.value = value
         self.parent = parent
+        self.children = []
     
     def build_tree_layer(self, depth):
         pass

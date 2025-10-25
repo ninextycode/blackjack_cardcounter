@@ -1,4 +1,4 @@
-from blackjack.hand import Hand
+from blackjack.hand import Hand, ValueOnlyHand
 from blackjack.cards import Card, Rank
 from blackjack.actions import PlayerAction, DealerAction
 from enum import Enum, auto 
@@ -16,13 +16,22 @@ class BJStage(Enum):
     ROUND_OVER = auto()
 
 
+def all_rank_values():
+    return range(2, 12)
+
+
 class BJRound:
     def __init__(self, rules = BJRules()):
         self.stage = BJStage.NOT_STARTED
 
         self.rules : BJRules = rules
-        self.dealer_hand = Hand()
-        self.player_hands = [Hand()]
+        # self.dealer_hand = Hand()
+        # self.player_hands = [Hand()]
+        self.dealer_hand = ValueOnlyHand()
+        self.player_hands = [ValueOnlyHand()]
+        if not rules.allow_split_different_tens:
+            raise NotImplementedError("Cannot differentiate different tens in ValueOnlyHand")
+        
         self.active_hand_idx = 0
         self.dealer_checked_blackjack = False
         self.dealer_has_bj_after_check = False
@@ -112,35 +121,45 @@ class BJRound:
         )
 
     def get_possible_next_card_ranks(self):
+        """
+        Get possible next card ranks given the current stage and state.
+        Returns None if all ranks are possible.
+        """
         if self.stage not in (BJStage.PLAYER_CARD, BJStage.DEALER_CARD):
             return []
         
         if self.stage == BJStage.PLAYER_CARD:
-            return list(Rank)
+            return None
         
         elif self.stage == BJStage.DEALER_CARD:
             if self.dealer_hand.size() == 1:
                 if self.dealer_checked_blackjack:
                     if self.dealer_has_bj_after_check:
-                        if self.dealer_hand.cards[0].rank == Rank.ACE:
-                            return [r for r in Rank if r.rank_value() == 10]
-                        if self.dealer_hand.cards[0].rank_value() == 10:
-                            return [Rank.ACE]
+                        if self.dealer_hand.cards[0] == 11:
+                            # return [r for r in Rank if r == 10]
+                            return [10]
+                        if self.dealer_hand.cards[0] == 10:
+                            # return [Rank.ACE]
+                            return [11]
                         raise RuntimeError("Dealer must have blackjack but cards are not consistent")
                     else:
-                        if self.dealer_hand.cards[0].rank == Rank.ACE:
-                            return [r for r in Rank if r.rank_value() != 10]
-                        if self.dealer_hand.cards[0].rank_value() == 10:
-                            return [r for r in Rank if r != Rank.ACE]
+                        if self.dealer_hand.cards[0] == 11:
+                            # return [r for r in Rank if r != 10]
+                            return [r for r in range(2, 12) if r != 10]
+                        if self.dealer_hand.cards[0] == 10:
+                            # return [r for r in Rank if r != Rank.ACE]
+                            return range(2, 10)
+
                         raise RuntimeError("Dealer cannot have blackjack but cards are not consistent")
                 else:
-                    return list(Rank)
+                    return None
             else:
-                return list(Rank)
+                return None
 
 
-    def take_card(self, card: Card):
-        if card.rank not in self.get_possible_next_card_ranks():
+    def take_card(self, card):
+        possible_values = self.get_possible_next_card_ranks()
+        if possible_values is not None and card not in possible_values:
             raise RuntimeError("Invalid card")
 
         # Set last card and clear last action
@@ -181,7 +200,7 @@ class BJRound:
         # handle split
         if self.split_origin_idx is not None:
             # split ace just got the second card, stand, depending on the rules
-            if not self.rules.allow_action_on_split_aces and hand.cards[0].rank == Rank.ACE:
+            if not self.rules.allow_action_on_split_aces and hand.cards[0] == 11:
                 self.is_hand_in_progress[self.active_hand_idx] = False
             
             # this was the first hand of the split
@@ -208,7 +227,7 @@ class BJRound:
             self._same_hand_or_next_or_dealer()
 
 
-    def _take_dealer_card(self, card: Card):
+    def _take_dealer_card(self, card: int):
         self.dealer_hand.add_card(card)
 
         if self.surrendered:
@@ -226,7 +245,7 @@ class BJRound:
             # 3. Dealer check for blackjack
             # 4. Player action if player doesn't have 21, else dealer takes the 2nd card
             
-            if self.rules.allow_insurance_vs_ace and card.rank == Rank.ACE:
+            if self.rules.allow_insurance_vs_ace and card == 11:
                 self.stage = BJStage.PLAYER_OFFERED_INSURANCE
             elif self._can_early_surrender():
                 self.stage = BJStage.PLAYER_OFFERED_EARLY_SURRENDER
@@ -260,7 +279,7 @@ class BJRound:
         if self.dealer_hand.size() != 1:
             return False
         up_card = self.dealer_hand.cards[0]
-        return up_card.rank == Rank.ACE or up_card.rank_value() == 10
+        return up_card == 11 or up_card == 10
     
 
     def get_player_value(self):
@@ -324,15 +343,14 @@ class BJRound:
                 or self.n_splits < self.rules.max_splits_allowed
             )
         ):
-            same_rank = hand.is_same_rank_pair()
             same_value = hand.is_same_value_pair()
-            if same_rank:
+            if same_value and self.rules.allow_split_different_tens:
                 actions.append(PlayerAction.SPLIT)
-            elif same_value:
-                # same value but different rank - different cards with value 10            
-                if hand.cards[0].rank_value() == 10 and self.rules.allow_split_different_tens:
+            elif same_value and not self.rules.allow_split_different_tens:
+                same_rank = hand.is_same_rank_pair()
+                if same_rank:
                     actions.append(PlayerAction.SPLIT)
-        
+            
         # Late surrender: only available after dealer check or if dealer can't have BJ
         # Early surrender is handled as a separate stage, not as general player action
         if first_hand_first_action and self.rules.allow_late_surrender:
@@ -356,9 +374,9 @@ class BJRound:
         # Check all three early surrender rules
         if self.rules.allow_early_surrender_on_all:
             return True
-        if self.rules.allow_early_surrender_on_ace and up_card.rank == Rank.ACE:
+        if self.rules.allow_early_surrender_on_ace and up_card == 11:
             return True
-        if self.rules.allow_early_surrender_on_ten and up_card.rank_value() == 10:
+        if self.rules.allow_early_surrender_on_ten and up_card == 10:
             return True
         
         return False
@@ -586,6 +604,9 @@ class BJRound:
     
 
     def __str__(self):
+        def hand_to_str(hand):
+            return "".join(Rank.from_value(card).value for card in hand.cards)
+
         lines = []
         
         # Add last action/card information
@@ -623,7 +644,7 @@ class BJRound:
         # Player lines
         if self.surrendered:
             hand = self.player_hands[0]
-            card_str = "".join(str(card) for card in hand.cards)
+            card_str = hand_to_str(hand)
             surrender_type = "early surrender" if self.early_surrendered else "late surrender"
             lines.append(f"Player {card_str} ({surrender_type})")
         else:
@@ -635,7 +656,7 @@ class BJRound:
                 
                 parts = []
                 
-                card_str = "".join(str(card) for card in hand.cards)
+                card_str = hand_to_str(hand)
                 parts.append(card_str)
 
                 value = hand.get_best_value()

@@ -1,0 +1,3 @@
+[submodule "extern/game_algorithms"]
+	path = extern/game_algorithms
+	url = git@github.com:ninextycode/game_algorithms.git
