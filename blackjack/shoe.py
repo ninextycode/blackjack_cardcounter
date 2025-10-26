@@ -1,4 +1,5 @@
 from blackjack.cards import Card, Rank
+from random_sampler import RandomSampler
 import numpy as np
 
 """
@@ -6,21 +7,18 @@ Global RNG for the shoe module. New ProbabilisticRankShoe instances
 will use this generator by default unless an explicit rng is provided.
 This centralizes randomness and improves reproducibility.
 """
-_global_rng: np.random.Generator = np.random.default_rng()
+_global_rng = RandomSampler.get_global_sampler()
 
-def set_shoe_rng(rng: np.random.Generator) -> None:
+def set_shoe_rng(rng) -> None:
     global _global_rng
     _global_rng = rng
 
 def seed_shoe_rng(seed: int | None) -> None:
-    global _global_rng
-    _global_rng = np.random.default_rng(seed)
-
-
+    RandomSampler.set_seed_global_sampler(seed)
 
 
 class ProbabilisticRankShoe:
-    def __init__(self, n_decks = 8, rng: np.random.Generator | None = None):
+    def __init__(self, n_decks = 8, rng = None):
         self.n_decks = n_decks
         self.n_total = 52 * self.n_decks
         self.rank_value_counts = {
@@ -31,7 +29,7 @@ class ProbabilisticRankShoe:
             self.rank_value_counts[rv] += self.n_total / len(Rank)
         self.given_dealer_card_is_not_value = None
         # Use a dedicated RNG for reproducibility; default to module-level SHOE_RNG
-        self.rng: np.random.Generator = rng if rng is not None else _global_rng
+        self.rng = rng if rng is not None else _global_rng
 
  
     def sample_rank(self, given_rank_values_set=None):

@@ -4,6 +4,7 @@ __pycache__
 frames
 *png
 logs/*
-build/
+**/build/
+**/python_lib/
 .vscode
 activate

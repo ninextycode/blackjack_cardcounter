@@ -25,24 +25,29 @@ class BJRound {
 public:
     BJRound(const BJRules* rules);
     BJRound copy() const;
-    void start_round(int bet_unit);
-    BJStage get_stage() const;
-    bool need_card() const;
-    bool need_action() const;
-    bool need_player_action() const;
-    bool need_dealer_action() const;
-    vector<Rank> get_possible_next_card_ranks() const;
-    void take_card(const Card& card);
-    void take_action(PlayerAction action);
-    void take_action(DealerAction action);
-    int get_player_value() const;
+    void startRound(int bet_unit);
+    BJStage getStage() const;
+    bool needCard() const;
+    bool needAction() const;
+    bool needPlayerAction() const;
+    bool needDealerAction() const;
+    // When nullopt, all rank values 2..11 are possible (matching Python: get_possible_next_card_ranks)
+    std::optional<std::vector<int>> getPossibleNextCardRanks() const;
+    void takeCard(int value);
+    void takeAction(PlayerAction action);
+    void takeAction(DealerAction action);
+    int getPlayerValue() const;
     // List available player actions in the current stage
-    vector<PlayerAction> get_available_actions() const;
+    vector<PlayerAction> getAvailableActions() const;
+    // Check if dealer expects to show blackjack (matching Python API)
+    bool dealerExpectsToShowBlackjack() const;
+    // String representation matching Python __str__
+    std::string toString() const;
 
     // Public state used by game tree builder
     const BJRules* rules_;
-    Hand dealer_hand;
-    vector<Hand> player_hands;
+    ValueOnlyHand dealer_hand;
+    vector<ValueOnlyHand> player_hands;
     int active_hand_idx;
     bool dealer_checked_blackjack;
     bool dealer_has_bj_after_check;
@@ -58,21 +63,23 @@ public:
     int insurance_bet;
     bool surrendered;
     bool early_surrendered;
+    optional<PlayerAction> last_action;
+    optional<int> last_card;
 
 private:
     BJStage stage_;
-    void _take_player_card(const Card& card);
-    void _take_dealer_card(const Card& card);
-    bool _dealer_can_have_bj() const;
-    void _action_stand();
-    void _action_hit();
-    void _action_double();
-    void _action_split();
-    void _action_late_surrender();
-    void _advance_to_next_or_dealer();
-    void calculate_value();
-    void _same_hand_or_next_or_dealer();
-    bool _can_early_surrender() const;
+    void takePlayerCard(int value);
+    void takeDealerCard(int value);
+    bool dealerCanHaveBj() const;
+    void actionStand();
+    void actionHit();
+    void actionDouble();
+    void actionSplit();
+    void actionLateSurrender();
+    void advanceToNextOrDealer();
+    void calculateValue();
+    void sameHandOrNextOrDealer();
+    bool canEarlySurrender() const;
 };
 
 } // namespace blackjack

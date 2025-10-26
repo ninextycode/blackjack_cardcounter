@@ -1,13 +1,30 @@
-cmake_minimum_required(VERSION 3.10)
 
-project(blackjack_cpp_project LANGUAGES CXX)
+# CMake configuration for the blackjack_lib C++ sources
+cmake_minimum_required(VERSION 3.10)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# Add optimization flags for all build types
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -DNDEBUG")
-# Enable link-time optimization
-set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
+project(blackjack_cpp_lib LANGUAGES CXX)
 
-add_subdirectory(cpp)
+file(GLOB CPP_SOURCES_LIB "${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp")
+list(FILTER CPP_SOURCES_LIB EXCLUDE REGEX "(pybind|cpp_exec)")
+
+# Find the cpp_exec file separately
+file(GLOB CPP_EXEC_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/cpp_exec/*.cpp")
+
+add_library(blackjack SHARED ${CPP_SOURCES_LIB})
+
+target_include_directories(blackjack PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+
+add_executable(blackjack_exec ${CPP_EXEC_SOURCES})
+target_link_libraries(blackjack_exec PRIVATE blackjack)
+
+# Build python module with pybind11
+pybind11_add_module(random_sampler ${CMAKE_CURRENT_SOURCE_DIR}/src/random_sampler_pybind/pybind.cpp)
+target_link_libraries(random_sampler PRIVATE blackjack)
+
+set_target_properties(random_sampler PROPERTIES
+	LIBRARY_OUTPUT_DIRECTORY ${PYTHON_LIBRARY_OUTPUT_DIRECTORY}
+)
+

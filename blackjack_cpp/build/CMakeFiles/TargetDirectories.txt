@@ -1,6 +1,0 @@
-/home/maxim/Programming/blackjack_cardcounter/blackjack_cpp/build/CMakeFiles/edit_cache.dir
-/home/maxim/Programming/blackjack_cardcounter/blackjack_cpp/build/CMakeFiles/rebuild_cache.dir
-/home/maxim/Programming/blackjack_cardcounter/blackjack_cpp/build/cpp/CMakeFiles/blackjack.dir
-/home/maxim/Programming/blackjack_cardcounter/blackjack_cpp/build/cpp/CMakeFiles/blackjack_demo.dir
-/home/maxim/Programming/blackjack_cardcounter/blackjack_cpp/build/cpp/CMakeFiles/edit_cache.dir
-/home/maxim/Programming/blackjack_cardcounter/blackjack_cpp/build/cpp/CMakeFiles/rebuild_cache.dir

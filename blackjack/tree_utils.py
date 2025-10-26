@@ -15,16 +15,6 @@ def iterate_nodes_by_levels(root_node):
             queue.append((node_level + 1, child))
 
 
-def iterate_nodes_by_levels(root_node):
-    queue = deque()
-    queue.append((root_node, 0))
-    while queue:
-        node, node_level = queue.popleft()
-        yield node, node_level
-        for child in node.children:
-            queue.append((child, node_level + 1))
-
-
 def get_nodes_by_levels(root_node, nodes_by_level_dict=None):
     if nodes_by_level_dict is None:
         nodes_by_level_dict = defaultdict(list)

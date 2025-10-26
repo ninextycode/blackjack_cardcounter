@@ -4,50 +4,86 @@
 #include <vector>
 #include <optional>
 #include <string>
+#include <memory>
 #include "cards.h"
+#include "random_sampler.h"
 
 using namespace std;
 
 namespace blackjack {
 
-struct RankProbability {
-    std::array<double, 10> probs{}; // index 0->P(2), ..., index 9->P(11)
-    inline double p(int rank_value) const {
+template <typename T>
+struct RankMap {
+    array<T, 10> data{}; // index 0->(2), ..., index 9->(11)
+    inline void fill(const T& value) {
+        data.fill(value);
+    }
+
+    inline T& at(int rank_value) {
+        return data[getIdx(rank_value)];
+    }
+    inline const T& at(int rank_value) const {
+        return data[getIdx(rank_value)];
+    }
+
+private:
+    inline int getIdx(int rank_value) const {
         int idx = rank_value - 2;
-        if (idx < 0 || idx >= 10) return 0.0;
-        return probs[idx];
+        if (idx < 0 || idx >= 10) {
+            throw runtime_error("Invalid rank value");
+        }
+        return idx;
     }
 };
 
+
+using RankProbability = RankMap<double>; 
+using RankCount = RankMap<int>;
+
 class ProbabilisticRankShoe {
 public:
-    ProbabilisticRankShoe(int n_decks = 8);
+    ProbabilisticRankShoe(
+        int n_decks = 8,
+        shared_ptr<RandomSampler> sampler = nullptr
+    );
     ProbabilisticRankShoe copy() const;
     // Returns probabilities for values 2..11 as RankProbability
-    RankProbability get_rank_value_probabilities(const optional<vector<int>>& given_rank_values_set = nullopt) const;
-    void burn_card(const Card& c);
-    void burn_rank_value(int rank_value);
-    void lock_dealer_card_not_ace();
-    void lock_dealer_card_not_ten();
-    void unlock_dealer_card();
-    string to_string() const;
+    RankProbability get_rank_value_probabilities(
+        const optional<vector<int>>& given_rank_values_set = nullopt
+    ) const;
+    void burnCard(const Card& c);
+    void burnRankValue(int rank_value);
+    void lockDealerCardNotAce();
+    void lockDealerCardNotTen();
+    void unlockDealerCard();
+    int sampleAndBurnRank(
+        const optional<vector<int>>& given_rank_values_set = nullopt
+    );
+    int sampleRank(
+        const optional<vector<int>>& given_rank_values_set = nullopt
+    ) const;
 
-    int n_decks;
-    int n_total; // remaining cards
-    // Counts for values 2..11
-    array<int, 10> value_counts{};     // index 0->value 2, ..., index 9->value 11
-    // Raw probabilities (without dealer info), maintained alongside counts
-    array<double, 10> value_probs{};   // index 0->P(2), ..., index 9->P(11)
-    optional<int> given_dealer_card_is_not_value;
+    string toString() const;
+
 private:
-    void recompute_raw_probabilities();
-    void take_given_dealer_info_into_account(
+    void recomputeRawProbabilities();
+    void takeGivenDealerInfoIntoAccount(
         RankProbability& probs
     ) const;
-    void probabilities_given_rank_values_set(
+    void takeGivenSetIntoAccount(
         RankProbability& probs,
         const optional<vector<int>>& given
     ) const;
+
+    int n_decks_;
+    int n_total_; // remaining cards
+    // Counts for values 2..11
+    RankCount value_counts_;     // index 0->value 2, ..., index 9->value 11
+    // Raw probabilities (without dealer info), maintained alongside counts
+    RankProbability value_probs_;   // index 0->P(2), ..., index 9->P(11)
+    optional<int> given_dealer_card_is_not_value_;
+
+    shared_ptr<RandomSampler> sampler_;
 };
 
 } // namespace blackjack

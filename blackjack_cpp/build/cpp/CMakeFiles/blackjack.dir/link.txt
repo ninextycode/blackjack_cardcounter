@@ -1,2 +1,0 @@
-"/usr/bin/gcc-ar-13" cr libblackjack.a CMakeFiles/blackjack.dir/blackjack_round.cpp.o CMakeFiles/blackjack.dir/cards.cpp.o CMakeFiles/blackjack.dir/game_tree.cpp.o CMakeFiles/blackjack.dir/hand.cpp.o CMakeFiles/blackjack.dir/rules.cpp.o CMakeFiles/blackjack.dir/shoe.cpp.o
-"/usr/bin/gcc-ranlib-13" libblackjack.a
