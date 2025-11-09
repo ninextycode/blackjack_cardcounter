@@ -1,0 +1,5 @@
+player,dealer,tc_min,tc_max,action
+18,2,3,,ds
+18,3,,0,s
+18,11,2,,s
+19,6,1,,ds

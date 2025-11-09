@@ -1,1 +1,1 @@
-scrcpy --v4l2-sink=/dev/video2 # -m 1080
+sudo ./scrcpy/scrcpy --no-audio --video-codec=h264 --v4l2-sink=/dev/video2 # -m 1080

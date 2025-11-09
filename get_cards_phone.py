@@ -1,11 +1,17 @@
 import numpy as np
 import image_utils
 import ocr_cards
+import os
 
 _suit_templates = []
 _suits = "shcd"
+_script_dir = os.path.dirname(os.path.abspath(__file__))
 for suit in _suits:
-    _suit_templates.append(image_utils.load_rdb(f"suits/{suit}.png"))
+    _suit_templates.append(
+        image_utils.load_rdb(
+            os.path.join(_script_dir, "suits_phone", f"{suit}.png")
+        )
+    )
 card_peek_width = 68
 card_height = 135
 card_width = 150

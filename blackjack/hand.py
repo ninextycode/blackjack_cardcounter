@@ -93,14 +93,20 @@ class Hand:
     def is_bust(self):
         return self.get_best_value() is None
     
+    def __getitem__(self, idx):
+        return self.cards[idx]
+ 
     def __str__(self):
         value = self.get_best_value()
         if value is None:
-            value = "bust"
-        return "[" + "".join([str(c) for c in self.cards]) + f"] ({value})"
-
+            value = f"bust {self.get_hard_value()}"
+        return "[" + ",".join([str(c) for c in self.cards]) + f"] ({value})"
+ 
     def __repr__(self):
         return f"<{self.__class__.__name__}: {str(self)}>"
+
+    def __len__(self):
+        return len(self.cards)
 
 
 class ValueOnlyHand:
@@ -186,10 +192,22 @@ class ValueOnlyHand:
 
     def __str__(self):
         value = self.get_best_value()
+        hard_value = self.get_hard_value()
         if value is None:
             value = "bust"
-        vals = ",".join(str(v) for v in self.cards)
-        return f"[{vals}] ({value})"
+        vals = ",".join(["A" if v == 11 else "T" if v == 10 else str(v) for v in self.cards])
+
+        if value == hard_value:
+            value_lbl = f"({value})"
+        else:
+            value_lbl = f"({hard_value}/{value})"
+        return f"{vals}{value_lbl}"
 
     def __repr__(self):
         return f"<{self.__class__.__name__}: {str(self)}>"
+
+    def __len__(self):
+        return len(self.cards)
+    
+    def __getitem__(self, idx):
+        return self.cards[idx]

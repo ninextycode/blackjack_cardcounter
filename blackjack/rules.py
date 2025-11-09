@@ -20,6 +20,7 @@ class BJRules:
     allow_double_on_soft: bool = True
     allow_split_different_tens: bool = True
     no_natural_bj_on_split: bool = True
+    split_order_reversed: bool = False
 
     def __str__(self):
         str_lines = ["BJRules: "]

@@ -39,14 +39,14 @@ NodeLevel NodeIterator::next() {
 MixedNode::MixedNode(
     const BJRound &bj_round,
     const ProbabilisticRankShoe &shoe,
-    int hand_size_full_enum_limit,
+    int max_hand_size_full_enum,
     int player_card_initial_samples,
     size_t n_dealer_sim_runs,
     AbstractBJTreeNode *parent,
     bool copy_data
 ) :
     AbstractBJTreeNode(bj_round, shoe, parent, copy_data),
-    hand_size_full_enum_limit_(hand_size_full_enum_limit),
+    hand_size_full_enum_limit_(max_hand_size_full_enum),
     n_dealer_sim_runs_(n_dealer_sim_runs),
     player_card_initial_samples_(player_card_initial_samples),
     active_hand_size_(nullopt)

@@ -20,19 +20,28 @@ def seed_shoe_rng(seed: int | None) -> None:
 class ProbabilisticRankShoe:
     def __init__(self, n_decks = 8, rng = None):
         self.n_decks = n_decks
-        self.n_total = 52 * self.n_decks
+        self.n_cards = 52 * self.n_decks
+        self.n_initial = self.n_cards
         self.rank_value_counts = {
             rv: 0 for rv in range(2, 12)
         }
         for r in Rank:
             rv = r.rank_value()
-            self.rank_value_counts[rv] += self.n_total / len(Rank)
+            self.rank_value_counts[rv] += self.n_cards / len(Rank)
         self.given_dealer_card_is_not_value = None
         # Use a dedicated RNG for reproducibility; default to module-level SHOE_RNG
         self.rng = rng if rng is not None else _global_rng
 
- 
+    def get_n_remaining(self):
+        return self.n_cards
+    
+    def get_penetration(self):
+        return 1.0 - (self.n_cards / self.n_initial)
+
+
     def sample_rank(self, given_rank_values_set=None):
+        if given_rank_values_set is not None and len(given_rank_values_set) == 0:
+            raise RuntimeError("given ranks set is empty")
         probabilities = self.get_rank_value_probabilities(given_rank_values_set)
         rank_values = list(probabilities.keys())
         probs = [probabilities[rv] for rv in rank_values]
@@ -49,13 +58,16 @@ class ProbabilisticRankShoe:
     def copy(self):
         # Keep the same RNG reference to maintain a single source of randomness unless overridden
         new_shoe = ProbabilisticRankShoe(self.n_decks, rng=self.rng)
-        new_shoe.n_total = self.n_total
+        new_shoe.n_cards = self.n_cards
+        new_shoe.n_initial = self.n_initial
         new_shoe.rank_value_counts = self.rank_value_counts.copy()
         new_shoe.given_dealer_card_is_not_value = self.given_dealer_card_is_not_value
         return new_shoe
     
 
     def get_rank_value_probabilities(self, given_rank_values_set=None):
+        if given_rank_values_set is not None and len(given_rank_values_set) == 0:
+            raise RuntimeError("given ranks set is empty")
         probabilities = self._get_raw_rank_value_probabilities()
         probabilities = self._take_given_dealer_info_into_account(probabilities)
         probabilities = self._probabilities_given_rank_values_set(
@@ -75,7 +87,7 @@ class ProbabilisticRankShoe:
         card_dealer_card_is_not_coef = (n_cards_dealer_card_is_not - 1) / n_cards_dealer_card_is_not
 
         for rv, p in probabilities.items():
-            p = p * self.n_total / (self.n_total - 1)
+            p = p * self.n_cards / (self.n_cards - 1)
             if rv == self.given_dealer_card_is_not_value:
                 probabilities[rv] = p
             else:
@@ -99,7 +111,7 @@ class ProbabilisticRankShoe:
 
     def _get_raw_rank_value_probabilities(self):
         return {
-            rv: count / self.n_total
+            rv: count / self.n_cards
             for rv, count in self.rank_value_counts.items()
         }
 
@@ -112,7 +124,11 @@ class ProbabilisticRankShoe:
         if self.rank_value_counts[rank_value] < 1:
             raise RuntimeError(f"Card count for rank value {rank_value} is too low")
         self.rank_value_counts[rank_value] -= 1
-        self.n_total -= 1
+        self.n_cards -= 1
+
+
+    def lock_dealer_card_not(self, value):
+        self.given_dealer_card_is_not_value = value
 
 
     def lock_dealer_card_not_ace(self):

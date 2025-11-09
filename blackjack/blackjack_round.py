@@ -94,6 +94,14 @@ class BJRound:
         self.is_hand_in_progress[0] = True
         self.stage = BJStage.PLAYER_CARD
 
+    def get_active_player_hand(self):
+        if self.active_hand_idx >= len(self.player_hands):
+            raise RuntimeError("Invalid state")
+        return self.player_hands[self.active_hand_idx]
+
+    def get_dealer_hand(self):
+        return self.dealer_hand
+
     def get_stage(self):
         return self.stage
 
@@ -148,7 +156,7 @@ class BJRound:
                             return [r for r in range(2, 12) if r != 10]
                         if self.dealer_hand.cards[0] == 10:
                             # return [r for r in Rank if r != Rank.ACE]
-                            return range(2, 10)
+                            return list(range(2, 11))
 
                         raise RuntimeError("Dealer cannot have blackjack but cards are not consistent")
                 else:
@@ -473,6 +481,10 @@ class BJRound:
         hand = self.player_hands[idx]
         new_hand_1, new_hand_2 = hand.split()
         # replace and insert
+        # when split_order_left_right is False, the first/left card correspond 
+        # to the first hand to be player, otherwise order is reversed
+        if self.rules.split_order_reversed:
+            new_hand_1, new_hand_2 = new_hand_2, new_hand_1
         self.player_hands[idx] = new_hand_1
         self.player_hands.insert(idx + 1, new_hand_2)
         self.n_splits += 1
@@ -620,7 +632,7 @@ class BJRound:
         if self.dealer_hand.size() == 0:
             dealer_parts.append("(no cards)")
         elif self.dealer_hand.size() == 1:
-            dealer_parts.append(f"{self.dealer_hand.cards[0]}X")
+            dealer_parts.append(f"{self.dealer_hand.cards[0]},X")
             
             if self.insurance_bet > 0:
                 dealer_parts.append(f"(insurance {self.insurance_bet})")
@@ -632,19 +644,15 @@ class BJRound:
                 else:
                     dealer_parts.append("(checked - no bj)")
         else:
-            card_str = "".join(str(card) for card in self.dealer_hand.cards)
-            dealer_value = self.dealer_hand.get_best_value()
-            if dealer_value is not None:
-                dealer_parts.append(f"{card_str} ({dealer_value})")
-            else:
-                dealer_parts.append(f"{card_str} (bust)")
+            card_str = str(self.dealer_hand)
+            dealer_parts.append(f"{card_str}")
         
         lines.append(" ".join(dealer_parts))
         
         # Player lines
         if self.surrendered:
             hand = self.player_hands[0]
-            card_str = hand_to_str(hand)
+            card_str = str(hand)
             surrender_type = "early surrender" if self.early_surrendered else "late surrender"
             lines.append(f"Player {card_str} ({surrender_type})")
         else:
@@ -656,30 +664,18 @@ class BJRound:
                 
                 parts = []
                 
-                card_str = hand_to_str(hand)
+                card_str = str(hand)
                 parts.append(card_str)
 
                 value = hand.get_best_value()
                 if value is not None:
-
-                    if not self.is_hand_in_progress[i]:
-                        stand_str = " - stand"
-                    else:
-                        stand_str = ""
-
-                    hard_value = hand.get_hard_value()
                     if (
                         not (self.rules.no_natural_bj_on_split and self.n_splits > 0) 
                         and hand.is_natural_blackjack()
                     ):
-                        parts.append("(bj)")
-                    elif hard_value != value:
-                        parts.append(f"({value}/{hard_value}{stand_str})")
-                    else:
-                        parts.append(f"({value}{stand_str})")
-                            
-                else:
-                    parts.append("(bust)")
+                        parts.append(" bj")
+                    elif not self.is_hand_in_progress[i]:
+                        parts.append(f"-stand")
 
 
                 bet = self.hand_bets[i]

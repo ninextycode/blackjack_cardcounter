@@ -10,11 +10,21 @@ class SuitStub(Enum):
     STUB = "."
 
 
+@total_ordering
 class Suit(Enum):
     SPADE = "s"
     HEART = "h"
     CLUB = "c"
     DIAMOND = "d"
+
+    def ord_value(self):
+        return "dchs".index(self.value)
+
+    def __eq__(self, other):
+        return self.ord_value() == other.ord_value()
+
+    def __lt__(self, other):
+        return self.ord_value() < other.ord_value()
 
 
 @total_ordering
@@ -84,10 +94,27 @@ class Rank(Enum):
         return self.ord_value() < other.ord_value()
 
 
+
+@total_ordering
 class Card:
     def __init__(self, rank: Rank, suit: Suit | SuitStub = SuitStub.STUB):
         self.rank: Rank = rank
         self.suit: Suit = suit
+
+    def __eq__(self, value):
+        return self.rank == value.rank and self.suit == value.suit
+
+    def __lt__(self, other):
+        if self.rank < other.rank:
+            return True
+        if self.rank > other.rank:
+            return False
+        return self.suit < other.suit
+
+    def from_str(card_str: str):
+        rank_char = card_str[0]
+        suit_char = card_str[1] if len(card_str) > 1 else "."
+        return Card(Rank(rank_char), Suit(suit_char))
 
     def rank_value(self, soft=True):
         return self.rank.rank_value(soft)

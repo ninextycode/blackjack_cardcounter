@@ -1,5 +1,5 @@
 import json
-from blackjack.game_tree import SimulationResultNode
+from blackjack.game_node import SimulationResultNode
 from blackjack.blackjack_round import BJStage
 
 

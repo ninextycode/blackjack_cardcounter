@@ -11,7 +11,7 @@ public:
     MixedNode(
         const BJRound &bj_round,
         const ProbabilisticRankShoe &shoe,
-        int hand_size_full_enum_limit,
+        int max_hand_size_full_enum,
         int player_card_initial_samples = 1,
         size_t n_dealer_sim_runs = 100,
         AbstractBJTreeNode *parent = nullptr,

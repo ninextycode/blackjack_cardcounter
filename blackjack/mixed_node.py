@@ -1,18 +1,10 @@
 from blackjack.actions import PlayerAction
-from blackjack.game_tree import AbstractBJTreeNode, SimulationResultNode
+from blackjack.game_node import AbstractBJTreeNode, SimulationResultNode
 from blackjack.blackjack_round import BJStage
 import numpy as np
 from collections import deque
+from blackjack.tree_utils import iterate_nodes_by_levels
 
-
-def iterate_nodes_by_levels(root_node):
-    queue = deque()
-    queue.append((0, root_node))
-    while queue:
-        node_level, node = queue.popleft()
-        yield node_level, node
-        for child in node.children:
-            queue.append((node_level + 1, child))
 
 
 class MixedNode(AbstractBJTreeNode):
@@ -20,7 +12,7 @@ class MixedNode(AbstractBJTreeNode):
             self,
             bj_round,
             shoe,
-            hand_size_full_enum_limit,
+            max_hand_size_full_enum,
             player_card_initial_samples=1,
             n_dealer_sim_runs=100,
             parent=None,
@@ -32,7 +24,7 @@ class MixedNode(AbstractBJTreeNode):
             parent=parent,
             copy_data=copy_data
         )
-        self.hand_size_full_enum_limit = hand_size_full_enum_limit
+        self.max_hand_size_full_enum = max_hand_size_full_enum
         self.n_dealer_sim_runs = n_dealer_sim_runs
         self.player_card_initial_samples = player_card_initial_samples
         self._active_hand_size = None
@@ -51,7 +43,7 @@ class MixedNode(AbstractBJTreeNode):
     def create_child(self, child_bj_round, child_shoe, transition_event, prob=0):
         child = MixedNode(
             child_bj_round, child_shoe, parent=self, copy_data=False,
-            hand_size_full_enum_limit=self.hand_size_full_enum_limit,
+            max_hand_size_full_enum=self.max_hand_size_full_enum,
             player_card_initial_samples=self.player_card_initial_samples,
             n_dealer_sim_runs=self.n_dealer_sim_runs,
         )
@@ -63,7 +55,7 @@ class MixedNode(AbstractBJTreeNode):
 
     def _build_children_player_card(self):
         """Build children for card dealing stages. Must be implemented by subclasses."""
-        if self._active_hand_size > self.hand_size_full_enum_limit:
+        if self._active_hand_size > self.max_hand_size_full_enum:
             # perform sampling
             for _ in range(self.player_card_initial_samples):
                 self._add_player_card_sample()

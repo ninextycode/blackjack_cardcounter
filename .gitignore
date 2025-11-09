@@ -1,10 +1,13 @@
 venv
 old_blackjack
 __pycache__
-frames
+frames*/
 *png
 logs/*
 **/build/
 **/python_lib/
 .vscode
 activate
+scrcpy/
+!digits/*png
+!suits_table/*png

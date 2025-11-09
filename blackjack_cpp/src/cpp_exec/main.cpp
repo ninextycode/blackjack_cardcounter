@@ -147,12 +147,15 @@ void testAcePair() {
     shoe.burnRankValue(11);
     shoe.burnRankValue(6);
 
-    MixedNode root_node(bj_round, shoe, 1);
+    int max_hand_size_full_enum = 3;
+    int player_card_initial_samples = 1;
+    MixedNode root_node(bj_round, shoe, max_hand_size_full_enum, player_card_initial_samples);
 
     cout << "Blackjack round initialized." << endl;
     cout << bj_round.toString() << endl;
     cout << "Building game tree..." << endl << endl;
 
+    auto t0_total = std::chrono::high_resolution_clock::now();
     for (int i = 0; i < 50; ++i) {
         auto t0 = std::chrono::high_resolution_clock::now();
         root_node.buildTreeLayer(i);
@@ -167,27 +170,32 @@ void testAcePair() {
             break;
         }
     }
-
+    auto t1_total = std::chrono::high_resolution_clock::now();
+    double dt_total = std::chrono::duration_cast<std::chrono::milliseconds>(
+        t1_total - t0_total
+    ).count();
+    cout << "\nTotal tree building time: " << dt_total / 1000 << " s" << endl;
+    
     // Print final statistics
     printTreeStatistics(&root_node);
 
     // Log tree structure by levels (from tree_utils)
     logTreeStructure(&root_node);
 
-    for (int i = 0; i < 50; ++i) {
-        cout << endl;
+    // for (int i = 0; i < 50; ++i) {
+    //     cout << endl;
         
-        auto t0 = std::chrono::high_resolution_clock::now();
-        root_node.convertToFullUpToDepth(i);
-        auto t1 = std::chrono::high_resolution_clock::now();
-        double dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-            t1 - t0
-        ).count();
-        cout << "Depth " << i << " full enumeration in " << dt / 1000 << " s" << endl;
-        cout << "Current root value (EV): " << fixed << setprecision(6) << root_node.getValue() << endl;
+    //     auto t0 = std::chrono::high_resolution_clock::now();
+    //     root_node.convertToFullUpToDepth(i);
+    //     auto t1 = std::chrono::high_resolution_clock::now();
+    //     double dt = std::chrono::duration_cast<std::chrono::milliseconds>(
+    //         t1 - t0
+    //     ).count();
+    //     cout << "Depth " << i << " full enumeration in " << dt / 1000 << " s" << endl;
+    //     cout << "Current root value (EV): " << fixed << setprecision(6) << root_node.getValue() << endl;
 
-        logTreeStructure(&root_node);
-    }
+    //     logTreeStructure(&root_node);
+    // }
 }
 
 void testSampling() {

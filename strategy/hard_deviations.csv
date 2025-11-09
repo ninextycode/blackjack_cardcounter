@@ -1,0 +1,17 @@
+player,dealer,tc_min,tc_max,action
+16,10,0,inf,s
+15,10,4,inf,s
+10,10,4,inf,dh
+12,3,2,inf,s
+12,2,3,inf,s
+11,11,1,inf,dh
+9,2,1,inf,dh
+10,11,3,inf,dh
+9,7,3,inf,dh
+16,9,5,inf,s
+13,2,-inf,-2,h
+12,4,-inf,-1,h
+12,5,-inf,-3,h
+12,6,-inf,-2,h
+13,3,-inf,-3,h
+15,9,2,inf,s
