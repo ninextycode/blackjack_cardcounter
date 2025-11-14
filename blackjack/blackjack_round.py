@@ -245,7 +245,7 @@ class BJRound:
             self.stage = BJStage.ROUND_OVER
             return
         
-
+        # decision after the card was added
         if self.dealer_hand.size() == 1:
             # Order of operations after dealer's first card:
             # 1. Insurance (if ace)
@@ -262,12 +262,27 @@ class BJRound:
             else:
                 self._same_hand_or_next_or_dealer()
         
-        elif all([hand.is_natural_blackjack() for hand in self.player_hands]):
+        elif (
+            len(self.player_hands) == 1 and self.player_hands[0].is_natural_blackjack()
+        ) or (
+            not self.rules.no_natural_bj_on_split
+            and all([hand.is_natural_blackjack() for hand in self.player_hands])
+        ):
+            # Player's blackjack check
             # Dealer already has 2 cards
-            # when player has natural blackjack only, reveal the hole card, then finish, do not draw
+            # when player has natural blackjack
+            # reveal the hole card, then finish, do not draw
             self.calculate_value()
             self.stage = BJStage.ROUND_OVER
 
+        elif all([hand.is_bust() for hand in self.player_hands]):
+            # Player's bust check
+            # Dealer already has 2 cards
+            # when player is bust on all hands
+            # reveal the hole card, then finish, do not draw
+            self.calculate_value()
+            self.stage = BJStage.ROUND_OVER
+            
         elif self.dealer_hand.get_best_value() is None:
             # dealer is bust
             self.calculate_value()

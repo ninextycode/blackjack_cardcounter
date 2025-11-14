@@ -43,6 +43,11 @@ class AndroidBJTabletActor:
         
         self._tournament_ad_continue = [1150, 1330]
 
+        self._leave_table_loc = [2170, 160]
+        self._leave_table_yet_loc = [1350, 880]
+        self._leave_table_exit_loc = [1370, 1060]
+
+        self._create_private_table_loc = [370, 380]
         self._bet_locs = [
             [1125, 800],
             [1212, 815],
@@ -102,6 +107,16 @@ class AndroidBJTabletActor:
     
     def refuse_insurance(self):
         self.click(*self._refuse_insurance)
+
+    def leave_table(self):
+        self.click(*self._leave_table_loc)
+        self.sleep(1.5)
+        # immediate clicks
+        self.device.click(*self._leave_table_yet_loc)
+        self.device.click(*self._leave_table_exit_loc)
+
+    def create_private_table(self):
+        self.click(*self._create_private_table_loc)
 
     def place_bet_units(self, bet_units):
         n_half_units = bet_units * 2

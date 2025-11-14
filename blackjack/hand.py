@@ -195,7 +195,7 @@ class ValueOnlyHand:
         hard_value = self.get_hard_value()
         if value is None:
             value = "bust"
-        vals = ",".join(["A" if v == 11 else "T" if v == 10 else str(v) for v in self.cards])
+        vals = ",".join(["A" if v == 11 else str(v) for v in self.cards])
 
         if value == hard_value:
             value_lbl = f"({value})"

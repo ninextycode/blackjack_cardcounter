@@ -187,7 +187,7 @@ def is_insurance_offered(game_img):
     return match > 0.9
 
 
-class ActiveHand(Enum):
+class HandPosition(Enum):
     LEFT = 1
     RIGHT = 2
     MIDDLE = 3
@@ -204,29 +204,29 @@ def get_active_hand(game_img):
     finger_img = game_img[finger_area]
     match_middle = image_utils.get_best_match(finger_img, finger_middle)
     if match_middle > 0.9:
-        return ActiveHand.MIDDLE
+        return HandPosition.MIDDLE
     
     match_middle_split = image_utils.get_best_match(finger_img, finger_middle_split)
     if match_middle_split > 0.9:
-        return ActiveHand.MIDDLE
+        return HandPosition.MIDDLE
     
     match_left = image_utils.get_best_match(finger_img, finger_left)
     if match_left > 0.9:
-        return ActiveHand.LEFT
+        return HandPosition.LEFT
     
     match_right = image_utils.get_best_match(finger_img, finger_right)
     if match_right > 0.9:
-        return ActiveHand.RIGHT
+        return HandPosition.RIGHT
 
-    return ActiveHand.NONE
+    return HandPosition.NONE
 
 
-def get_player_cards(game_img, hand: ActiveHand):
-    if hand == ActiveHand.LEFT:
+def get_player_cards(game_img, hand: HandPosition):
+    if hand == HandPosition.LEFT:
         return get_player_cards_left(game_img)
-    elif hand == ActiveHand.RIGHT:
+    elif hand == HandPosition.RIGHT:
         return get_player_cards_right(game_img)
-    elif hand == ActiveHand.MIDDLE:
+    elif hand == HandPosition.MIDDLE:
         return get_player_cards_middle(game_img)
     else:
         return None
@@ -285,6 +285,8 @@ def get_shoe_penetration(game_img):
             break
     
     penetration = 1 - ((height-1) - top_card_idx) / (height-1)
+    if penetration == 1:
+        raise RuntimeError("Unexpected shoe penetration value")
     return penetration
 
 
@@ -293,3 +295,21 @@ def can_hit_stand(game_img):
     hsv = cv2.cvtColor(stand_btn_region, cv2.COLOR_RGB2HSV)
     # button is bright enough
     return np.mean(hsv[..., 2] > 100) > 0.9
+
+
+def can_create_private_table(game_img):
+    private_table_area = (slice(325, 460), slice(250, 450))
+    area_img = game_img[private_table_area]
+
+    img_path = "ui_elements/private_table.png"
+    private_table = image_utils.load_rdb(img_path)
+    img_path = "ui_elements/private_table_grey.png"
+    private_table_grey = image_utils.load_rdb(img_path)
+    match_0 = image_utils.get_best_match(
+        area_img, private_table
+    )
+    match_1 = image_utils.get_best_match(
+        area_img, private_table_grey
+    )
+
+    return max(match_0, match_1) > 0.9

@@ -114,7 +114,9 @@ class Card:
     def from_str(card_str: str):
         rank_char = card_str[0]
         suit_char = card_str[1] if len(card_str) > 1 else "."
-        return Card(Rank(rank_char), Suit(suit_char))
+        rank = Rank(rank_char)
+        suit = SuitStub.STUB if suit_char == "." else Suit(suit_char)
+        return Card(rank, suit)
 
     def rank_value(self, soft=True):
         return self.rank.rank_value(soft)
