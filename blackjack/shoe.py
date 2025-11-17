@@ -113,6 +113,7 @@ class ProbabilisticRankShoe:
         return {
             rv: count / self.n_cards
             for rv, count in self.rank_value_counts.items()
+            if count > 0
         }
 
 

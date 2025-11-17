@@ -1,3 +1,4 @@
+import itertools
 import cv2
 import numpy as np
 from PIL import Image
@@ -13,25 +14,11 @@ def save_rgb_png(img_rgb, img_path):
     img_pil.save(img_path, format="PNG")
     
 
-def find_subimages(main_img, templates, threshold=0.8, keys=None):
-    """
-    Find multiple template images in main image
-    
-    Args:
-        main_img_path: Path to main image
-        template_paths: List of paths to template images
-        threshold: Matching confidence (0-1)
-    
-    Returns:
-        List of matches with locations
-    """    
+def find_subimages(main_img, templates, threshold=0.8):
     # Avoid list aliasing so each template has its own match list
-    if keys is None:
-        keys = range(len(templates))
-
     matches = defaultdict(list)
     n_matches = 0
-    for key, template in zip(keys, templates):
+    for key, template in templates.items():
         h = template.shape[0]
         w = template.shape[1]
         # Perform template matching
@@ -112,3 +99,38 @@ def get_red_mask_hsv(hsv):
 def get_best_match(image, template):
     result = cv2.matchTemplate(image, template, cv2.TM_CCOEFF_NORMED)
     return result.max()
+
+
+def find_template_middle_positions(game_img, templates, threshold=0.8, allow_overlap=False):
+    if not isinstance(templates, dict):
+        templates = {i: t for i, t in enumerate(templates)}
+    
+    matches, n_matches = find_subimages(
+        game_img, templates, threshold=threshold
+    )
+    mid_positions = []
+
+    for match in itertools.chain.from_iterable(matches.values()):
+        top_left = match[0]
+        bottom_right = match[1]
+        cross_area = game_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
+        hsv = cv2.cvtColor(cross_area, cv2.COLOR_RGB2HSV)
+        brightness = hsv[..., 2].mean()
+        if brightness < 100: # inactive cross
+            continue
+        x_mid = (top_left[0] + bottom_right[0]) // 2
+        y_mid = (top_left[1] + bottom_right[1]) // 2
+
+        position_exists = False
+
+        if not allow_overlap:
+            width = bottom_right[0] - top_left[0]
+            height = bottom_right[1] - top_left[1]
+            for xp, yp in mid_positions:
+                if np.abs(xp - x_mid) < width and np.abs(yp - y_mid) < height:
+                    position_exists = True
+
+        if not position_exists:
+            mid_positions.append((x_mid, y_mid))
+    
+    return mid_positions

@@ -168,7 +168,7 @@ class BJRound:
     def take_card(self, card):
         possible_values = self.get_possible_next_card_ranks()
         if possible_values is not None and card not in possible_values:
-            raise RuntimeError("Invalid card")
+            raise RuntimeError(f"Invalid card {card}")
 
         # Set last card and clear last action
         self.last_card = card
@@ -408,7 +408,7 @@ class BJRound:
     def take_action(self, action):
         legal_actions = self.get_available_actions()
         if action not in legal_actions:
-            raise RuntimeError(f"Illegal action {action} for current state")
+            raise RuntimeError(f"Illegal action {action} for current stage {self.stage}")
 
         # Set last action and clear last card
         self.last_action = action

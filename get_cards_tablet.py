@@ -3,12 +3,10 @@ import image_utils
 import ocr_cards
 from enum import Enum
 import cv2
+from image_assets import ImageAssets
+import itertools
 
 
-_suit_templates = []
-_suits = "shcd"
-for suit in _suits:
-    _suit_templates.append(image_utils.load_rdb(f"suits_tablet/{suit}.png"))
 card_width = 100
 card_peek_width = 40
 card_height = 120
@@ -47,11 +45,10 @@ digit_height = 34
 digit_x_offset = 0
 digit_y_offset = 2
 
-insurance_offer = image_utils.load_rdb("ui_elements/insurance.png")
 
 
 def extract_card_values_img(player_cards_img, suit_matches):
-    digits = {s: [] for s in _suits}
+    digits = {s: [] for s in ImageAssets.suit_templates.keys()}
     H, W = player_cards_img.shape[:2]
 
     for s, m_list in suit_matches.items():
@@ -132,8 +129,8 @@ def get_dealer_cards_img(game_img):
 def get_cards(card_area_img):
     matches, n_matches = \
         image_utils.find_subimages(
-            card_area_img, _suit_templates,
-            threshold=0.9, keys=_suits
+            card_area_img, ImageAssets.suit_templates,
+            threshold=0.9
         )
     if n_matches == 0:
         return []
@@ -141,7 +138,7 @@ def get_cards(card_area_img):
 
     player_cards = []
     topleft = []
-    for s in _suits:
+    for s in ImageAssets.suit_templates.keys():
         suit_digit_imgs = digit_images[s]
         suit_matches = matches[s]
         for digit_img, match in zip(suit_digit_imgs, suit_matches):
@@ -180,9 +177,9 @@ def get_player_cards(game_img):
 
 
 def is_insurance_offered(game_img):
-    insurance_area = game_img[680:731, 1185:1411]
+    insurance_area = game_img[675:728, 1185:1411]
     match = image_utils.get_best_match(
-        insurance_area, insurance_offer
+        insurance_area, ImageAssets.insurance_offer
     )
     return match > 0.9
 
@@ -192,29 +189,33 @@ class HandPosition(Enum):
     RIGHT = 2
     MIDDLE = 3
     NONE = 4
-    
-finger_middle = image_utils.load_rdb("ui_elements/finger_middle.png")
-finger_middle_split = image_utils.load_rdb("ui_elements/finger_middle_split.png")
-finger_left = image_utils.load_rdb("ui_elements/finger_left.png")
-finger_right = image_utils.load_rdb("ui_elements/finger_right.png")
+
 
 
 def get_active_hand(game_img):
     finger_area = (slice(545, 620), slice(1150, 1400))
     finger_img = game_img[finger_area]
-    match_middle = image_utils.get_best_match(finger_img, finger_middle)
+    match_middle = image_utils.get_best_match(
+        finger_img, ImageAssets.finger_middle
+    )
     if match_middle > 0.9:
         return HandPosition.MIDDLE
     
-    match_middle_split = image_utils.get_best_match(finger_img, finger_middle_split)
+    match_middle_split = image_utils.get_best_match(
+        finger_img, ImageAssets.finger_middle_split
+    )
     if match_middle_split > 0.9:
         return HandPosition.MIDDLE
     
-    match_left = image_utils.get_best_match(finger_img, finger_left)
+    match_left = image_utils.get_best_match(
+        finger_img, ImageAssets.finger_left
+    )
     if match_left > 0.9:
         return HandPosition.LEFT
     
-    match_right = image_utils.get_best_match(finger_img, finger_right)
+    match_right = image_utils.get_best_match(
+        finger_img, ImageAssets.finger_right
+    )
     if match_right > 0.9:
         return HandPosition.RIGHT
 
@@ -233,8 +234,7 @@ def get_player_cards(game_img, hand: HandPosition):
 
 
 def is_tournament_ad(game_img):
-    img_path = "ui_elements/ad_continue_btn.png"
-    ad_continue_btn = image_utils.load_rdb(img_path)
+    ad_continue_btn = ImageAssets.ad_continue_btn
     ad_continue_btn_area = (slice(1300,1375), slice(900,1400))
     area_img = game_img[ad_continue_btn_area]
     match = image_utils.get_best_match(
@@ -244,8 +244,7 @@ def is_tournament_ad(game_img):
 
 
 def is_table_empty(game_img):
-    img_path = "ui_elements/empty_table.png"
-    empty_table = image_utils.load_rdb(img_path)
+    empty_table = ImageAssets.empty_table
     empty_table_area = (slice(550, 775), slice(1000, 1375))
     area_img = game_img[empty_table_area]
     match = image_utils.get_best_match(
@@ -301,15 +300,31 @@ def can_create_private_table(game_img):
     private_table_area = (slice(325, 460), slice(250, 450))
     area_img = game_img[private_table_area]
 
-    img_path = "ui_elements/private_table.png"
-    private_table = image_utils.load_rdb(img_path)
-    img_path = "ui_elements/private_table_grey.png"
-    private_table_grey = image_utils.load_rdb(img_path)
+    private_table = ImageAssets.private_table
     match_0 = image_utils.get_best_match(
         area_img, private_table
     )
-    match_1 = image_utils.get_best_match(
-        area_img, private_table_grey
+    hsv = cv2.cvtColor(area_img, cv2.COLOR_RGB2HSV)
+    brightness = hsv[..., 2].mean()
+    return match_0 > 0.9 and brightness > 100
+
+
+def find_close_ad_crosses(game_img):
+    templates = {
+        "cross": ImageAssets.ad_cross,
+        "pink_cross": ImageAssets.ad_cross_pink,
+        "small_cross": ImageAssets.ad_cross_small
+    }
+    return image_utils.find_template_middle_positions(
+        game_img, templates, threshold=0.7
     )
 
-    return max(match_0, match_1) > 0.9
+
+def find_leave_table_button(game_img):
+    templates = {
+        "yes": ImageAssets.leave_table_yes,
+        "exit": ImageAssets.leave_table_exit
+    }
+    return image_utils.find_template_middle_positions(
+        game_img, templates
+    )

@@ -1,13 +1,13 @@
-from blackjack.actions import DealerAction, PlayerAction
-from blackjack.abstract_node import AbstractBJTreeNode, SimulationResultNode
-from blackjack.blackjack_round import BJRound, BJStage
+from blackjack.actions import PlayerAction
+from blackjack.game_node import AbstractBJTreeNode, SimulationResultNode
+from blackjack.blackjack_round import BJStage
 import numpy as np
 from collections import deque
 from blackjack.tree_utils import iterate_nodes_by_levels
 
 
 
-class MixedNode(AbstractBJTreeNode):
+class MixedNodeOld(AbstractBJTreeNode):
     def __init__(
             self,
             bj_round,
@@ -34,21 +34,18 @@ class MixedNode(AbstractBJTreeNode):
             active_hand = self.bj_round.player_hands[hand_idx]
             self._active_hand_size = active_hand.size()
 
-
     def is_past_three_initial_cards(self):
         has_dealer_card = self.bj_round.dealer_hand.size() > 0
         has_player_two_cards = len(self.bj_round.player_hands) > 1 \
             or self.bj_round.player_hands[0].size() >= 2
         return has_dealer_card and has_player_two_cards
-
-
+    
     def create_child(self, child_bj_round, child_shoe, transition_event, prob=0):
         child = MixedNode(
             child_bj_round, child_shoe, parent=self, copy_data=False,
             max_hand_size_full_enum=self.max_hand_size_full_enum,
             player_card_initial_samples=self.player_card_initial_samples,
             n_dealer_sim_runs=self.n_dealer_sim_runs,
-            split_branch=self.split_branch
         )
         self.children.append(child)
         self.children_prob.append(prob)
@@ -80,6 +77,7 @@ class MixedNode(AbstractBJTreeNode):
             if p == 0:
                 continue
             card = rv
+
             bj_round_copy = self.bj_round.copy()
             shoe_copy = self.shoe.copy()
             bj_round_copy.take_card(card)
@@ -95,22 +93,6 @@ class MixedNode(AbstractBJTreeNode):
         self.has_built_children = True
 
 
-    def _build_children_player_action(self):
-        """Build children for player action stages."""
-        actions = self.bj_round.get_available_actions()
-        for a in actions:
-            if a == PlayerAction.SPLIT:
-                self.create_child()
-
-            bj_round_copy = self.bj_round.copy()
-            bj_round_copy.take_action(a)
-            self.create_child(bj_round_copy, self.shoe.copy(), a)
-
-
-    def create_split_action_child(self):
-        pass
-
-
     def _build_child_dealer_blackjack(self):
         """Build single child for dealer showing blackjack."""
         possible_ranks = self.bj_round.get_possible_next_card_ranks()
@@ -122,6 +104,25 @@ class MixedNode(AbstractBJTreeNode):
         bj_round_copy = self.bj_round.copy()
         bj_round_copy.take_card(card)
         self.create_child(bj_round_copy, shoe_copy, card, 1)
+
+
+    def _run_dealer_cards_simulations(self):
+        """Run Monte Carlo simulations for dealer play."""
+        values = []
+        for i in range(self.n_dealer_sim_runs):
+            bj_round_copy = self.bj_round.copy()
+            shoe_copy = self.shoe.copy()
+
+            # Simulate dealer cards until round over
+            while not bj_round_copy.get_stage() == BJStage.ROUND_OVER:
+                possible_values = bj_round_copy.get_possible_next_card_ranks()
+                card = shoe_copy.sample_and_burn_rank(possible_values)
+                bj_round_copy.take_card(card)
+            
+            # Collect results
+            values.append(bj_round_copy.get_player_value())
+        self.children = [SimulationResultNode(np.mean(values), self)]
+        self.children_prob = [1]
 
 
     def add_player_card_sample(self):
@@ -183,6 +184,7 @@ class MixedNode(AbstractBJTreeNode):
         self.children_prob = [new_probabilities[rv] for rv in self.children_events]
         return True
     
+
 
     def convert_to_full_next_layer(self):
         """
@@ -325,84 +327,4 @@ class MixedNode(AbstractBJTreeNode):
             self.recompute_tree_value()
             return True
         return False    
-
-
-class SplitNode(MixedNode):
-    def __init__(
-            self,
-            bj_round,
-            shoe,
-            max_hand_size_full_enum,
-            player_card_initial_samples=1,
-            n_dealer_sim_runs=100,
-            parent=None,
-            copy_data=True,
-        ):
-        super().__init__(
-            bj_round,
-            shoe,
-            parent=parent,
-            copy_data=copy_data
-        )
-        self.max_hand_size_full_enum = max_hand_size_full_enum
-        self.n_dealer_sim_runs = n_dealer_sim_runs
-        self.player_card_initial_samples = player_card_initial_samples
-
-
-    def create_child(self, child_bj_round, child_shoe, event, prob=0):
-        """Create a child node. Must be implemented by subclasses."""
-        child = MixedNode(
-            child_bj_round, child_shoe, parent=self, copy_data=False,
-            max_hand_size_full_enum=self.max_hand_size_full_enum,
-            player_card_initial_samples=self.player_card_initial_samples,
-            n_dealer_sim_runs=self.n_dealer_sim_runs
-        )
-        self.children.append(child)
-        self.children_prob.append(prob)
-        self.children_events.append(event)
-        return child
-
-    def _build_children_player_card(self):
-        raise NotImplementedError()
-
-
-    def _build_children_dealer_card(self):
-        raise NotImplementedError()
-
-
-    def build_children(self):
-        """Build child nodes based on current game stage."""
-        stage = self.bj_round.get_stage()
-        assert PlayerAction.SPLIT in self.bj_round.get_available_actions()
-
-        card_probabilities = self.shoe.get_rank_value_probabilities()
-        for card, prob in card_probabilities.items():
-            if prob == 0:
-                continue
-            
-            # card_bj_round is supposed to represent one of the split hands 
-            # 2 split hands are approximated by it
-            child_shoe = self.shoe.copy()
-            child_shoe.burn_card(card)
-
-            child_bj_round = BJRound(self.bj_round.rules)
-            child_bj_round.start_round(self.bj_round.bet_unit)
-            
-            child_bj_round.take_card(self.bj_round.player_hands[0][0])
-            child_bj_round.take_card(card)
-            
-            child_bj_round.take_card(self.bj_round.dealer_hand[0])
-
-            if child_bj_round.insurance_bet > 0:
-                child_bj_round.take_action(PlayerAction.TAKE_INSURANCE)
-
-            if child_bj_round.get_stage() == BJStage.DEALER_CHECK_BJ:
-                # split action would only be possible if dealer does not have blackjack
-                child_bj_round.take_action(DealerAction.CONFIRM_NO_BLACKJACK)
-
-            self.create_child(
-                child_bj_round, child_shoe, card, prob
-            )
-
-
-# class HitStandNode()
+    

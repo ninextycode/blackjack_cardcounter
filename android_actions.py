@@ -1,4 +1,8 @@
+import logging
 import uiautomator2 as u2
+from blackjack.actions import PlayerAction
+
+logger = logging.getLogger(__name__)
 
 
 class AndroidActor:
@@ -13,7 +17,7 @@ class AndroidActor:
 
 
 class AndroidBJTabletActor:
-    def __init__(self, device_ip=None, min_bet=1000, max_bet=None):
+    def __init__(self, bets, max_bet=None, device_ip=None):
         self.device = u2.connect(device_ip)
         
         self._btn_locs = [
@@ -55,18 +59,32 @@ class AndroidBJTabletActor:
             [1395, 813],
             [1480, 800],
         ]
-        self._min_bet = min_bet
-        self._max_bet = 5 * min_bet if max_bet is None else max_bet
+        self._min_bet = min(bets)
+        self._max_bet = max(bets) if max_bet is None else max_bet
         self._max_bet_units = self._max_bet / self._min_bet
-        self._bet_value_units = [
-            1, 1.5, 2, 3, 5
-        ]
-        self._bet_values = [
-            self._min_bet * v for v in self._bet_value_units
-        ]
+        self._bet_value_units = [b / self._min_bet for b in bets]
+        self._bet_values = list(bets)
         self._click_sleep_time = 0.2
 
+    def take_action(self, action):
+        if action == PlayerAction.DOUBLE:
+            self.double()
+        elif action == PlayerAction.SPLIT:
+            self.split()
+        elif action == PlayerAction.HIT:
+            self.hit()
+        elif action == PlayerAction.STAND:
+            self.stand()
+        elif action == PlayerAction.REFUSE_INSURANCE:
+            self.refuse_insurance()
+        elif action == PlayerAction.TAKE_INSURANCE:
+            self.take_insurance()
+        else:
+            raise ValueError(f"Unsupported action {action}")
+
     def click(self, x, y):
+        x, y = float(x), float(y)
+        logger.info(f"click at {x}, {y}")
         self.device.click(x, y)
         self.sleep(self._click_sleep_time)
 
@@ -74,18 +92,23 @@ class AndroidBJTabletActor:
         self.device.sleep(sleep_time)
 
     def deal(self):
+        logger.info("deal")
         self.click(*self._deal_loc)
 
     def split(self):
+        logger.info("split")
         self.click(*self._split_loc)
     
     def stand(self):
+        logger.info("stand")
         self.click(*self._stand_loc)
 
     def hit(self):
+        logger.info("hit")
         self.click(*self._hit_loc)
 
     def double(self):
+        logger.info("double")
         self.click(*self._double_loc)
 
     def place_min_bet(self):
@@ -110,47 +133,44 @@ class AndroidBJTabletActor:
 
     def leave_table(self):
         self.click(*self._leave_table_loc)
-        self.sleep(1.5)
-        # immediate clicks
-        self.device.click(*self._leave_table_yet_loc)
-        self.device.click(*self._leave_table_exit_loc)
+        # self.sleep(1.5)
+        # # immediate clicks
+        # self.device.click(*self._leave_table_yet_loc)
+        # self.device.click(*self._leave_table_exit_loc)
+
+    
 
     def create_private_table(self):
         self.click(*self._create_private_table_loc)
 
     def place_bet_units(self, bet_units):
-        n_half_units = bet_units * 2
-        if int(n_half_units) != n_half_units:
+        if int(bet_units) != bet_units:
             raise ValueError(f"Bet amount must be multiple of 0.5 units")
         if not (1 <= bet_units <= self._max_bet_units):
             raise ValueError(f"Bet amount must be between {self._min_bet} and {self._max_bet}")
 
         self.clear_bet()
-
-        if n_half_units % 2 != 0:
-            self.click(*self._bet_locs[1])
-            self.click(*self._add_bet_loc)
-            n_half_units -= 1
         
-        while n_half_units > 0:
+        while bet_units > 0:
             success = False
-            for i in [4, 3, 2, 0]:
-                bet_val_half_units = 2 * self._bet_value_units[i]
-                if bet_val_half_units > n_half_units:
+            for i in reversed(range(len(self._bet_value_units))):
+                bet_val_units = self._bet_value_units[i]
+                if bet_val_units > bet_units:
                     continue
                 bet_loc = self._bet_locs[i]
                 self.click(*bet_loc)
                 self.click(*self._add_bet_loc)
-                n_half_units -= bet_val_half_units
+                bet_units -= bet_val_units
                 success = True
                 break
             if not success:
                 raise RuntimeError("Failed to place bet")
     
+
     def rebuy(self):
         self.click(*self._player_loc)
         self.click(*self._rebuy_wheel_loc)
-        self.sleep(0.5)
+        self.sleep(1)
         self.click(*self._rebuy_play_btn_loc)
         self.sleep(0.5)
         self.click(*self._rebuy_ok_btn_loc)

@@ -42,11 +42,16 @@ class DeviationStrategy:
         fill_tc_limits(self.insurance_table)
 
 
-    def split_action(self, card_value, dealer_value, true_count):
+    def split_action(self, hand_value, dealer_value, true_count):
         """
         returns an action that should override split/no-split decision
         returns none if should stick to basic strategy
         """
+        if hand_value == 12:
+            card_value = 11
+        else:
+            card_value = hand_value // 2
+
         true_count_int = int(true_count)
         idx = (
             (self.pair_alt_table["card_value"] == card_value)
@@ -70,7 +75,7 @@ class DeviationStrategy:
             actions.append(PlayerAction.TAKE_INSURANCE)
         
         if is_pair:
-            split_actions = self.split_action(player_value // 2, dealer_value, true_count)
+            split_actions = self.split_action(player_value, dealer_value, true_count)
             if split_actions is not None:
                 actions.extend(split_actions)
                 
@@ -103,7 +108,12 @@ class BasicStrategy:
         self.split_table = pd.read_csv(split_path)
 
 
-    def should_split(self, card_value, dealer_value):
+    def should_split(self, hand_value, dealer_value):
+        if hand_value == 12:
+            card_value = 11
+        else:
+            card_value = hand_value // 2
+
         val_series = self.split_table.loc[
             self.split_table["card_value"] == card_value, str(dealer_value)
         ]
@@ -114,7 +124,7 @@ class BasicStrategy:
     def get_actions(self, player_value, is_soft, is_pair, dealer_value, true_count):
         actions = [PlayerAction.REFUSE_INSURANCE]
         if is_pair:
-            if self.should_split(player_value // 2, dealer_value):
+            if self.should_split(player_value, dealer_value):
                 actions.append(PlayerAction.SPLIT)
         
         if is_soft:
