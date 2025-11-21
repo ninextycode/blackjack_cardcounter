@@ -40,7 +40,6 @@ class Player:
         self.actor = actor
         self.scr_taker = scr_taker  # "/media/maxim/T7/frames/")
         self.round = BJRound(Player.rules)
-        self.active_hand_position = get_cards_tablet.HandPosition.NONE
         self.card_counter = card_counter
         self.strategy = strategy
 
@@ -50,7 +49,6 @@ class Player:
 
     def reset_round(self):
         self.round = BJRound(Player.rules)
-        self.active_hand_position = get_cards_tablet.HandPosition.NONE
 
     def play_round(self, bet=1000):
         self.reset_round()
@@ -167,39 +165,52 @@ class Player:
         self.actor.take_action(action)
         game_img = self.scr_taker.get_screen()
         # failed to register action - try again
-        if get_cards_tablet.can_hit_stand(game_img):
-            logger.warning(f"second attempt {action}")
-            self.actor.take_action(action)    
+        # should choose a different approach with stand on split pair
+        # when standing on the first pair of hand
+        # I need to check that  
+        # round should have been updated before button is pressed
+        stand_on_first_hand = (action == PlayerAction.STAND) and (self.round.active_hand_idx == 1)
+        if not stand_on_first_hand:
+            if get_cards_tablet.can_hit_stand(game_img):
+                logger.warning(f"second attempt {action}")
+                self.actor.take_action(action)
+        elif stand_on_first_hand:
+            active_hand_position = get_cards_tablet.get_active_hand(game_img)
+            # should switch to left
+            if active_hand_position == get_cards_tablet.HandPosition.RIGHT: 
+                logger.warning(f"second attempt {action} on first hand")
+                self.actor.take_action(action)
 
     def double(self):
-        self.press_android_button(PlayerAction.DOUBLE)
         self.round.take_action(PlayerAction.DOUBLE)
+        self.press_android_button(PlayerAction.DOUBLE)
         self.wait_for_player_card()
 
     def split(self):
-        self.press_android_button(PlayerAction.SPLIT)
         self.round.take_action(PlayerAction.SPLIT)
+        self.press_android_button(PlayerAction.SPLIT)
         self.wait_for_player_card()
         self.wait_for_player_card()
 
     def hit(self):
-        self.press_android_button(PlayerAction.HIT)
         self.round.take_action(PlayerAction.HIT)
+        self.press_android_button(PlayerAction.HIT)
         self.wait_for_player_card()
 
     def stand(self):
-        self.press_android_button(PlayerAction.STAND)
         self.round.take_action(PlayerAction.STAND)
+        self.press_android_button(PlayerAction.STAND)
 
     def refuse_insurance(self):
         self.wait_for_insurance_option()
-        self.actor.refuse_insurance()
         self.round.take_action(PlayerAction.REFUSE_INSURANCE)
+        self.actor.refuse_insurance()
 
     def take_insurance(self):
         self.wait_for_insurance_option()
-        self.actor.take_insurance()
         self.round.take_action(PlayerAction.TAKE_INSURANCE)
+        self.actor.take_insurance()
+  
 
     def btn_action_delay(self):
         # active_hand = self.round.get_active_player_hand()
@@ -282,11 +293,11 @@ class Player:
 
     def wait_for_action_request(self):
         logger.info("wait_for_action_request")
-        while True:
-            if self.active_hand_position != get_cards_tablet.HandPosition.NONE:
-                break
+        game_img = self.scr_taker.get_screen()
+        active_hand_position = get_cards_tablet.get_active_hand(game_img)
+        while active_hand_position == get_cards_tablet.HandPosition.NONE:
             game_img = self.scr_taker.get_screen()
-            self.active_hand_position = get_cards_tablet.get_active_hand(game_img)
+            active_hand_position = get_cards_tablet.get_active_hand(game_img)
 
 
     def wait_for_dealer_bj_or_action_request(self):
@@ -305,18 +316,19 @@ class Player:
         dealer_cards_confirmed = False
         action_request = False
         dealer_blackjack = False
+        active_hand_position = get_cards_tablet.get_active_hand(game_img)
         while True:
             # dealer shows blackjack
             if dealer_cards_confirmed and len(dealer_cards_new) >= 2:
                 dealer_blackjack = True
                 break
             # dealer asks for action
-            if self.active_hand_position != get_cards_tablet.HandPosition.NONE:
+            if active_hand_position != get_cards_tablet.HandPosition.NONE:
                 action_request = True
                 break
                 
             game_img = self.scr_taker.get_screen()
-            self.active_hand_position = get_cards_tablet.get_active_hand(game_img)
+            active_hand_position = get_cards_tablet.get_active_hand(game_img)
             dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
             
             if dealer_cards_new == dealer_cards_last:
@@ -382,12 +394,12 @@ class Player:
         round_hand_idx = self.round.active_hand_idx
         n_hands = len(self.round.player_hands)
         if n_hands == 1 and round_hand_idx == 0:
-            self.active_hand_position = get_cards_tablet.HandPosition.MIDDLE
+            active_hand_position = get_cards_tablet.HandPosition.MIDDLE
         elif n_hands == 2 and round_hand_idx == 0:
             # hands go in the order of right -> left
-            self.active_hand_position = get_cards_tablet.HandPosition.RIGHT
+            active_hand_position = get_cards_tablet.HandPosition.RIGHT
         elif n_hands == 2 and round_hand_idx == 1:
-            self.active_hand_position = get_cards_tablet.HandPosition.LEFT
+            active_hand_position = get_cards_tablet.HandPosition.LEFT
         else:
             raise ValueError(f"Unsupported hands state n={n_hands}, idx={round_hand_idx}")
         
@@ -410,7 +422,7 @@ class Player:
         visible_old_tail = tuple(hand[visible_tail_idx])
         game_img = self.scr_taker.get_screen()
         hand_cards_new = card_list_str_to_rank_values(
-            get_cards_tablet.get_player_cards(game_img, self.active_hand_position)
+            get_cards_tablet.get_player_cards(game_img, active_hand_position)
         )
         hand_cards_last = hand_cards_new
         
@@ -426,7 +438,7 @@ class Player:
 
             game_img = self.scr_taker.get_screen()
             hand_cards_new = card_list_str_to_rank_values(
-                get_cards_tablet.get_player_cards(game_img, self.active_hand_position)
+                get_cards_tablet.get_player_cards(game_img, active_hand_position)
             )
             
             if hand_cards_new == hand_cards_last:

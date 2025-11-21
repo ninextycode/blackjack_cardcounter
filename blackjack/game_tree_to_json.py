@@ -1,5 +1,5 @@
 import json
-from blackjack.game_node import SimulationResultNode
+from blackjack.abstract_node import ValueNode
 from blackjack.blackjack_round import BJStage
 
 
@@ -31,7 +31,7 @@ def game_tree_to_json(file_obj, root_node):
 
     for i, n in enumerate(nodes):
         node_type = None
-        if isinstance(n, SimulationResultNode):
+        if isinstance(n, ValueNode):
             node_type = "Terminal"
             representation = f"SimulationResult: value = {n.value}"
         else:

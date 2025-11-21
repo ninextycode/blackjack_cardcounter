@@ -1,11 +1,12 @@
 from collections import defaultdict, deque
 from collections import Counter
-from blackjack.game_node import SimulationResultNode
+from typing import Generator
+from blackjack.abstract_node import AbstractBJTreeNode, ValueNode
 from blackjack.blackjack_round import BJStage
 
 
 
-def iterate_nodes_by_levels(root_node):
+def iterate_nodes_by_levels(root_node) -> Generator[tuple[int, AbstractBJTreeNode], None, None]:
     queue = deque()
     queue.append((0, root_node))
     while queue:
@@ -38,7 +39,7 @@ def log_tree_structure(root_node):
 def count_stages(node_list):
     stage_counter = Counter()
     for node in node_list:
-        if isinstance(node, SimulationResultNode):
+        if isinstance(node, ValueNode):
             stage = BJStage.ROUND_OVER
         else:
             stage = node.bj_round.get_stage()

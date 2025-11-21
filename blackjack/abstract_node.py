@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod
+from abc import ABC
 from blackjack.blackjack_round import BJStage, BJRound
 from blackjack.actions import DealerAction
 import numpy as np
@@ -48,15 +48,20 @@ class AbstractBJTreeNode(ABC):
         return self.has_built_children and all([child.tree_completed() for child in self.children])
 
 
-    @abstractmethod
     def create_child(self, child_bj_round, child_shoe, event, prob=0):
         """Create a child node. Must be implemented by subclasses."""
-        pass
+        raise NotImplementedError()
 
+    def add_child(self, child, event, prob=0):
+        self.children.append(child)
+        self.children_prob.append(prob)
+        self.children_events.append(event)
+        return child
 
     def build_tree(self):
         """Build complete tree without depth limit."""
         self.build_tree_layer(depth=None)
+
 
     def recompute_tree_value(self):
         """
@@ -140,6 +145,15 @@ class AbstractBJTreeNode(ABC):
         self.value = self.bj_round.get_player_value()
 
 
+    def rebuild_children(self):
+        """Rebuild children nodes from scratch."""
+        self.children = []
+        self.children_prob = []
+        self.children_events = []
+        self.has_built_children = False
+        self.has_completed_tree = False
+        self.build_children()
+
     def build_children(self):
         """Build child nodes based on current game stage."""
         stage = self.bj_round.get_stage()
@@ -166,16 +180,14 @@ class AbstractBJTreeNode(ABC):
         self.has_built_children = True
 
 
-    @abstractmethod
     def _build_children_player_card(self):
         """Build children for card dealing stages. Must be implemented by subclasses."""
-        pass
+        raise NotImplementedError()
 
 
-    @abstractmethod
     def _build_children_dealer_card(self):
         """Build children for card dealing stages. Must be implemented by subclasses."""
-        pass
+        raise NotImplementedError()
 
 
     def _build_children_dealer_check_bj(self):
@@ -240,18 +252,24 @@ class AbstractBJTreeNode(ABC):
             
             # Collect results
             values.append(bj_round_copy.get_player_value())
-        self.children = [SimulationResultNode(np.mean(values), self)]
+        self.children = [ValueNode(np.mean(values), self)]
         self.children_prob = [1]
 
 
-  
 
-class SimulationResultNode:
+class ValueNode(AbstractBJTreeNode):
     """Node to hold simulation results without building children."""
     def __init__(self, value, parent=None):
+        super().__init__(
+            bj_round=None,
+            shoe=None,
+            parent=parent, 
+            copy_data=False
+        )
         self.value = value
-        self.parent = parent
         self.children = []
+        self.is_tree_completed = True   
+        self.has_built_children = True
     
     def build_tree_layer(self, depth):
         pass
@@ -264,3 +282,63 @@ class SimulationResultNode:
 
     def get_value(self):
         return self.value
+    
+    def get_ceil_value(self):
+        return self.value
+
+    def get_floor_value(self):
+        return self.value
+
+
+class FloorCeilValueNode(AbstractBJTreeNode):
+    """Node to hold ceil and floor values without building children."""
+    def __init__(self, floor_value, ceil_value, parent=None):
+        super().__init__(
+            bj_round=None,
+            shoe=None,
+            parent=parent, 
+            copy_data=False
+        )
+        self.ceil_value = ceil_value
+        self.floor_value = floor_value
+        self.children = []
+        self.is_tree_completed = True   
+        self.has_built_children = True
+    
+    def build_tree_layer(self, depth):
+        pass
+
+    def tree_completed(self):
+        return True
+    
+    def children_trees_completed(self):
+        return True
+
+    def get_value(self):
+        raise NotImplementedError()
+    
+    def get_ceil_value(self):
+        return self.ceil_value
+
+    def get_floor_value(self):
+        return self.floor_value
+
+
+def run_dealer_cards_simulation(bj_round, shoe, n_dealer_sim_runs):
+    """Run Monte Carlo simulations for dealer play."""
+    values = []
+    for i in range(n_dealer_sim_runs):
+        bj_round_copy = bj_round.copy()
+        shoe_copy = shoe.copy()
+
+        # Simulate dealer cards until round over
+        while not bj_round_copy.get_stage() == BJStage.ROUND_OVER:
+            possible_values = bj_round_copy.get_possible_next_card_ranks()
+            card = shoe_copy.sample_and_burn_rank(possible_values)
+            bj_round_copy.take_card(card)
+        
+        # Collect results
+        values.append(bj_round_copy.get_player_value())
+    return np.mean(values)
+          
+

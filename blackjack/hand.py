@@ -116,19 +116,20 @@ class ValueOnlyHand:
     Provides a similar API to Hand for use in logic that only needs numeric totals.
     Note: is_same_rank_pair cannot be determined from integer values alone and returns False.
     """
-    def __init__(self, values: list[int] = None):
+    def __init__(self, values: list[int] = None, natural_blackjack_possible=True):
         if values is None:
             values = []
         self.cards: list[int] = list(values)
         self._best_value = 0
         self._hard_value = 0
+        self._natural_blackjack_possible = natural_blackjack_possible
         self._reset_value()
 
     def size(self) -> int:
         return len(self.cards)
 
     def copy(self):
-        return ValueOnlyHand(self.cards)
+        return ValueOnlyHand(self.cards, self._natural_blackjack_possible)
 
     def add_card(self, value: int):
         self.cards.append(value)
@@ -145,11 +146,18 @@ class ValueOnlyHand:
         return v1 == v2
 
     def split(self):
-        return ValueOnlyHand([self.cards[0]]), ValueOnlyHand([self.cards[1]])
+        # natural blackjack impossible after split
+        return \
+            ValueOnlyHand([self.cards[0]], False),\
+            ValueOnlyHand([self.cards[1]], False)
 
     def is_natural_blackjack(self) -> bool:
-        return len(self.cards) == 2 and self.get_best_value() == 21
-
+        return (
+            self._natural_blackjack_possible 
+            and len(self.cards) == 2 
+            and self.get_best_value() == 21
+        )
+    
     def is_soft(self) -> bool:
         return self.get_best_value() != self.get_hard_value()
 

@@ -28,7 +28,9 @@ class BJRound:
         # self.dealer_hand = Hand()
         # self.player_hands = [Hand()]
         self.dealer_hand = ValueOnlyHand()
-        self.player_hands = [ValueOnlyHand()]
+        self.player_hands = [
+            ValueOnlyHand(natural_blackjack_possible=not rules.ignore_player_natural_blackjack)
+        ]
         if not rules.allow_split_different_tens:
             raise NotImplementedError("Cannot differentiate different tens in ValueOnlyHand")
         
@@ -252,7 +254,6 @@ class BJRound:
             # 2. Early surrender (if applicable)
             # 3. Dealer check for blackjack
             # 4. Player action if player doesn't have 21, else dealer takes the 2nd card
-            
             if self.rules.allow_insurance_vs_ace and card == 11:
                 self.stage = BJStage.PLAYER_OFFERED_INSURANCE
             elif self._can_early_surrender():
@@ -264,9 +265,6 @@ class BJRound:
         
         elif (
             len(self.player_hands) == 1 and self.player_hands[0].is_natural_blackjack()
-        ) or (
-            not self.rules.no_natural_bj_on_split
-            and all([hand.is_natural_blackjack() for hand in self.player_hands])
         ):
             # Player's blackjack check
             # Dealer already has 2 cards
@@ -599,12 +597,9 @@ class BJRound:
                 else:
                     got_per_hand.append(0)
                 continue
-
-            # Dealer does not have blackjack
-            if (
-                (len(self.player_hands) == 1 or not self.rules.no_natural_bj_on_split) \
-                and hand.is_natural_blackjack()
-            ):
+            
+            # Dealer does not have blackjack - check player blackjack
+            if len(self.player_hands) == 1 and hand.is_natural_blackjack():
                 got_per_hand.append(bet * (1 + self.rules.natural_blackjack_payout))
                 continue
             
@@ -684,10 +679,7 @@ class BJRound:
 
                 value = hand.get_best_value()
                 if value is not None:
-                    if (
-                        not (self.rules.no_natural_bj_on_split and self.n_splits > 0) 
-                        and hand.is_natural_blackjack()
-                    ):
+                    if hand.is_natural_blackjack():
                         parts.append(" bj")
                     elif not self.is_hand_in_progress[i]:
                         parts.append(f"-stand")
