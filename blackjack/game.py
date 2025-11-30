@@ -1,3 +1,5 @@
+raise NotImplementedError
+
 from blackjack.cards import Deck, Hand, Rank
 from abc import ABC, abstractmethod
 import logging

@@ -16,6 +16,11 @@ RandomSampler::RandomSampler(uint64_t seed):
     uniform_dist(0.0, 1.0) {
 }
 
+RandomSampler::RandomSampler(const RandomSampler& other):
+    gen(other.gen),
+    uniform_dist(other.uniform_dist) {
+}
+
 void RandomSampler::resetSeed(uint64_t seed) {
     lock_guard<mutex> lock(random_sampler_mutex);
     gen.seed(seed);

@@ -6,8 +6,7 @@ SimulationResultNode::SimulationResultNode(double value, AbstractBJTreeNode *par
     : AbstractBJTreeNode(
         (parent != nullptr ? parent->bj_round_ : BJRound(nullptr)),
         (parent != nullptr ? parent->shoe_ : ProbabilisticRankShoe()),
-        parent,
-        false
+        parent
     )
 {
     value_ = value;

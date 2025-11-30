@@ -3,13 +3,15 @@ from blackjack.blackjack_round import BJStage, BJRound
 from blackjack.actions import DealerAction
 import numpy as np
 
+from blackjack_py import ProbabilisticRankShoe
+
 
 class AbstractBJTreeNode(ABC):
     """Abstract base class for blackjack game tree nodes."""
     
     def __init__(self, bj_round, shoe, parent=None, copy_data=True):
         self.bj_round : BJRound = bj_round.copy() if copy_data else bj_round
-        self.shoe = shoe.copy() if copy_data else shoe
+        self.shoe: ProbabilisticRankShoe = shoe.copy() if copy_data else shoe
         self.parent = parent
         self.children = []
         self.children_prob = []
@@ -101,6 +103,22 @@ class AbstractBJTreeNode(ABC):
             self._compute_node_value()
             self.has_completed_tree = True  
 
+
+    def is_chance_node(self):
+        stage = self.bj_round.get_stage()
+        return stage in (
+            BJStage.DEALER_CARD,
+            BJStage.PLAYER_CARD,
+            BJStage.DEALER_CHECK_BJ
+        )
+    
+    def is_player_decision_node(self):
+        stage = self.bj_round.get_stage()
+        return stage in (
+            BJStage.PLAYER_ACTION,
+            BJStage.PLAYER_OFFERED_EARLY_SURRENDER,
+            BJStage.PLAYER_OFFERED_INSURANCE
+        )
 
     def _compute_node_value(self):
         """Complete the node based on its stage type."""
@@ -322,23 +340,3 @@ class FloorCeilValueNode(AbstractBJTreeNode):
 
     def get_floor_value(self):
         return self.floor_value
-
-
-def run_dealer_cards_simulation(bj_round, shoe, n_dealer_sim_runs):
-    """Run Monte Carlo simulations for dealer play."""
-    values = []
-    for i in range(n_dealer_sim_runs):
-        bj_round_copy = bj_round.copy()
-        shoe_copy = shoe.copy()
-
-        # Simulate dealer cards until round over
-        while not bj_round_copy.get_stage() == BJStage.ROUND_OVER:
-            possible_values = bj_round_copy.get_possible_next_card_ranks()
-            card = shoe_copy.sample_and_burn_rank(possible_values)
-            bj_round_copy.take_card(card)
-        
-        # Collect results
-        values.append(bj_round_copy.get_player_value())
-    return np.mean(values)
-          
-

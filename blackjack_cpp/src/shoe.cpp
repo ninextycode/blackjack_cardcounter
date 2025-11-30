@@ -9,6 +9,16 @@ namespace blackjack {
 
 ProbabilisticRankShoe::ProbabilisticRankShoe(
     int n_decks, 
+    uint64_t seed
+):
+    ProbabilisticRankShoe::ProbabilisticRankShoe(
+        n_decks, make_shared<RandomSampler>(seed)
+    )
+{ }
+
+
+ProbabilisticRankShoe::ProbabilisticRankShoe(
+    int n_decks, 
     shared_ptr<RandomSampler> sampler
 ):
     n_decks_(n_decks),
@@ -30,13 +40,27 @@ ProbabilisticRankShoe::ProbabilisticRankShoe(
 }
 
 
-ProbabilisticRankShoe ProbabilisticRankShoe::copy() const {
-    ProbabilisticRankShoe s(n_decks_);
-    s.n_total_ = n_total_;
-    s.value_counts_ = value_counts_;
-    s.value_probs_ = value_probs_;
-    s.given_dealer_card_is_not_value_ = given_dealer_card_is_not_value_;
-    return s;
+ProbabilisticRankShoe::ProbabilisticRankShoe(const ProbabilisticRankShoe& other)
+    : n_decks_(other.n_decks_)
+{
+    if (other.sampler_ == RandomSampler::getGlobalSampler()) {
+        sampler_ = other.sampler_;
+    } else {
+        sampler_ = make_shared<RandomSampler>(*other.sampler_);
+    }
+    n_total_ = other.n_total_;
+    value_counts_ = other.value_counts_;
+    value_probs_ = other.value_probs_;
+    given_dealer_card_is_not_value_ = other.given_dealer_card_is_not_value_;
+}
+
+
+void ProbabilisticRankShoe::changeRandomSampler(int seed) {
+    if (seed == -1) {
+        sampler_ = RandomSampler::getGlobalSampler();
+    } else {
+        sampler_ = make_shared<RandomSampler>(uint64_t(seed));
+    }
 }
 
 
@@ -47,6 +71,16 @@ int ProbabilisticRankShoe::sampleAndBurnRank(
     burnRankValue(rv);
     return rv;
 }
+
+
+void ProbabilisticRankShoe::addRankValue(
+    int rank_value
+) {
+    value_counts_.at(rank_value) += 1;
+    n_total_ += 1;
+    recomputeRawProbabilities();
+}
+
 
 int ProbabilisticRankShoe::sampleRank(
     const optional<vector<int>>& given_rank_values_set
@@ -159,6 +193,16 @@ void ProbabilisticRankShoe::lockDealerCardNotAce() { given_dealer_card_is_not_va
 void ProbabilisticRankShoe::lockDealerCardNotTen() { given_dealer_card_is_not_value_ = 10; }
 void ProbabilisticRankShoe::unlockDealerCard() { given_dealer_card_is_not_value_ = nullopt; }
 
+int ProbabilisticRankShoe::dealerCardLockedValue() {
+    if (!given_dealer_card_is_not_value_.has_value()) {
+        return -1;
+    }
+    return *given_dealer_card_is_not_value_;
+}
+
+bool ProbabilisticRankShoe::isDealerCardLocked() {
+    return given_dealer_card_is_not_value_.has_value();
+}
 
 string ProbabilisticRankShoe::toString() const {
     ostringstream ss;

@@ -24,6 +24,8 @@ enum class BJStage {
 class BJRound {
 public:
     BJRound(const BJRules* rules);
+    BJRound(const BJRound& round);
+    BJRound(const BJRound&& round);
     BJRound copy() const;
     void startRound(int bet_unit);
     BJStage getStage() const;

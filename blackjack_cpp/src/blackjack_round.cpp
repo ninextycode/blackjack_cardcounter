@@ -31,6 +31,11 @@ BJRound::BJRound(const BJRules* rules):
 
 }
 
+
+BJRound::BJRound(const BJRound& round) = default;
+
+BJRound::BJRound(BJRound&& round) noexcept = default;
+
 BJRound BJRound::copy() const {
     BJRound n(rules_);
     n.stage_ = stage_;
@@ -515,6 +520,50 @@ std::string BJRound::toString() const {
                 
                 int hard_value = hand.get_hard_value();
                 if (!(rules_->no_natural_bj_on_split && n_splits > 0) && hand.is_natural_blackjack()) {
+                    parts += "(bj)";
+                } else if (hard_value != value.value()) {
+                    parts += "(" + std::to_string(value.value()) + "/" + std::to_string(hard_value) + stand_str + ")";
+                } else {
+                    parts += "(" + std::to_string(value.value()) + stand_str + ")";
+                }
+            } else {
+                parts += "(bust)";
+            }
+            
+            int bet = hand_bets[i];
+            parts += "[$" + std::to_string(bet) + "]";
+            
+            player_lines.push_back(parts);
+        }
+        
+        if (!player_lines.empty()) {
+            result += "Player ";
+            for (size_t i = 0; i < player_lines.size(); ++i) {
+                if (i > 0) result += " | ";
+                result += player_lines[i];
+            }
+            result += "\n";
+        }
+    }
+    
+    // Final totals if round is over
+    if (stage_ == BJStage::ROUND_OVER) {
+        result += "Player total bet: " + std::to_string(total_player_bet) + "\n";
+        result += "Player total payout: " + std::to_string(total_player_got) + "\n";
+        int net = player_value;
+        std::string net_sign = (net > 0) ? "+" : "";
+        result += "Player net: " + net_sign + std::to_string(net) + "\n";
+    }
+    
+    // Remove trailing newline
+    if (!result.empty() && result.back() == '\n') {
+        result.pop_back();
+    }
+    
+    return result;
+}
+
+} // namespace blackjack
                     parts += "(bj)";
                 } else if (hard_value != value.value()) {
                     parts += "(" + std::to_string(value.value()) + "/" + std::to_string(hard_value) + stand_str + ")";

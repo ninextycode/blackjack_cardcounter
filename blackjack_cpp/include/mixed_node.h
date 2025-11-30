@@ -14,8 +14,7 @@ public:
         int max_hand_size_full_enum,
         int player_card_initial_samples = 1,
         size_t n_dealer_sim_runs = 100,
-        AbstractBJTreeNode *parent = nullptr,
-        bool copy_data = true
+        AbstractBJTreeNode *parent = nullptr
     );
 
     // Override createChild

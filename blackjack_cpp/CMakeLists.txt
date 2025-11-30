@@ -21,10 +21,10 @@ add_executable(blackjack_exec ${CPP_EXEC_SOURCES})
 target_link_libraries(blackjack_exec PRIVATE blackjack)
 
 # Build python module with pybind11
-pybind11_add_module(random_sampler ${CMAKE_CURRENT_SOURCE_DIR}/src/random_sampler_pybind/pybind.cpp)
-target_link_libraries(random_sampler PRIVATE blackjack)
+pybind11_add_module(blackjack_py ${CMAKE_CURRENT_SOURCE_DIR}/src/pybind/pybind.cpp)
+target_link_libraries(blackjack_py PRIVATE blackjack)
 
-set_target_properties(random_sampler PROPERTIES
+set_target_properties(blackjack_py PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY ${PYTHON_LIBRARY_OUTPUT_DIRECTORY}
 )
 

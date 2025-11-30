@@ -46,16 +46,26 @@ public:
         int n_decks = 8,
         shared_ptr<RandomSampler> sampler = nullptr
     );
-    ProbabilisticRankShoe copy() const;
+    ProbabilisticRankShoe(
+        int n_decks, uint64_t seed
+    );
+    ProbabilisticRankShoe(const ProbabilisticRankShoe&);
+
+    void changeRandomSampler(int seed=-1);
+
     // Returns probabilities for values 2..11 as RankProbability
     RankProbability get_rank_value_probabilities(
         const optional<vector<int>>& given_rank_values_set = nullopt
     ) const;
     void burnCard(const Card& c);
     void burnRankValue(int rank_value);
+    void addRankValue(int rank_value);
     void lockDealerCardNotAce();
     void lockDealerCardNotTen();
     void unlockDealerCard();
+    int dealerCardLockedValue();
+    bool isDealerCardLocked();
+    
     int sampleAndBurnRank(
         const optional<vector<int>>& given_rank_values_set = nullopt
     );

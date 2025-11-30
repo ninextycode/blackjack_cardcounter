@@ -24,8 +24,7 @@ public:
     AbstractBJTreeNode(
         const BJRound &bj_round,
         const ProbabilisticRankShoe &shoe,
-        AbstractBJTreeNode *parent = nullptr,
-        bool copy_data = true
+        AbstractBJTreeNode *parent = nullptr
     );
 
     virtual ~AbstractBJTreeNode() = default;

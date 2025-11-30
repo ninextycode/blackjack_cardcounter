@@ -42,10 +42,9 @@ MixedNode::MixedNode(
     int max_hand_size_full_enum,
     int player_card_initial_samples,
     size_t n_dealer_sim_runs,
-    AbstractBJTreeNode *parent,
-    bool copy_data
+    AbstractBJTreeNode *parent
 ) :
-    AbstractBJTreeNode(bj_round, shoe, parent, copy_data),
+    AbstractBJTreeNode(bj_round, shoe, parent),
     hand_size_full_enum_limit_(max_hand_size_full_enum),
     n_dealer_sim_runs_(n_dealer_sim_runs),
     player_card_initial_samples_(player_card_initial_samples),
@@ -83,8 +82,7 @@ void MixedNode::createChild(
         hand_size_full_enum_limit_,
         player_card_initial_samples_,
         n_dealer_sim_runs_,
-        this,
-        false
+        this
     );
     children_.push_back(child);
     children_prob_.push_back(prob);
@@ -131,7 +129,7 @@ void MixedNode::buildFullChildrenPlayerCard() {
         }
 
         auto bj_round_copy = bj_round_.copy();
-        auto shoe_copy = shoe_.copy();
+        ProbabilisticRankShoe shoe_copy(shoe_);
         bj_round_copy.takeCard(rv);
         shoe_copy.burnRankValue(rv);
 
@@ -155,7 +153,7 @@ void MixedNode::buildChildDealerBlackjack() {
     }
     
     int rank_value = possible_ranks_opt.value()[0];
-    auto shoe_copy = shoe_.copy();
+    ProbabilisticRankShoe shoe_copy(shoe_);
     shoe_copy.burnRankValue(rank_value);
     
     auto bj_round_copy = bj_round_.copy();
@@ -170,7 +168,7 @@ void MixedNode::runDealerCardsSimulations() {
 
     for (size_t i = 0; i < n_dealer_sim_runs_; ++i) {
         auto bj_round_copy = bj_round_.copy();
-        auto shoe_copy = shoe_.copy();
+        ProbabilisticRankShoe shoe_copy(shoe_);
 
         // Simulate dealer cards until round over
         while (bj_round_copy.getStage() != BJStage::ROUND_OVER) {
@@ -270,7 +268,7 @@ bool MixedNode::addPlayerCardSampleImpl() {
     }
 
     // Sample a card
-    auto shoe_sample = shoe_.copy();
+    auto shoe_sample = shoe_;
     int card = shoe_sample.sampleRank(new_values);
 
     // Calculate new probabilities while conditioning on existing samples
@@ -390,7 +388,7 @@ bool MixedNode::convertFromSampleToFull() {
     auto new_probabilities = shoe_.get_rank_value_probabilities(possible_values);
 
     for (int new_rank_value : new_values) {
-        auto shoe_sample = shoe_.copy();
+        ProbabilisticRankShoe shoe_sample(shoe_);
         shoe_sample.burnRankValue(new_rank_value);
 
         auto bj_round_copy = bj_round_.copy();

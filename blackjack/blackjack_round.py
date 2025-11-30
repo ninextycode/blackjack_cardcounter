@@ -642,7 +642,7 @@ class BJRound:
         if self.dealer_hand.size() == 0:
             dealer_parts.append("(no cards)")
         elif self.dealer_hand.size() == 1:
-            dealer_parts.append(f"{self.dealer_hand.cards[0]},X")
+            dealer_parts.append(str(self.dealer_hand))
             
             if self.insurance_bet > 0:
                 dealer_parts.append(f"(insurance {self.insurance_bet})")

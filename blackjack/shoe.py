@@ -1,6 +1,8 @@
 from blackjack.cards import Card, Rank
-from random_sampler import RandomSampler
+from blackjack_py import RandomSampler
 import numpy as np
+
+raise RuntimeError("This module is temporarily disabled")
 
 """
 Global RNG for the shoe module. New ProbabilisticRankShoe instances
@@ -126,6 +128,11 @@ class ProbabilisticRankShoe:
             raise RuntimeError(f"Card count for rank value {rank_value} is too low")
         self.rank_value_counts[rank_value] -= 1
         self.n_cards -= 1
+
+
+    def add_rank_value(self, rank_value):
+        self.rank_value_counts[rank_value] += 1
+        self.n_cards += 1
 
 
     def lock_dealer_card_not(self, value):

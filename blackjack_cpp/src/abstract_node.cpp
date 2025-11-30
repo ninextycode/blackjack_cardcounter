@@ -10,11 +10,10 @@ namespace blackjack {
 AbstractBJTreeNode::AbstractBJTreeNode(
     const BJRound &bj_round,
     const ProbabilisticRankShoe &shoe,
-    AbstractBJTreeNode *parent,
-    bool copy_data
+    AbstractBJTreeNode *parent
 ) :
-    bj_round_(copy_data ? bj_round.copy() : bj_round),
-    shoe_(copy_data ? shoe.copy() : shoe),
+    bj_round_(bj_round),
+    shoe_(shoe),
     parent_(parent),
     value_(0.0),
     has_built_children_(false),
@@ -192,7 +191,7 @@ void AbstractBJTreeNode::buildChildrenDealerCheckBj() {
 
     auto rv_prob = shoe_.get_rank_value_probabilities(nullopt);
 
-    auto shoe_no_bj = shoe_.copy();
+    ProbabilisticRankShoe shoe_no_bj(shoe_);
     double p_dealer_blackjack;
 
     if (dealer_value == 11) {
@@ -215,7 +214,7 @@ void AbstractBJTreeNode::buildChildrenDealerCheckBj() {
 
     createChild(
         bj_round_dealer_bj,
-        shoe_.copy(),
+        shoe_,
         DealerAction::CONFIRM_BLACKJACK,
         p_dealer_blackjack
     );
@@ -235,7 +234,7 @@ void AbstractBJTreeNode::buildChildrenPlayerAction() {
         BJRound bj_round_copy = bj_round_.copy();
         bj_round_copy.takeAction(action);
 
-        createChild(bj_round_copy, shoe_.copy(), action, 0.0);
+        createChild(bj_round_copy, shoe_, action, 0.0);
     }
 }
 

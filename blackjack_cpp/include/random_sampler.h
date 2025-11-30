@@ -15,7 +15,8 @@ public:
     static shared_ptr<RandomSampler> getGlobalSampler();
 
     RandomSampler(uint64_t seed = 0);
-    
+    RandomSampler(const RandomSampler&);
+
     void resetSeed(uint64_t seed);
 
     double uniform();
@@ -32,7 +33,6 @@ public:
     // Choice - select element from array with given probabilities
     template<typename T>
     T choice(const vector<T>& values, const vector<double>& probs);
-
 private:
     static shared_ptr<RandomSampler> global_sampler;
 

@@ -135,6 +135,11 @@ class ValueOnlyHand:
         self.cards.append(value)
         self._reset_value()
 
+    def pop_card(self) -> int:
+        value = self.cards.pop()
+        self._reset_value()
+        return value
+
     def is_same_rank_pair(self) -> bool:
         raise NotImplementedError
 

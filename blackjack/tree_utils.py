@@ -6,16 +6,6 @@ from blackjack.blackjack_round import BJStage
 
 
 
-def iterate_nodes_by_levels(root_node) -> Generator[tuple[int, AbstractBJTreeNode], None, None]:
-    queue = deque()
-    queue.append((0, root_node))
-    while queue:
-        node_level, node = queue.popleft()
-        yield node_level, node
-        for child in node.children:
-            queue.append((node_level + 1, child))
-
-
 def get_nodes_by_levels(root_node, nodes_by_level_dict=None):
     if nodes_by_level_dict is None:
         nodes_by_level_dict = defaultdict(list)
@@ -23,10 +13,29 @@ def get_nodes_by_levels(root_node, nodes_by_level_dict=None):
     queue.append((root_node, 0))
     while queue:
         node, node_level = queue.popleft()
+        # handle case of a node with 2 parents, up to level 4
+        if node_level < 4 and node in nodes_by_level_dict[node_level]:
+            continue
         nodes_by_level_dict[node_level].append(node)
         for child in node.children:
             queue.append((child, node_level + 1))
     return nodes_by_level_dict
+
+
+
+def iterate_nodes_by_levels(root_node) -> Generator[tuple[int, AbstractBJTreeNode], None, None]:
+    nodes_by_level_dict = defaultdict(list)
+    queue = deque()
+    queue.append((0, root_node))
+    while queue:
+        node_level, node = queue.popleft()
+        # handle case of a node with 2 parents, up to level 4
+        if node_level < 4 and node in nodes_by_level_dict[node_level]:
+            continue  
+        nodes_by_level_dict[node_level].append(node)
+        yield node_level, node
+        for child in node.children:
+            queue.append((node_level + 1, child))
 
 
 def log_tree_structure(root_node):
