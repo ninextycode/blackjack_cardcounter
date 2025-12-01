@@ -300,8 +300,7 @@ def _run_dealer_cards_simulation(
     dealer_hand: ValueOnlyHand,
     shoe: ProbabilisticRankShoe,
     n_dealer_sim_runs: int,
-    dealer_hit_soft_17 = False,
-    reset_shoe_sampler: bool = True
+    dealer_hit_soft_17 = False
 ):
     values = []
 
@@ -309,16 +308,19 @@ def _run_dealer_cards_simulation(
         # Simulate dealer cards until round over
         
         dealer_hand_sim = dealer_hand.copy()
-        shoe_sim = shoe.copy()
-        if reset_shoe_sampler:
-            shoe_sim.change_random_sampler()
+        shoe_sim = shoe
 
+        burned_cards = []
         while (
             not dealer_hand_sim.is_bust() 
             and not _dealer_stand_or_bust(dealer_hand_sim, dealer_hit_soft_17)
         ):
             rank = shoe_sim.sample_and_burn_rank()
             dealer_hand_sim.add_card(rank)
+            burned_cards.append(rank)
+        
+        for card in burned_cards:
+            shoe_sim.add_rank_value(card)
 
         # Collect results
         if dealer_hand_sim.is_bust():
@@ -333,18 +335,6 @@ def _run_dealer_cards_simulation(
     return values
 
 
-
-
-combinations_with_counts_precomputed = dict()
-
-for i in range(1, 8):
-    comb_count = load_realistic_combs_with_counts(i)
-    comb_count_by_first_card = defaultdict(list)
-    for comb, count in comb_count:
-        first_card = comb[0]
-        rest_cards = comb[1:]
-        comb_count_by_first_card[first_card].append( (rest_cards, count) )
-    combinations_with_counts_precomputed[i] = comb_count_by_first_card
 
 
 
@@ -374,10 +364,10 @@ with open("combinations/combinations_with_counts.pkl", "rb") as f:
     precomputed_combinations_with_counts = pickle.load(f)
 
 
-def run_dealer_cards_simulation_comb(
+def run_dealer_cards_simulation_combo(
     bj_round: BJRound,
     shoe: ProbabilisticRankShoe,
-    n_dealer_sim_runs: int = 1,
+    n_dealer_sim_runs: int = None,
     n_full_sample: int = 5,
     verbose = False
 ):
@@ -420,7 +410,7 @@ def run_dealer_cards_simulation_comb(
             prob = prob * num_perms
             total_p += prob
             dealer_bust_p += prob
-        
+    
     ev_stand = np.zeros(len(stand_combos_data))
     prob_stand = np.zeros(len(stand_combos_data))
     ev_stand[player_hand_value > stand_values] = 1
@@ -468,7 +458,7 @@ def run_dealer_cards_simulation_comb(
             player_hand_value,
             dealer_hand,
             shoe,
-            n_dealer_sim_runs,
+            n_dealer_sim_runs if n_dealer_sim_runs is not None else num_perms,
             dealer_hit_soft_17
         )
         ev_other[i] = np.mean(sim_values)
@@ -493,7 +483,7 @@ def run_dealer_cards_simulation_comb(
         + ev_stand_value
         + ev_bust_value
     )
-
+    assert np.abs(total_p - 1) < 1e-8
     global total_sim_time
     end_time = time.time()
     total_sim_time += end_time - start_time

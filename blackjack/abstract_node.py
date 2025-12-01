@@ -277,10 +277,10 @@ class AbstractBJTreeNode(ABC):
 
 class ValueNode(AbstractBJTreeNode):
     """Node to hold simulation results without building children."""
-    def __init__(self, value, parent=None):
+    def __init__(self, value, parent=None, bj_round=None, shoe=None):
         super().__init__(
-            bj_round=None,
-            shoe=None,
+            bj_round=bj_round,
+            shoe=shoe,
             parent=parent, 
             copy_data=False
         )
