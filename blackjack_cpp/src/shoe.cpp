@@ -7,47 +7,34 @@ using namespace std;
 
 namespace blackjack {
 
-ProbabilisticRankShoe::ProbabilisticRankShoe(
-    int n_decks, 
-    uint64_t seed
-):
-    ProbabilisticRankShoe::ProbabilisticRankShoe(
-        n_decks, make_shared<RandomSampler>(seed)
-    )
-{ }
+ProbabilisticRankShoe::ProbabilisticRankShoe(int n_decks):
+    ProbabilisticRankShoe(n_decks, RandomSampler::createNextSampler())
+{
+}
 
+ProbabilisticRankShoe::ProbabilisticRankShoe(int n_decks, uint64_t seed):
+    ProbabilisticRankShoe(n_decks, RandomSampler(seed))
+{
+}
 
-ProbabilisticRankShoe::ProbabilisticRankShoe(
-    int n_decks, 
-    shared_ptr<RandomSampler> sampler
-):
-    n_decks_(n_decks),
+ProbabilisticRankShoe::ProbabilisticRankShoe(int n_decks, const RandomSampler& sampler):
     sampler_(sampler)
 {
-    if (!sampler_) {
-        sampler_ = RandomSampler::getGlobalSampler();
-    }
-
-    n_total_ = 52 * n_decks_;
+    n_total_ = 52 * n_decks;
     value_counts_.fill(0);
     for (int i = 2; i < 10; i++) {
-        value_counts_.at(i) = 4 * n_decks_;   // 2..9
+        value_counts_.at(i) = 4 * n_decks;   // 2..9
     }
-    value_counts_.at(10) = 16 * n_decks_;                         // 10s (T,J,Q,K)
-    value_counts_.at(11) = 4 * n_decks_;                          // Aces (11)
+    value_counts_.at(10) = 16 * n_decks;                         // 10s (T,J,Q,K)
+    value_counts_.at(11) = 4 * n_decks;                          // Aces (11)
     recomputeRawProbabilities();
     given_dealer_card_is_not_value_ = nullopt;
 }
 
 
 ProbabilisticRankShoe::ProbabilisticRankShoe(const ProbabilisticRankShoe& other)
-    : n_decks_(other.n_decks_)
+    : sampler_(other.sampler_)
 {
-    if (other.sampler_ == RandomSampler::getGlobalSampler()) {
-        sampler_ = other.sampler_;
-    } else {
-        sampler_ = make_shared<RandomSampler>(*other.sampler_);
-    }
     n_total_ = other.n_total_;
     value_counts_ = other.value_counts_;
     value_probs_ = other.value_probs_;
@@ -55,12 +42,48 @@ ProbabilisticRankShoe::ProbabilisticRankShoe(const ProbabilisticRankShoe& other)
 }
 
 
-void ProbabilisticRankShoe::changeRandomSampler(int seed) {
-    if (seed == -1) {
-        sampler_ = RandomSampler::getGlobalSampler();
-    } else {
-        sampler_ = make_shared<RandomSampler>(uint64_t(seed));
+ProbabilisticRankShoe::ProbabilisticRankShoe(const RankMap<int>& rank_counts, const RandomSampler& sampler):
+    sampler_(sampler)
+{
+    n_total_ = 0;
+    value_counts_ = rank_counts;
+    for (int i = 2; i <= 11; ++i) {
+        n_total_ += value_counts_.at(i);
     }
+    recomputeRawProbabilities();
+    given_dealer_card_is_not_value_ = nullopt;
+}
+
+void ProbabilisticRankShoe::setNumberOfRankCards(
+    int rank_value,
+    int number
+) {
+    if (number < 0) {
+        throw runtime_error("Number of rank values cannot be negative");
+    }
+    int current_number = value_counts_.at(rank_value);
+    n_total_ += (number - current_number);
+    value_counts_.at(rank_value) = number;
+    recomputeRawProbabilities();
+}
+
+int ProbabilisticRankShoe::getNumberOfRankCards(
+    int rank_value
+) const {
+    return value_counts_.at(rank_value);
+}
+
+int ProbabilisticRankShoe::getNumberOfCards() const {
+    return n_total_;
+}
+
+void ProbabilisticRankShoe::resetSampler() {
+    resetSampler(RandomSampler::createNextSampler());
+}
+
+
+void ProbabilisticRankShoe::resetSampler(const RandomSampler& sampler) {
+    sampler_ = sampler;
 }
 
 
@@ -84,7 +107,7 @@ void ProbabilisticRankShoe::addRankValue(
 
 int ProbabilisticRankShoe::sampleRank(
     const optional<vector<int>>& given_rank_values_set
-) const {
+) {
     RankProbability probs = get_rank_value_probabilities(given_rank_values_set);
     vector<double> prob_vec;
     vector<int> rank_values;
@@ -98,7 +121,7 @@ int ProbabilisticRankShoe::sampleRank(
     if (prob_vec.empty()) {
         throw runtime_error("No available ranks to sample from");
     }
-    return sampler_->choice(rank_values, prob_vec);
+    return sampler_.choice(rank_values, prob_vec);
 }
 
 
@@ -207,18 +230,24 @@ bool ProbabilisticRankShoe::isDealerCardLocked() {
 string ProbabilisticRankShoe::toString() const {
     ostringstream ss;
     ss << "ProbabilisticRankShoe\n";
-    if (given_dealer_card_is_not_value_.has_value()) {
-        ss << "|D!=" << *given_dealer_card_is_not_value_ << "\n";
-    }
+
     auto probs = get_rank_value_probabilities();
     for (int rv = 2; rv <= 11; rv++) {
         double p = probs.at(rv);
         if (p==0.0) {
             continue;
         }
-        ss << "  p(" << rv << ") = " << (p*100.0) << "%\n";
+        ss << "  p(" << rv;
+        if (given_dealer_card_is_not_value_.has_value()) {
+            ss << "|D!=" << *given_dealer_card_is_not_value_ << "\n";
+        }
+        ss << ") = " << (p*100.0) << "%\n";
     }
     return ss.str();
+}
+
+string ProbabilisticRankShoe::getSamplerRngState() const {
+    return sampler_.getRngState();
 }
 
 } // namespace blackjack

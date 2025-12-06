@@ -53,6 +53,12 @@ public:
     // Tree manipulation
     void setAsRoot();
 
+    // Rebuild children
+    virtual void rebuildChildren();
+
+    // Add child directly (for manual child management)
+    void addChild(shared_ptr<AbstractBJTreeNode> child, const TransitionEvent& event, double prob = 0.0);
+
     // Public state
     BJRound bj_round_;
     ProbabilisticRankShoe shoe_;
@@ -66,8 +72,8 @@ public:
     int depth_from_root_;
 
 protected:
-    // Helper methods for computing node values
-    void computeNodeValue();
+    // Helper methods for computing node values (virtual for override)
+    virtual void computeNodeValue();
     void computeActionNodeValue();
     void computeChanceNodeValue();
     void computeTerminalNodeValue();

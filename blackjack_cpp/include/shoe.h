@@ -42,16 +42,14 @@ using RankCount = RankMap<int>;
 
 class ProbabilisticRankShoe {
 public:
-    ProbabilisticRankShoe(
-        int n_decks = 8,
-        shared_ptr<RandomSampler> sampler = nullptr
-    );
-    ProbabilisticRankShoe(
-        int n_decks, uint64_t seed
-    );
+    ProbabilisticRankShoe(int n_decks = 8);
+    ProbabilisticRankShoe(int n_decks, uint64_t seed);
+    ProbabilisticRankShoe(int n_decks, const RandomSampler& sampler);
+    ProbabilisticRankShoe(const RankMap<int>& rank_counts, const RandomSampler& sampler);
     ProbabilisticRankShoe(const ProbabilisticRankShoe&);
 
-    void changeRandomSampler(int seed=-1);
+    void resetSampler();
+    void resetSampler(const RandomSampler& sampler);
 
     // Returns probabilities for values 2..11 as RankProbability
     RankProbability get_rank_value_probabilities(
@@ -60,6 +58,11 @@ public:
     void burnCard(const Card& c);
     void burnRankValue(int rank_value);
     void addRankValue(int rank_value);
+    
+    void setNumberOfRankCards(int rank_value, int number);
+    int getNumberOfRankCards(int rank_value) const;
+    int getNumberOfCards() const;
+
     void lockDealerCardNotAce();
     void lockDealerCardNotTen();
     void unlockDealerCard();
@@ -71,10 +74,10 @@ public:
     );
     int sampleRank(
         const optional<vector<int>>& given_rank_values_set = nullopt
-    ) const;
+    );
 
     string toString() const;
-
+    string getSamplerRngState() const;
 private:
     void recomputeRawProbabilities();
     void takeGivenDealerInfoIntoAccount(
@@ -85,7 +88,6 @@ private:
         const optional<vector<int>>& given
     ) const;
 
-    int n_decks_;
     int n_total_; // remaining cards
     // Counts for values 2..11
     RankCount value_counts_;     // index 0->value 2, ..., index 9->value 11
@@ -93,7 +95,7 @@ private:
     RankProbability value_probs_;   // index 0->P(2), ..., index 9->P(11)
     optional<int> given_dealer_card_is_not_value_;
 
-    shared_ptr<RandomSampler> sampler_;
+    RandomSampler sampler_;
 };
 
 } // namespace blackjack

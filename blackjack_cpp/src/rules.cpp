@@ -3,6 +3,27 @@
 
 namespace blackjack {
 
+BJRules getDefaultRules() {
+    BJRules rules;
+    rules.dealer_checks_blackjack = true;
+    rules.dealer_hits_soft_17 = false;
+    rules.allow_late_surrender = false;
+    rules.allow_early_surrender_on_ten = false;
+    rules.allow_early_surrender_on_ace = false;
+    rules.allow_early_surrender_on_all = false;
+    rules.dealer_shows_card_on_surrender = false;
+    rules.allow_insurance_vs_ace = true;
+    rules.natural_blackjack_payout = 3.0 / 2.0;
+    rules.surrender_payout = 1.0 / 2.0;
+    rules.insurance_payout = 2.0 / 1.0;
+    rules.max_splits_allowed = 1;
+    rules.allow_action_on_split_aces = true;
+    rules.allow_double_after_split = true;
+    rules.allow_double_on_soft = true;
+    rules.allow_split_different_tens = true;
+    return rules;
+}
+
 std::string BJRules::to_string() const {
     std::ostringstream ss;
     ss << "BJRules:\n";

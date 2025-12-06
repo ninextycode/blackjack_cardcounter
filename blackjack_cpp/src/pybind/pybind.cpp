@@ -79,35 +79,40 @@ PYBIND11_MODULE(blackjack_py, m) {
         )
         // Expose static methods
         .def_static(
-            "set_seed_global_sampler",
-            &RandomSampler::setSeedGlobalSampler,
-            py::arg("seed")
+            "reset_global_seed_generator",
+            py::overload_cast<>(&RandomSampler::resetGlobalSeedGenerator),
+            "Reset the global seed generator with an auto-generated seed"
         )
         .def_static(
-            "get_global_sampler",
-            &RandomSampler::getGlobalSampler,
-            py::return_value_policy::reference
+            "reset_global_seed_generator",
+            py::overload_cast<uint64_t>(&RandomSampler::resetGlobalSeedGenerator),
+            py::arg("seed"),
+            "Reset the global seed generator used for creating new samplers"
+        )
+        .def_static(
+            "create_next_sampler",
+            &RandomSampler::createNextSampler,
+            "Create a new sampler with a seed from the global seed generator"
         );
 
     // Expose ProbabilisticRankShoe
-    py::class_<
-        blackjack::ProbabilisticRankShoe,
-        shared_ptr<blackjack::ProbabilisticRankShoe>
-    >(m, "ProbabilisticRankShoe")
+    py::class_<blackjack::ProbabilisticRankShoe>(m, "ProbabilisticRankShoe")
         .def(
-            py::init<int, shared_ptr<RandomSampler>>(),
+            py::init<int>(),
             py::arg("n_decks") = 8,
-            py::arg("sampler") = nullptr,
-            "Create a probabilistic rank shoe"
+            "Create a probabilistic rank shoe with auto-generated seed"
         )
-        .def_static(
-            "seeded",
-            [](int n_decks, uint64_t seed) {
-                return blackjack::ProbabilisticRankShoe(n_decks, seed);
-            },
+        .def(
+            py::init<int, uint64_t>(),
             py::arg("n_decks"),
             py::arg("seed"),
             "Create a probabilistic rank shoe with a specific seed"
+        )
+        .def(
+            py::init<int, RandomSampler>(),
+            py::arg("n_decks"),
+            py::arg("sampler"),
+            "Create a probabilistic rank shoe with a specific sampler"
         )
         .def(
             "copy",
@@ -116,6 +121,37 @@ PYBIND11_MODULE(blackjack_py, m) {
             },
             "Create a copy of the shoe"
         )
+        .def(py::pickle(
+            // __getstate__
+            [](blackjack::ProbabilisticRankShoe& shoe) {
+                py::dict state;
+                state["sampler_state"] = shoe.getSamplerRngState();
+                state["dealer_locked"] = shoe.dealerCardLockedValue();
+                py::dict counts;
+                for (int rv = 2; rv <= 11; rv++) {
+                    counts[py::int_(rv)] = shoe.getNumberOfRankCards(rv);
+                }
+                state["counts"] = counts;
+                return state;
+            },
+            // __setstate__
+            [](py::dict state) {
+                string sampler_state = state["sampler_state"].cast<string>();
+                int dealer_locked = state["dealer_locked"].cast<int>();
+                py::dict counts = state["counts"].cast<py::dict>();
+                
+                blackjack::ProbabilisticRankShoe shoe(1, RandomSampler(sampler_state));
+                for (int rv = 2; rv <= 11; rv++) {
+                    shoe.setNumberOfRankCards(rv, counts[py::int_(rv)].cast<int>());
+                }
+                if (dealer_locked == 11) {
+                    shoe.lockDealerCardNotAce();
+                } else if (dealer_locked == 10) {
+                    shoe.lockDealerCardNotTen();
+                }
+                return shoe;
+            }
+        ))
         .def(
             "get_rank_value_probabilities",
             [](const blackjack::ProbabilisticRankShoe& shoe, 
@@ -186,11 +222,29 @@ PYBIND11_MODULE(blackjack_py, m) {
             "is_dealer_card_locked",
             &blackjack::ProbabilisticRankShoe::isDealerCardLocked,
             "Check if the dealer card is locked"
-        ).
-        def(
-            "change_random_sampler",
-            &blackjack::ProbabilisticRankShoe::changeRandomSampler,
-            py::arg("seed") = -1,
-            "Change the random sampler with an optional seed"
+        )
+        .def(
+            "reset_sampler",
+            py::overload_cast<>(&blackjack::ProbabilisticRankShoe::resetSampler),
+            "Reset the random sampler with a new auto-generated seed"
+        )
+        .def(
+            "reset_sampler",
+            py::overload_cast<const RandomSampler&>(&blackjack::ProbabilisticRankShoe::resetSampler),
+            py::arg("sampler"),
+            "Reset the random sampler with a specific sampler"
+        )
+        .def(
+            "get_number_of_rank_cards",
+            &blackjack::ProbabilisticRankShoe::getNumberOfRankCards,
+            py::arg("rank_value"),
+            "Get the number of cards with the given rank value"
+        )
+        .def(
+            "set_number_of_rank_cards",
+            &blackjack::ProbabilisticRankShoe::setNumberOfRankCards,
+            py::arg("rank_value"),
+            py::arg("number"),
+            "Set the number of cards with the given rank value"
         );
 }

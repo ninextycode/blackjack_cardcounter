@@ -1,7 +1,7 @@
 # from blackjack.shoe import ProbabilisticRankShoe
 import numpy as np
 from blackjack.hand import ValueOnlyHand
-from blackjack_py import ProbabilisticRankShoe
+from blackjack_py import ProbabilisticRankShoe, RandomSampler
 import time
 from blackjack.blackjack_round import BJRound, BJStage
 from itertools import combinations_with_replacement, product
@@ -97,7 +97,7 @@ def run_dealer_cards_simulation(
         bj_round_copy = bj_round.copy()
         shoe_copy = shoe.copy()
         if reset_shoe_sampler:
-            shoe_copy.change_random_sampler()
+            shoe_copy.reset_sampler()
 
         # Simulate dealer cards until round over
         while not bj_round_copy.get_stage() == BJStage.ROUND_OVER:
@@ -109,65 +109,6 @@ def run_dealer_cards_simulation(
         values.append(bj_round_copy.get_player_value())
     return np.mean(values)
           
-
-def run_dealer_cards_simulation_recursive_old(
-    bj_round: BJRound,
-    shoe: ProbabilisticRankShoe,
-    n_dealer_sim_runs: int,
-    n_full_sample: int = 4
-):
-    """Run Monte Carlo simulations for dealer play."""
-
-    possible_ranks = bj_round.get_possible_next_card_ranks()
-    value_by_first_card = {}
-
-    if shoe.is_dealer_card_locked():
-        shoe = shoe.copy()
-        shoe.unlock_dealer_card()
-
-    probabilities = shoe.get_rank_value_probabilities(possible_ranks)
-    if possible_ranks is None:
-        possible_ranks = list(range(2, 12))
-
-    for first_card in possible_ranks:
-        if first_card not in probabilities:
-            continue
-        values = []
-        shoe_first_card = shoe.copy()
-        bj_round_first_card = bj_round.copy()
-        shoe_first_card.burn_rank_value(first_card)
-        bj_round_first_card.take_card(first_card)
-
-        if bj_round_first_card.get_stage() == BJStage.ROUND_OVER:
-            value_by_first_card[first_card] = bj_round_first_card.get_player_value()
-        elif n_full_sample > 1:
-            value_by_first_card[first_card] = run_dealer_cards_simulation_recursive_old(
-                bj_round_first_card,
-                shoe_first_card,
-                n_dealer_sim_runs,
-                n_full_sample - 1
-            )
-        else:
-            for i in range(n_dealer_sim_runs):
-                shoe_sim = shoe_first_card.copy()
-                bj_round_sim = bj_round_first_card.copy()
-
-                # Simulate dealer cards until round over
-                while not bj_round_sim.get_stage() == BJStage.ROUND_OVER:
-                    card = shoe_sim.sample_and_burn_rank()
-                    bj_round_sim.take_card(card)
-                
-                # Collect results
-                values.append(bj_round_sim.get_player_value())
-            value_by_first_card[first_card] = np.mean(values)
-
-    mean_value = 0.0
-    for first_card in possible_ranks:
-        if first_card not in probabilities:
-            continue
-        mean_value += probabilities[first_card] * value_by_first_card[first_card]
-    return mean_value
-
 
 total_sim_time = 0
 
@@ -188,13 +129,13 @@ def run_dealer_cards_simulation_recursive(
     assert stage == BJStage.DEALER_CARD
     assert not bj_round.player_hands[0].is_natural_blackjack()
 
+    shoe = shoe.copy()
     if shoe.is_dealer_card_locked():
-        shoe = shoe.copy()
         shoe.unlock_dealer_card()
 
     possible_ranks = bj_round.get_possible_next_card_ranks()
 
-    value = bj_round.bet_unit * _run_dealer_cards_simulation_recursive_2(
+    value = bj_round.bet_unit * _run_dealer_cards_simulation_recursive(
         bj_round.player_hands[0].get_best_value(),
         bj_round.dealer_hand,
         shoe,
@@ -229,7 +170,7 @@ def _dealer_stand_or_bust(
     return dealer_stand
 
 
-def _run_dealer_cards_simulation_recursive_2(
+def _run_dealer_cards_simulation_recursive(
     player_value: int,
     dealer_hand,
     shoe: ProbabilisticRankShoe,
@@ -263,7 +204,7 @@ def _run_dealer_cards_simulation_recursive_2(
                 value_by_first_card[first_card] = 0
 
         elif n_full_sample > 1:
-            value_by_first_card[first_card] = _run_dealer_cards_simulation_recursive_2(
+            value_by_first_card[first_card] = _run_dealer_cards_simulation_recursive(
                 player_value,
                 dealer_hand,
                 shoe,
@@ -279,7 +220,8 @@ def _run_dealer_cards_simulation_recursive_2(
                 dealer_hand,
                 shoe,
                 n_dealer_sim_runs,
-                dealer_hit_soft_17
+                dealer_hit_soft_17,
+                new_random_sampler=True
             )
             value_by_first_card[first_card] = np.mean(values)
 
@@ -300,9 +242,14 @@ def _run_dealer_cards_simulation(
     dealer_hand: ValueOnlyHand,
     shoe: ProbabilisticRankShoe,
     n_dealer_sim_runs: int,
-    dealer_hit_soft_17 = False
+    dealer_hit_soft_17 = False,
+    new_random_sampler = False
 ):
     values = []
+    
+    if new_random_sampler:
+        shoe = shoe.copy()
+        shoe.reset_sampler()
 
     for i in range(n_dealer_sim_runs):
         # Simulate dealer cards until round over
@@ -335,11 +282,9 @@ def _run_dealer_cards_simulation(
     return values
 
 
-
-
-
 def get_cards_probability(cards, shoe, possible_first_card=None):
     prob = 1
+    burned_cards = []
     for i, card in enumerate(cards):
         if i == 0:
             possible_cards = possible_first_card
@@ -347,11 +292,16 @@ def get_cards_probability(cards, shoe, possible_first_card=None):
             possible_cards = None
         probs = shoe.get_rank_value_probabilities(possible_cards)
         if card not in probs or probs[card] == 0:
-            return 0
+            prob = 0
+            break
+
         prob = prob * probs[card]
         shoe.burn_rank_value(card)
-    for card in cards:
+        burned_cards.append(card)
+    
+    for card in burned_cards:
         shoe.add_rank_value(card)
+    
     return prob
 
 
@@ -364,6 +314,8 @@ with open("combinations/combinations_with_counts.pkl", "rb") as f:
     precomputed_combinations_with_counts = pickle.load(f)
 
 
+
+
 def run_dealer_cards_simulation_combo(
     bj_round: BJRound,
     shoe: ProbabilisticRankShoe,
@@ -371,8 +323,6 @@ def run_dealer_cards_simulation_combo(
     n_full_sample: int = 5,
     verbose = False
 ):
-    start_time = time.time()
-
     dealer_hand: ValueOnlyHand = bj_round.dealer_hand.copy()
     dealer_hit_soft_17 = bj_round.rules.dealer_hits_soft_17
     assert dealer_hand.size() == 1
@@ -380,7 +330,9 @@ def run_dealer_cards_simulation_combo(
     assert bj_round.get_stage() == BJStage.DEALER_CARD
     assert not bj_round.player_hands[0].is_natural_blackjack()
 
-
+    if n_dealer_sim_runs is None:
+        n_dealer_sim_runs = 1
+        
     if shoe.is_dealer_card_locked():
         shoe = shoe.copy()
         shoe.unlock_dealer_card()
@@ -404,7 +356,7 @@ def run_dealer_cards_simulation_combo(
     total_p = 0 
 
     dealer_bust_p = 0
-    for i, (combo, num_perms) in enumerate(bust_combos_data):
+    for i_comb, (combo, num_perms) in enumerate(bust_combos_data):
         prob = get_cards_probability(combo, shoe, possible_second_card)
         if prob != 0:
             prob = prob * num_perms
@@ -416,22 +368,22 @@ def run_dealer_cards_simulation_combo(
     ev_stand[player_hand_value > stand_values] = 1
     ev_stand[player_hand_value == stand_values] = 0
     ev_stand[player_hand_value < stand_values] = -1
-    for i, (combo, num_perms) in enumerate(stand_combos_data):
+    for i_comb, (combo, num_perms) in enumerate(stand_combos_data):
         prob = get_cards_probability(combo, shoe, possible_second_card)
         if prob != 0:
             prob = prob * num_perms
             total_p += prob
-            prob_stand[i] = prob
+            prob_stand[i_comb] = prob
 
-    ev_other = np.zeros(len(stand_combos_data))
-    prob_other= np.zeros(len(stand_combos_data))
+    ev_other = np.zeros(len(other_combos_data))
+    prob_other= np.zeros(len(other_combos_data))
     
-    for i, (combo, num_perms) in enumerate(other_combos_data):
+    for i_comb, (combo, num_perms) in enumerate(other_combos_data):
         prob = 1
         impossible = False
         burned_cards = []
-        for i, card in enumerate(combo):
-            if i == 0:
+        for i_card, card in enumerate(combo):
+            if i_card == 0:
                 probs = shoe.get_rank_value_probabilities(possible_second_card)
             else:
                 probs = shoe.get_rank_value_probabilities()
@@ -451,17 +403,18 @@ def run_dealer_cards_simulation_combo(
         
         prob = prob * num_perms
         total_p += prob
-        prob_other[i] = prob
+        prob_other[i_comb] = prob
 
         assert not _dealer_stand_or_bust(dealer_hand, dealer_hit_soft_17)
         sim_values = _run_dealer_cards_simulation(
             player_hand_value,
             dealer_hand,
             shoe,
-            n_dealer_sim_runs if n_dealer_sim_runs is not None else num_perms,
-            dealer_hit_soft_17
+            num_perms * n_dealer_sim_runs,
+            dealer_hit_soft_17,
+            new_random_sampler=False
         )
-        ev_other[i] = np.mean(sim_values)
+        ev_other[i_comb] = np.mean(sim_values)
         for card in burned_cards:
             shoe.add_rank_value(card)
             dealer_hand.pop_card()
@@ -483,8 +436,6 @@ def run_dealer_cards_simulation_combo(
         + ev_stand_value
         + ev_bust_value
     )
-    assert np.abs(total_p - 1) < 1e-8
-    global total_sim_time
-    end_time = time.time()
-    total_sim_time += end_time - start_time
+    if np.abs(total_p - 1) > 1e-8:
+        raise RuntimeError(f"Probability does not sum to 1 , total_p = {total_p}")
     return final_value

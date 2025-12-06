@@ -5,10 +5,10 @@
 
 namespace blackjack {
 
-BJRound::BJRound(const BJRules* rules):
+BJRound::BJRound(shared_ptr<const BJRules> rules):
     rules_(rules),
     dealer_hand(),
-    player_hands{ValueOnlyHand()},
+    player_hands{ValueOnlyHand(rules ? !rules->ignore_player_natural_blackjack : true)},
     active_hand_idx(0),
     dealer_checked_blackjack(false), 
     dealer_has_bj_after_check(false),
@@ -31,10 +31,6 @@ BJRound::BJRound(const BJRules* rules):
 
 }
 
-
-BJRound::BJRound(const BJRound& round) = default;
-
-BJRound::BJRound(BJRound&& round) noexcept = default;
 
 BJRound BJRound::copy() const {
     BJRound n(rules_);
@@ -74,6 +70,8 @@ bool BJRound::needCard() const { return stage_==BJStage::PLAYER_CARD || stage_==
 bool BJRound::needAction() const { return needPlayerAction() || needDealerAction(); }
 bool BJRound::needPlayerAction() const { return stage_==BJStage::PLAYER_ACTION || stage_==BJStage::PLAYER_OFFERED_INSURANCE || stage_==BJStage::PLAYER_OFFERED_EARLY_SURRENDER; }
 bool BJRound::needDealerAction() const { return stage_==BJStage::DEALER_CHECK_BJ; }
+
+
 std::optional<std::vector<int>> BJRound::getPossibleNextCardRanks() const {
     if (!(stage_ == BJStage::PLAYER_CARD || stage_ == BJStage::DEALER_CARD)) {
         return std::vector<int>{};
@@ -97,8 +95,8 @@ std::optional<std::vector<int>> BJRound::getPossibleNextCardRanks() const {
                     return v;
                 }
                 if (up == 10) {
-                    std::vector<int> v; v.reserve(8);
-                    for (int x = 2; x <= 9; ++x) v.push_back(x);
+                    std::vector<int> v; v.reserve(9);
+                    for (int x = 2; x <= 11; ++x) if (x != 11) v.push_back(x);
                     return v;
                 }
                 throw runtime_error("Dealer cannot have blackjack but cards are not consistent");
@@ -520,50 +518,6 @@ std::string BJRound::toString() const {
                 
                 int hard_value = hand.get_hard_value();
                 if (!(rules_->no_natural_bj_on_split && n_splits > 0) && hand.is_natural_blackjack()) {
-                    parts += "(bj)";
-                } else if (hard_value != value.value()) {
-                    parts += "(" + std::to_string(value.value()) + "/" + std::to_string(hard_value) + stand_str + ")";
-                } else {
-                    parts += "(" + std::to_string(value.value()) + stand_str + ")";
-                }
-            } else {
-                parts += "(bust)";
-            }
-            
-            int bet = hand_bets[i];
-            parts += "[$" + std::to_string(bet) + "]";
-            
-            player_lines.push_back(parts);
-        }
-        
-        if (!player_lines.empty()) {
-            result += "Player ";
-            for (size_t i = 0; i < player_lines.size(); ++i) {
-                if (i > 0) result += " | ";
-                result += player_lines[i];
-            }
-            result += "\n";
-        }
-    }
-    
-    // Final totals if round is over
-    if (stage_ == BJStage::ROUND_OVER) {
-        result += "Player total bet: " + std::to_string(total_player_bet) + "\n";
-        result += "Player total payout: " + std::to_string(total_player_got) + "\n";
-        int net = player_value;
-        std::string net_sign = (net > 0) ? "+" : "";
-        result += "Player net: " + net_sign + std::to_string(net) + "\n";
-    }
-    
-    // Remove trailing newline
-    if (!result.empty() && result.back() == '\n') {
-        result.pop_back();
-    }
-    
-    return result;
-}
-
-} // namespace blackjack
                     parts += "(bj)";
                 } else if (hard_value != value.value()) {
                     parts += "(" + std::to_string(value.value()) + "/" + std::to_string(hard_value) + stand_str + ")";

@@ -4,7 +4,7 @@ namespace blackjack {
 
 SimulationResultNode::SimulationResultNode(double value, AbstractBJTreeNode *parent)
     : AbstractBJTreeNode(
-        (parent != nullptr ? parent->bj_round_ : BJRound(nullptr)),
+        (parent != nullptr ? parent->bj_round_ : BJRound(shared_ptr<const BJRules>())),
         (parent != nullptr ? parent->shoe_ : ProbabilisticRankShoe()),
         parent
     )

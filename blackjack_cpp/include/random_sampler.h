@@ -11,11 +11,17 @@ using namespace std;
 
 class RandomSampler {
 public:
-    static void setSeedGlobalSampler(uint64_t seed);
-    static shared_ptr<RandomSampler> getGlobalSampler();
+    // Seed generator for creating new samplers with unique seeds
+    static void resetGlobalSeedGenerator(uint64_t seed);
+    static void resetGlobalSeedGenerator();
+    static RandomSampler createNextSampler();
 
-    RandomSampler(uint64_t seed = 0);
+    RandomSampler(uint64_t seed);
     RandomSampler(const RandomSampler&);
+    RandomSampler(const string& state);
+    RandomSampler& operator=(const RandomSampler& other);
+
+    string getRngState() const;
 
     void resetSeed(uint64_t seed);
 
@@ -34,11 +40,12 @@ public:
     template<typename T>
     T choice(const vector<T>& values, const vector<double>& probs);
 private:
-    static shared_ptr<RandomSampler> global_sampler;
+    static uint64_t generateSeed();
+    inline static mt19937_64 global_seed_generator{random_device{}()};
+    inline static mutex global_seed_generator_mutex;
 
     mt19937_64 gen;
     uniform_real_distribution<double> uniform_dist;
-    mutex random_sampler_mutex;
 };
 
 

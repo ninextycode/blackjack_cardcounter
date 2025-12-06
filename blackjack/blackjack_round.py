@@ -625,16 +625,16 @@ class BJRound:
         self.player_value = self.total_player_got - self.total_player_bet
     
 
-    def __str__(self):
+    def __str__(self, with_last_action=False):
         def hand_to_str(hand):
             return "".join(Rank.from_value(card).value for card in hand.cards)
 
         lines = []
         
         # Add last action/card information
-        if self.last_action is not None:
+        if with_last_action and self.last_action is not None:
             lines.append(f"Last action: {self.last_action.value}")
-        if self.last_card is not None:
+        if with_last_action and self.last_card is not None:
             lines.append(f"Last card: {self.last_card}")
         
         # Dealer lines

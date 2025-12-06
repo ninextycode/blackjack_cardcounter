@@ -30,6 +30,25 @@ void AbstractBJTreeNode::setAsRoot() {
     updateDepthFromRoot();
 }
 
+void AbstractBJTreeNode::rebuildChildren() {
+    children_.clear();
+    children_prob_.clear();
+    children_events_.clear();
+    has_built_children_ = false;
+    has_completed_tree_ = false;
+    buildChildren();
+}
+
+void AbstractBJTreeNode::addChild(
+    shared_ptr<AbstractBJTreeNode> child,
+    const TransitionEvent& event,
+    double prob
+) {
+    children_.push_back(child);
+    children_prob_.push_back(prob);
+    children_events_.push_back(event);
+}
+
 void AbstractBJTreeNode::updateDepthFromRoot() {
     if (parent_ == nullptr) {
         depth_from_root_ = 0;

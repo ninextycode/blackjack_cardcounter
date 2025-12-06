@@ -121,11 +121,13 @@ const Card& Hand::operator[](size_t i) const { return cards_.at(i); }
 
 // ---------------- ValueOnlyHand ----------------
 
-ValueOnlyHand::ValueOnlyHand()
-    : values_(), best_value_cache_(std::nullopt), hard_value_cache_(0) {}
+ValueOnlyHand::ValueOnlyHand(bool natural_blackjack_possible)
+    : values_(), best_value_cache_(std::nullopt), hard_value_cache_(0), 
+      natural_blackjack_possible_(natural_blackjack_possible) {}
 
-ValueOnlyHand::ValueOnlyHand(const std::vector<int>& values)
-    : values_(values), best_value_cache_(std::nullopt), hard_value_cache_(0) {}
+ValueOnlyHand::ValueOnlyHand(const std::vector<int>& values, bool natural_blackjack_possible)
+    : values_(values), best_value_cache_(std::nullopt), hard_value_cache_(0),
+      natural_blackjack_possible_(natural_blackjack_possible) {}
 
 int ValueOnlyHand::size() const { return (int)values_.size(); }
 
@@ -134,11 +136,26 @@ void ValueOnlyHand::add_value(int v) {
     reset_cache();
 }
 
+int ValueOnlyHand::pop_value() {
+    if (values_.empty()) {
+        throw std::runtime_error("Cannot pop from empty hand");
+    }
+    int v = values_.back();
+    values_.pop_back();
+    reset_cache();
+    return v;
+}
+
+ValueOnlyHand ValueOnlyHand::copy() const {
+    return ValueOnlyHand(values_, natural_blackjack_possible_);
+}
+
 std::pair<ValueOnlyHand, ValueOnlyHand> ValueOnlyHand::split() const {
     if (values_.size() != 2) throw std::runtime_error("Can only split 2-value hand");
+    // natural blackjack impossible after split
     return {
-        ValueOnlyHand(std::vector<int>{values_[0]}),
-        ValueOnlyHand(std::vector<int>{values_[1]})
+        ValueOnlyHand(std::vector<int>{values_[0]}, false),
+        ValueOnlyHand(std::vector<int>{values_[1]}, false)
     };
 }
 
@@ -154,7 +171,7 @@ bool ValueOnlyHand::is_same_value_pair() const {
 
 bool ValueOnlyHand::is_natural_blackjack() const {
     auto v = get_best_value();
-    return values_.size() == 2 && v && *v == 21;
+    return natural_blackjack_possible_ && values_.size() == 2 && v && *v == 21;
 }
 
 bool ValueOnlyHand::is_bust() const {

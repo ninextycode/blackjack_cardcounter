@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <optional>
+#include <memory>
 #include "hand.h"
 #include "rules.h"
 #include "actions.h"
@@ -23,9 +24,11 @@ enum class BJStage {
 
 class BJRound {
 public:
-    BJRound(const BJRules* rules);
-    BJRound(const BJRound& round);
-    BJRound(const BJRound&& round);
+    BJRound(shared_ptr<const BJRules> rules);
+    BJRound(const BJRound& round) = default;
+    BJRound(BJRound&& round) = default;
+    BJRound& operator=(const BJRound& round) = default;
+    BJRound& operator=(BJRound&& round) = default;
     BJRound copy() const;
     void startRound(int bet_unit);
     BJStage getStage() const;
@@ -34,7 +37,7 @@ public:
     bool needPlayerAction() const;
     bool needDealerAction() const;
     // When nullopt, all rank values 2..11 are possible (matching Python: get_possible_next_card_ranks)
-    std::optional<std::vector<int>> getPossibleNextCardRanks() const;
+    optional<vector<int>> getPossibleNextCardRanks() const;
     void takeCard(int value);
     void takeAction(PlayerAction action);
     void takeAction(DealerAction action);
@@ -44,10 +47,10 @@ public:
     // Check if dealer expects to show blackjack (matching Python API)
     bool dealerExpectsToShowBlackjack() const;
     // String representation matching Python __str__
-    std::string toString() const;
+    string toString() const;
 
     // Public state used by game tree builder
-    const BJRules* rules_;
+    shared_ptr<const BJRules> rules_;
     ValueOnlyHand dealer_hand;
     vector<ValueOnlyHand> player_hands;
     int active_hand_idx;

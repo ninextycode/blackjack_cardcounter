@@ -35,6 +35,7 @@ class FloorCeilNode(AbstractBJTreeNode):
             parent=parent,
             copy_data=copy_data
         )
+        self.shoe.reset_sampler()
         self.max_hand_size_full_enum = max_hand_size_full_enum
         self.sim_algo = sim_algo if sim_algo is not None else 'combo'
         self.dealer_sim_depth = dealer_sim_depth
@@ -139,6 +140,12 @@ class FloorCeilNode(AbstractBJTreeNode):
 
 
     def convert_to_full_up_to_depth(self, depth):
+        """
+        Note: I cannot use the return value of this function to determine
+        Whether the tree cannot be updated anymore
+        It can return false just because the depth is too shallow
+        to trigger change in children
+        """
         if not self.tree_completed():
             raise RuntimeError(
                 "Cannot convert player card sample to full enum in an incomplete tree."
@@ -285,6 +292,28 @@ class DecisionNode(FloorCeilNode):
         ]
     
     
+    def _compute_action_node_value(self):
+        """Compute value using only non-excluded actions."""
+        if not self.possible_actions:
+            raise RuntimeError("No possible actions remaining to evaluate.")
+
+        # Identify the best-valued action among those still possible.
+        values = []
+        child_indices = []
+        for action in self.possible_actions:
+            child_idx = self.children_events.index(action)
+            child_indices.append(child_idx)
+            values.append(self.children[child_idx].get_value())
+
+        best_idx_in_possible = int(np.argmax(values))
+        best_child_idx = child_indices[best_idx_in_possible]
+
+        # Clear probabilities for all actions, then select the best possible action.
+        self.children_prob = [0 for _ in self.children_prob]
+        self.children_prob[best_child_idx] = 1
+        self.value = values[best_idx_in_possible]
+
+
     def _compute_node_value(self):
         self._compute_action_node_value()
         self._update_possible_actions()
@@ -1060,9 +1089,10 @@ class DoubleNode(FloorCeilNode):
 
     def build_children(self):
         rank_prob = self.shoe.get_rank_value_probabilities()
-        player_hard_value = self.bj_round.get_active_player_hand().get_hard_value()
         for card, p in rank_prob.items():
-            if player_hard_value + card > 21:  # bust
+            player_hand = self.bj_round.get_active_player_hand().copy()
+            player_hand.add_card(card)
+            if player_hand.is_bust():
                 value = - 2 * self.bj_round.bet_unit
                 child = ValueNode(value, self)
             else:
@@ -1071,6 +1101,7 @@ class DoubleNode(FloorCeilNode):
                 bj_round_copy.take_card(card)
                 shoe_copy.burn_rank_value(card)
                 value = self._run_dealer_sim(bj_round_copy, shoe_copy)
+                value = 2 * value # double bet
                 child = ValueNode(value, self)
             self.children.append(child)
             self.children_prob.append(p)
