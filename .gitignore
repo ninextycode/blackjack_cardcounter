@@ -11,3 +11,4 @@ activate
 scrcpy/
 !digits/*png
 !suits_table/*png
+.cache/

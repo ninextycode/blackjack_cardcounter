@@ -45,19 +45,36 @@ public:
     ProbabilisticRankShoe(int n_decks = 8);
     ProbabilisticRankShoe(int n_decks, uint64_t seed);
     ProbabilisticRankShoe(int n_decks, const RandomSampler& sampler);
-    ProbabilisticRankShoe(const RankMap<int>& rank_counts, const RandomSampler& sampler);
-    ProbabilisticRankShoe(const ProbabilisticRankShoe&);
+    ProbabilisticRankShoe(RankCount&& rank_counts, const RandomSampler& sampler);
+    ProbabilisticRankShoe(const RankCount& rank_counts, const RandomSampler& sampler);
+    // ProbabilisticRankShoe(const ProbabilisticRankShoe&);
 
+    ProbabilisticRankShoe(const ProbabilisticRankShoe&) = default;
+    ProbabilisticRankShoe& operator=(const ProbabilisticRankShoe&) = default;
+
+    ProbabilisticRankShoe(ProbabilisticRankShoe&&) noexcept = default;
+    ProbabilisticRankShoe& operator=(ProbabilisticRankShoe&&) noexcept = default;
+
+    ~ProbabilisticRankShoe() = default;
+
+    ProbabilisticRankShoe copyResetSampler() const;
     void resetSampler();
     void resetSampler(const RandomSampler& sampler);
 
     // Returns probabilities for values 2..11 as RankProbability
-    RankProbability get_rank_value_probabilities(
+    RankProbability getRankValueProbabilities(
         const optional<vector<int>>& given_rank_values_set = nullopt
     ) const;
+    
+    double getRankValueProbability(
+        int rank, const optional<vector<int>>& given_rank_values_set = nullopt
+    ) const;
+
     void burnCard(const Card& c);
     void burnRankValue(int rank_value);
+    ProbabilisticRankShoe copyAndBurnRank(int rank_value) const;
     void addRankValue(int rank_value);
+    void addRankValues(const vector<int>& rank_values);
     
     void setNumberOfRankCards(int rank_value, int number);
     int getNumberOfRankCards(int rank_value) const;
@@ -76,7 +93,11 @@ public:
         const optional<vector<int>>& given_rank_values_set = nullopt
     );
 
+    RankCount getRankCount() const;
+
     string toString() const;
+    string toStringProb() const;
+    string toStringCount() const;
     string getSamplerRngState() const;
 private:
     void recomputeRawProbabilities();

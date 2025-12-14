@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <stdexcept>
+#include <utility>
 
 using namespace std;
 
@@ -13,8 +14,7 @@ DecisionNode::DecisionNode(
     int max_hand_size_full_enum,
     int dealer_sim_depth,
     SimAlgo sim_algo,
-    AbstractBJTreeNode* parent,
-    int n_splits_happened
+    AbstractBJTreeNode* parent
 ) :
     FloorCeilNode(
         bj_round,
@@ -22,21 +22,13 @@ DecisionNode::DecisionNode(
         max_hand_size_full_enum,
         dealer_sim_depth,
         sim_algo,
-        parent,
-        n_splits_happened
+        parent
     ),
     possible_actions_()
 {
     // Initialize possible_actions from available actions
+    // Split exclusion is handled by the game round itself
     possible_actions_ = bj_round_.getAvailableActions();
-    
-    // Handle split exclusion based on max splits
-    if (n_splits_happened_ >= bj_round_.rules_->max_splits_allowed) {
-        auto it = find(possible_actions_.begin(), possible_actions_.end(), PlayerAction::SPLIT);
-        if (it != possible_actions_.end()) {
-            possible_actions_.erase(it);
-        }
-    }
 }
 
 void DecisionNode::createChild(
@@ -53,8 +45,7 @@ void DecisionNode::createChild(
         max_hand_size_full_enum_,
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
     children_.push_back(child);
     children_prob_.push_back(prob);
@@ -64,13 +55,6 @@ void DecisionNode::createChild(
 void DecisionNode::rebuildChildren() {
     FloorCeilNode::rebuildChildren();
     possible_actions_ = bj_round_.getAvailableActions();
-    
-    if (n_splits_happened_ >= bj_round_.rules_->max_splits_allowed) {
-        auto it = find(possible_actions_.begin(), possible_actions_.end(), PlayerAction::SPLIT);
-        if (it != possible_actions_.end()) {
-            possible_actions_.erase(it);
-        }
-    }
 }
 
 void DecisionNode::computeFloorValue() {
@@ -333,13 +317,16 @@ void DecisionNode::buildChildrenPlayerAction() {
         ProbabilisticRankShoe shoe_copy(shoe_);
 
         if (a == PlayerAction::SPLIT) {
+            // The first hand of the split is set to <card>2 hand with zero value
+            // to simplify the tree only the second one is considered, it's value is doubled
+            // this is handled inside SplitNode
+            bj_round_child.takeAction(PlayerAction::SPLIT);
             auto child = make_shared<SplitNode>(
                 bj_round_child, shoe_copy,
                 max_hand_size_full_enum_,
                 dealer_sim_depth_,
                 sim_algo_,
-                this,
-                n_splits_happened_ + 1
+                this
             );
             addChild(child, PlayerAction::SPLIT, 0.0);
         }
@@ -350,8 +337,7 @@ void DecisionNode::buildChildrenPlayerAction() {
                 max_hand_size_full_enum_,
                 dealer_sim_depth_,
                 sim_algo_,
-                this,
-                n_splits_happened_
+                this
             );
             addChild(child, PlayerAction::HIT, 0.0);
         }
@@ -378,8 +364,7 @@ void DecisionNode::buildChildrenPlayerAction() {
                 max_hand_size_full_enum_,
                 dealer_sim_depth_,
                 sim_algo_,
-                this,
-                n_splits_happened_
+                this
             );
             addChild(child, PlayerAction::DECLINE_EARLY_SURRENDER, 0.0);
         }
@@ -406,8 +391,7 @@ void DecisionNode::buildChildrenInsurance() {
         true,  // insurance_offered
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
     
     auto decline_child = make_shared<DealerCheckBJNode>(
@@ -417,8 +401,7 @@ void DecisionNode::buildChildrenInsurance() {
         true,  // insurance_offered
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
 
     accept_child->buildChildren();
@@ -432,7 +415,7 @@ void DecisionNode::buildChildrenInsurance() {
     addChild(decline_child, PlayerAction::REFUSE_INSURANCE, 0.0);
 }
 
-bool DecisionNode::convertToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertToFullUpToDepth(int depth) {
     if (!treeCompleted()) {
         throw runtime_error(
             "Cannot convert DecisionNode to full enum in an incomplete tree."
@@ -440,32 +423,35 @@ bool DecisionNode::convertToFullUpToDepth(int depth) {
     }
 
     if (depth < 0) {
-        return false;
+        return make_pair(false, false);
     }
     
     bool children_changed = false;
+    bool is_final = true;
 
     if (bj_round_.getStage() == BJStage::PLAYER_OFFERED_INSURANCE) {
-        children_changed = convertBjCheckChildrenToFullUpToDepth(depth);
-    } else if (!hasDecided()) {
-        children_changed = convertPossibleChildrenToFullUpToDepth(depth);
+        auto [changed, final] = convertBjCheckChildrenToFullUpToDepth(depth);
+        children_changed = changed;
+        is_final = final;
     } else {
-        children_changed = convertDecisionChildToFullUpToDepth(depth);
+        auto [changed, final] = convertPossibleChildrenToFullUpToDepth(depth);
+        children_changed = changed;
+        is_final = final;
     }
     
     if (children_changed) {
         recomputeTreeValue();
-        return true;
     }
-    return false;
+    
+    return make_pair(children_changed, is_final);
 }
 
-bool DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) {
     // Special case - update the downstream round tree where dealer does not have bj
     // both insurance children share the same no-BJ subtree
     DealerCheckBJNode* child = dynamic_cast<DealerCheckBJNode*>(children_[0].get());
     if (child == nullptr) {
-        return false;
+        return make_pair(false, true);
     }
     
     auto& dealer_no_bj_round_tree = child->children_[child->dealer_no_bj_child_idx_];
@@ -473,15 +459,15 @@ bool DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) {
     ValueNode* v_node = dynamic_cast<ValueNode*>(dealer_no_bj_round_tree.get());
     if (v_node != nullptr) {
         // Case where player has bj but dealer does not - no subtree to expand
-        return false;
+        return make_pair(false, true);
     }
     
     FloorCeilNode* fc_node = dynamic_cast<FloorCeilNode*>(dealer_no_bj_round_tree.get());
     if (fc_node == nullptr) {
-        return false;
+        return make_pair(false, true);
     }
     
-    bool round_child_changed = fc_node->convertToFullUpToDepth(depth - 2);
+    auto [round_child_changed, child_is_final] = fc_node->convertToFullUpToDepth(depth - 2);
     if (round_child_changed) {
         if (!hasDecided()) {
             for (auto& ch : children_) {
@@ -490,13 +476,15 @@ bool DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) {
         } else {
             getDecisionChoiceChild()->recomputeTreeValue();
         }
-        return true;
+        return make_pair(true, child_is_final);
     }
-    return false;
+    return make_pair(false, child_is_final);
 }
 
-bool DecisionNode::convertPossibleChildrenToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertPossibleChildrenToFullUpToDepth(int depth) {
     bool children_changed = false;
+    bool is_final = true;
+    
     for (const auto& action : possible_actions_) {
         for (size_t i = 0; i < children_events_.size(); ++i) {
             if (holds_alternative<PlayerAction>(children_events_[i]) &&
@@ -511,33 +499,36 @@ bool DecisionNode::convertPossibleChildrenToFullUpToDepth(int depth) {
                 
                 FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[i].get());
                 if (fc_child != nullptr) {
-                    bool child_changed = fc_child->convertToFullUpToDepth(depth - 1);
+                    auto [child_changed, child_is_final] = fc_child->convertToFullUpToDepth(depth - 1);
                     if (child_changed) {
                         children_changed = true;
+                    }
+                    if (!child_is_final) {
+                        is_final = false;
                     }
                 }
                 break;
             }
         }
     }
-    return children_changed;
+    return make_pair(children_changed, is_final);
 }
 
-bool DecisionNode::convertDecisionChildToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertDecisionChildToFullUpToDepth(int depth) {
     auto* child = getDecisionChoiceChild();
     
     ValueNode* v_child = dynamic_cast<ValueNode*>(child);
     DoubleNode* d_child = dynamic_cast<DoubleNode*>(child);
     
     if (v_child != nullptr || d_child != nullptr) {
-        return false;
+        return make_pair(false, true);
     }
     
     FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(child);
     if (fc_child != nullptr) {
         return fc_child->convertToFullUpToDepth(depth - 1);
     }
-    return false;
+    return make_pair(false, true);
 }
 
 } // namespace blackjack

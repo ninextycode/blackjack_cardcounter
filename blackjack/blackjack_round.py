@@ -29,7 +29,7 @@ class BJRound:
         # self.player_hands = [Hand()]
         self.dealer_hand = ValueOnlyHand()
         self.player_hands = [
-            ValueOnlyHand(natural_blackjack_possible=not rules.ignore_player_natural_blackjack)
+            ValueOnlyHand()
         ]
         if not rules.allow_split_different_tens:
             raise NotImplementedError("Cannot differentiate different tens in ValueOnlyHand")

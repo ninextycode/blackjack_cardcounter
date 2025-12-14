@@ -1,6 +1,7 @@
 #include "floor_ceil_node.h"
 
 #include <stdexcept>
+#include <utility>
 
 using namespace std;
 
@@ -63,7 +64,7 @@ void DealerCheckBJNode::createChild(
 }
 
 double DealerCheckBJNode::getDealerBlackjackChance() const {
-    auto rank_prob = shoe_.get_rank_value_probabilities(nullopt);
+    auto rank_prob = shoe_.getRankValueProbabilities(nullopt);
     
     if (bj_round_.dealer_hand.size() != 1) {
         throw runtime_error("Expected dealer hand size 1 for blackjack chance calculation");
@@ -235,7 +236,7 @@ void DealerCheckBJNode::computeFloorValue() {
     }
 }
 
-bool DealerCheckBJNode::convertToFullUpToDepth(int depth) {
+pair<bool, bool> DealerCheckBJNode::convertToFullUpToDepth(int depth) {
     if (insurance_offered_) {
         // In the case of insurance, tree expansion and value update should be handled by
         // decision node

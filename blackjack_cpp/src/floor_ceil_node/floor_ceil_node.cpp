@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <numeric>
+#include <utility>
 
 using namespace std;
 
@@ -14,14 +15,12 @@ FloorCeilNode::FloorCeilNode(
     int max_hand_size_full_enum,
     int dealer_sim_depth,
     SimAlgo sim_algo,
-    AbstractBJTreeNode* parent,
-    int n_splits_happened
+    AbstractBJTreeNode* parent
 ) :
     AbstractBJTreeNode(bj_round, shoe, parent),
     max_hand_size_full_enum_(max_hand_size_full_enum),
     dealer_sim_depth_(dealer_sim_depth),
     sim_algo_(sim_algo),
-    n_splits_happened_(n_splits_happened),
     active_hand_size_(nullopt),
     ceil_value_(0.0),
     floor_value_(0.0)
@@ -48,8 +47,7 @@ void FloorCeilNode::createChild(
         max_hand_size_full_enum_,
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
     children_.push_back(child);
     children_prob_.push_back(prob);
@@ -192,7 +190,7 @@ void FloorCeilNode::buildChildrenPlayerCard() {
     throw runtime_error("buildChildrenPlayerCard must be implemented by subclass");
 }
 
-bool FloorCeilNode::convertToFullUpToDepth(int depth) {
+pair<bool, bool> FloorCeilNode::convertToFullUpToDepth(int depth) {
     if (!treeCompleted()) {
         throw runtime_error(
             "Cannot convert player card sample to full enum in an incomplete tree."
@@ -200,15 +198,16 @@ bool FloorCeilNode::convertToFullUpToDepth(int depth) {
     }
 
     if (depth < 0) {
-        return false;
+        return make_pair(false, false);
     }
     
     bool children_changed = false;
+    bool is_final = true;
 
     BJStage stage = bj_round_.getStage();
     
     if (stage == BJStage::DEALER_CARD || stage == BJStage::ROUND_OVER) {
-        return false;
+        return make_pair(false, true);
     }
 
     // Convert itself
@@ -239,17 +238,22 @@ bool FloorCeilNode::convertToFullUpToDepth(int depth) {
             children_changed = true;
         }
 
-        bool child_changed = fc_child->convertToFullUpToDepth(depth - 1);
+        auto [child_changed, child_is_final] = fc_child->convertToFullUpToDepth(depth - 1);
         if (child_changed) {
             children_changed = true;
         }
+        if (!child_is_final) {
+            is_final = false;
+        }
     }
 
+    bool value_changed = false;
     if (children_changed) {
         recomputeTreeValue();
-        return true;
+        value_changed = true;
     }
-    return false;
+    
+    return make_pair(value_changed, is_final);
 }
 
 bool FloorCeilNode::convertFromSampleToFull() {

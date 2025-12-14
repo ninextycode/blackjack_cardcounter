@@ -8,7 +8,7 @@ namespace blackjack {
 BJRound::BJRound(shared_ptr<const BJRules> rules):
     rules_(rules),
     dealer_hand(),
-    player_hands{ValueOnlyHand(rules ? !rules->ignore_player_natural_blackjack : true)},
+    player_hands{ValueOnlyHand(true)},
     active_hand_idx(0),
     dealer_checked_blackjack(false), 
     dealer_has_bj_after_check(false),
@@ -305,8 +305,15 @@ void BJRound::actionSplit() {
     if (active_hand_idx >= (int)player_hands.size()) throw runtime_error("Invalid hand index");
     auto h = player_hands[active_hand_idx];
     auto p = h.split();
-    player_hands[active_hand_idx] = p.first;
-    player_hands.insert(player_hands.begin() + active_hand_idx + 1, p.second);
+    // when split_order_reversed is False, the first/left card corresponds 
+    // to the first hand to be played, otherwise order is reversed
+    ValueOnlyHand new_hand_1 = p.first;
+    ValueOnlyHand new_hand_2 = p.second;
+    if (rules_->split_order_reversed) {
+        std::swap(new_hand_1, new_hand_2);
+    }
+    player_hands[active_hand_idx] = new_hand_1;
+    player_hands.insert(player_hands.begin() + active_hand_idx + 1, new_hand_2);
     is_hand_in_progress.insert(is_hand_in_progress.begin() + active_hand_idx + 1, true);
     hand_bets.insert(hand_bets.begin() + active_hand_idx + 1, hand_bets[active_hand_idx]);
     split_origin_idx = active_hand_idx;
@@ -364,7 +371,7 @@ void BJRound::calculateValue() {
             continue;
         }
 
-        if (((player_hands.size() == 1) || !rules_->no_natural_bj_on_split) && hand.is_natural_blackjack()) {
+        if (hand.is_natural_blackjack()) {
             got_per_hand_sum += (int)(bet * (1 + rules_->natural_blackjack_payout));
             continue;
         }
@@ -517,7 +524,7 @@ std::string BJRound::toString() const {
                 }
                 
                 int hard_value = hand.get_hard_value();
-                if (!(rules_->no_natural_bj_on_split && n_splits > 0) && hand.is_natural_blackjack()) {
+                if (hand.is_natural_blackjack()) {
                     parts += "(bj)";
                 } else if (hard_value != value.value()) {
                     parts += "(" + std::to_string(value.value()) + "/" + std::to_string(hard_value) + stand_str + ")";

@@ -40,7 +40,7 @@ void DoubleNode::createChild(
 }
 
 void DoubleNode::buildChildren() {
-    auto rank_prob = shoe_.get_rank_value_probabilities(nullopt);
+    auto rank_prob = shoe_.getRankValueProbabilities(nullopt);
     
     for (int card = 2; card <= 11; ++card) {
         double p = rank_prob.at(card);

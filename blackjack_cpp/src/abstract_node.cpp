@@ -208,7 +208,7 @@ void AbstractBJTreeNode::buildChildrenDealerCheckBj() {
     }
     int dealer_value = dealer_value_opt.value();
 
-    auto rv_prob = shoe_.get_rank_value_probabilities(nullopt);
+    auto rv_prob = shoe_.getRankValueProbabilities(nullopt);
 
     ProbabilisticRankShoe shoe_no_bj(shoe_);
     double p_dealer_blackjack;

@@ -20,7 +20,6 @@ class BJRules:
     allow_double_on_soft: bool = True
     allow_split_different_tens: bool = True
     split_order_reversed: bool = False
-    ignore_player_natural_blackjack: bool = False
 
     def __str__(self):
         str_lines = ["BJRules: "]

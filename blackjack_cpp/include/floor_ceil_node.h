@@ -102,8 +102,7 @@ public:
         int max_hand_size_full_enum,
         int dealer_sim_depth = 5,
         SimAlgo sim_algo = SimAlgo::RECURSIVE,
-        AbstractBJTreeNode* parent = nullptr,
-        int n_splits_happened = 0
+        AbstractBJTreeNode* parent = nullptr
     );
 
     virtual ~FloorCeilNode() = default;
@@ -124,13 +123,15 @@ public:
     virtual void rebuildChildren();
 
     // Tree conversion methods
-    virtual bool convertToFullUpToDepth(int depth);
+    // Returns pair<bool, bool>: (value_changed, is_final)
+    // value_changed: whether the node value changed
+    // is_final: whether no further exploration can improve the value
+    virtual pair<bool, bool> convertToFullUpToDepth(int depth);
 
     // Configuration
     int max_hand_size_full_enum_;
     int dealer_sim_depth_;
     SimAlgo sim_algo_;
-    int n_splits_happened_;
 
 protected:
     // Run dealer simulation using configured algorithm
@@ -169,8 +170,7 @@ public:
         int max_hand_size_full_enum,
         int dealer_sim_depth = 5,
         SimAlgo sim_algo = SimAlgo::RECURSIVE,
-        AbstractBJTreeNode* parent = nullptr,
-        int n_splits_happened = 0
+        AbstractBJTreeNode* parent = nullptr
     );
 
     // Override createChild to create appropriate node types
@@ -193,10 +193,11 @@ public:
     vector<pair<PlayerAction, AbstractBJTreeNode*>> getPossibleActionChildren();
 
     // Tree conversion
-    bool convertToFullUpToDepth(int depth) override;
-    bool convertBjCheckChildrenToFullUpToDepth(int depth);
-    bool convertPossibleChildrenToFullUpToDepth(int depth);
-    bool convertDecisionChildToFullUpToDepth(int depth);
+    // Returns pair<bool, bool>: (value_changed, is_final)
+    pair<bool, bool> convertToFullUpToDepth(int depth) override;
+    pair<bool, bool> convertBjCheckChildrenToFullUpToDepth(int depth);
+    pair<bool, bool> convertPossibleChildrenToFullUpToDepth(int depth);
+    pair<bool, bool> convertDecisionChildToFullUpToDepth(int depth);
 
     // Possible actions tracking
     vector<PlayerAction> possible_actions_;
@@ -226,8 +227,7 @@ public:
         bool insurance_offered,
         int dealer_sim_depth = 5,
         SimAlgo sim_algo = SimAlgo::RECURSIVE,
-        AbstractBJTreeNode* parent = nullptr,
-        int n_splits_happened = 0
+        AbstractBJTreeNode* parent = nullptr
     );
 
     void createChild(
@@ -241,7 +241,8 @@ public:
 
     double getDealerBlackjackChance() const;
 
-    bool convertToFullUpToDepth(int depth) override;
+    // Returns pair<bool, bool>: (value_changed, is_final)
+    pair<bool, bool> convertToFullUpToDepth(int depth) override;
 
     // Child indices
     int dealer_bj_child_idx_;
@@ -268,8 +269,7 @@ public:
         int max_hand_size_full_enum,
         int dealer_sim_depth = 5,
         SimAlgo sim_algo = SimAlgo::RECURSIVE,
-        AbstractBJTreeNode* parent = nullptr,
-        int n_splits_happened = 0
+        AbstractBJTreeNode* parent = nullptr
     );
 
     void createChild(
@@ -281,8 +281,8 @@ public:
 
     void buildChildren() override;
 
-    // Original round for reference
-    BJRound original_bj_round_;
+    // Index of the first hand (placeholder hand with bet=0)
+    int first_hand_idx_;
 
 protected:
     void computeNodeValue() override;
@@ -303,8 +303,7 @@ public:
         int max_hand_size_full_enum,
         int dealer_sim_depth = 5,
         SimAlgo sim_algo = SimAlgo::RECURSIVE,
-        AbstractBJTreeNode* parent = nullptr,
-        int n_splits_happened = 0
+        AbstractBJTreeNode* parent = nullptr
     );
 
     void createChild(

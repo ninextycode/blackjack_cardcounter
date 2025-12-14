@@ -32,7 +32,6 @@ class Player:
         allow_double_after_split = True,
         allow_double_on_soft = True,
         allow_split_different_tens = True,
-        no_natural_bj_on_split = True,
         split_order_reversed = True
     )
 

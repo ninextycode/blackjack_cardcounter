@@ -13,8 +13,8 @@ namespace {
 void buildAndConverge(FloorCeilNode& node, double gap_target_absolute) {
     node.buildTree();
     for (int depth = 0; depth < 100; ++depth) {
-        node.convertToFullUpToDepth(depth);
-        if (node.getCeilValue() - node.getFloorValue() < gap_target_absolute) {
+        auto [value_changed, is_final] = node.convertToFullUpToDepth(depth);
+        if (is_final || node.getCeilValue() - node.getFloorValue() < gap_target_absolute) {
             break;
         }
     }
@@ -51,17 +51,19 @@ RootNodeResult createRootNode(
         result.node = nullptr;
         return result;
     }
+
+    int n_dealer_sim_runs = 1;  // Default number of dealer sim runs
     
     if (stage == BJStage::DEALER_CHECK_BJ) {
         // Dealer checks blackjack (ten up), insurance not offered
         auto node = make_shared<DealerCheckBJNode>(
-            bj_round, shoe, 1, false, false, sim_depth, algo
+            bj_round, shoe, n_dealer_sim_runs, false, false, sim_depth, algo
         );
         result.node = node;
     } else {
         // Normal decision node (including insurance offers)
         auto node = make_shared<DecisionNode>(
-            bj_round, shoe, 1, sim_depth, algo
+            bj_round, shoe, n_dealer_sim_runs, sim_depth, algo
         );
         result.node = node;
     }
@@ -97,17 +99,17 @@ EdgeResult calculateEdge(
                 double prob = 1.0;
                 
                 // Calculate probability
-                auto prob_map = shoe_copy.get_rank_value_probabilities();
+                auto prob_map = shoe_copy.getRankValueProbabilities();
                 prob *= prob_map.at(p0);
                 if (prob == 0) continue;
                 shoe_copy.burnRankValue(p0);
                 
-                prob_map = shoe_copy.get_rank_value_probabilities();
+                prob_map = shoe_copy.getRankValueProbabilities();
                 prob *= prob_map.at(p1);
                 if (prob == 0) continue;
                 shoe_copy.burnRankValue(p1);
                 
-                prob_map = shoe_copy.get_rank_value_probabilities();
+                prob_map = shoe_copy.getRankValueProbabilities();
                 prob *= prob_map.at(d);
                 if (prob == 0) continue;
                 

@@ -19,8 +19,8 @@ namespace {
 void buildAndConverge(blackjack::FloorCeilNode& node, double gap_target) {
     node.buildTree();
     for (int depth = 0; depth < 100; ++depth) {
-        node.convertToFullUpToDepth(depth);
-        if (node.getCeilValue() - node.getFloorValue() < gap_target) {
+        auto [value_changed, is_final] = node.convertToFullUpToDepth(depth);
+        if (is_final || node.getCeilValue() - node.getFloorValue() < gap_target) {
             break;
         }
     }
@@ -142,23 +142,7 @@ optional<blackjack::PlayerAction> getBestActionFromRootNode(RootNodeResult& resu
 
 void blackjack::testEv() {
     // Setup rules matching Python notebook
-    BJRules rules;
-    rules.dealer_checks_blackjack = true;
-    rules.dealer_hits_soft_17 = false;
-    rules.allow_late_surrender = false;
-    rules.allow_early_surrender_on_ten = false;
-    rules.allow_early_surrender_on_ace = false;
-    rules.allow_early_surrender_on_all = false;
-    rules.dealer_shows_card_on_surrender = false;
-    rules.allow_insurance_vs_ace = true;
-    rules.natural_blackjack_payout = 3.0 / 2.0;
-    rules.surrender_payout = 1.0 / 2.0;
-    rules.insurance_payout = 2.0 / 1.0;
-    rules.max_splits_allowed = 1;
-    rules.allow_action_on_split_aces = true;
-    rules.allow_double_after_split = true;
-    rules.allow_double_on_soft = true;
-    rules.allow_split_different_tens = true;
+    BJRules rules = getDefaultRules();
 
     auto rules_ptr = make_shared<const BJRules>(rules);
 
@@ -201,7 +185,7 @@ void blackjack::testEv() {
          << setw(10) << "Gap" << endl;
     cout << "=" << string(69, '=') << endl;
 
-    vector<int> depth_values{2, 3, 4, 5, 6, 7};
+    vector<int> depth_values{2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
     for (int depth : depth_values) {
         for (SimAlgo algo : {SimAlgo::COMBO, SimAlgo::RECURSIVE}) {
         // SimAlgo algo = SimAlgo::RECURSIVE;
@@ -299,17 +283,17 @@ void blackjack::testEdge() {
                 double prob = 1.0;
                 
                 // Calculate probability
-                auto prob_map = shoe.get_rank_value_probabilities();
+                auto prob_map = shoe.getRankValueProbabilities();
                 prob *= prob_map.at(p0);
                 if (prob == 0) continue;
                 shoe.burnRankValue(p0);
                 
-                prob_map = shoe.get_rank_value_probabilities();
+                prob_map = shoe.getRankValueProbabilities();
                 prob *= prob_map.at(p1);
                 if (prob == 0) continue;
                 shoe.burnRankValue(p1);
                 
-                prob_map = shoe.get_rank_value_probabilities();
+                prob_map = shoe.getRankValueProbabilities();
                 prob *= prob_map.at(d);
                 if (prob == 0) continue;
                 
@@ -535,6 +519,7 @@ void blackjack::testEdgeTiming() {
     
     cout << "=" << string(80, '=') << endl;
     cout << left << setw(10) << "Depth" 
+         << setw(12) << "Algorithm"
          << setw(14) << "Runtime (s)" 
          << setw(20) << "EV" 
          << setw(20) << "EV_min" 
@@ -544,26 +529,137 @@ void blackjack::testEdgeTiming() {
     vector<int> depths = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
     
     for (int depth : depths) {
-        auto t_start = chrono::high_resolution_clock::now();
-        
-        EdgeResult result = calculateEdge(
-            shoe,
-            rules,
-            bet_unit,
-            depth,
-            gap_target,
-            SimAlgo::RECURSIVE
-        );
-        
-        auto t_end = chrono::high_resolution_clock::now();
-        double runtime = chrono::duration<double>(t_end - t_start).count();
-        
-        cout << left << setw(10) << depth
-             << fixed << setprecision(3) << setw(14) << runtime
-             << setprecision(6) << setw(20) << result.ev
-             << setw(20) << result.ev_min
-             << setw(20) << result.ev_max << endl;
+        for (SimAlgo algo : {SimAlgo::RECURSIVE, SimAlgo::COMBO}) {
+            string algo_name = (algo == SimAlgo::COMBO) ? "combo" : "recursive";
+            auto t_start = chrono::high_resolution_clock::now();
+            
+            EdgeResult result = calculateEdge(
+                shoe,
+                rules,
+                bet_unit,
+                depth,
+                gap_target,
+                algo
+            );
+            
+            auto t_end = chrono::high_resolution_clock::now();
+            double runtime = chrono::duration<double>(t_end - t_start).count();
+            
+            cout << left << setw(10) << depth
+                << setw(12) << algo_name
+                << fixed << setprecision(3) << setw(14) << runtime
+                << setprecision(6) << setw(20) << result.ev
+                << setw(20) << result.ev_min
+                << setw(20) << result.ev_max << endl;
+        }
     }
     
     cout << "=" << string(80, '=') << endl;
+}
+
+
+
+void blackjack::testEdgeTimingWithGap() {
+    BJRules rules = getDefaultRules();
+    
+    const int n_decks = 6;
+    const int bet_unit = 100;
+    
+    mt19937_64 gen(random_device{}());
+    RankCount random_shoe_data;
+    for (int rank = 2; rank <= 11; ++rank) {
+        int max_count = 4 * n_decks;
+        if (rank == 10) {
+            max_count = 16 * n_decks;  // 4 face cards * 4 suits * 6 decks
+        }
+        uniform_int_distribution<int> dist(1, max_count);
+        random_shoe_data.at(rank) = dist(gen);
+    }
+    
+    // RandomSampler::resetGlobalSeedGenerator(42);
+
+    ProbabilisticRankShoe shoe(random_shoe_data, RandomSampler::createNextSampler());
+    
+    cout << "======================================" << endl;
+    cout << "Testing Edge Timing with Different Gap Targets" << endl;
+    cout << "======================================" << endl;
+    cout << "Random shoe composition:" << endl;
+    for (int rank = 2; rank <= 11; ++rank) {
+        cout << "Rank " << (rank == 11 ? "A" : std::to_string(rank)) << ": " << random_shoe_data.at(rank) << endl;
+    }
+    cout << endl;
+    
+    vector<SimAlgo> algos = { /* SimAlgo::RECURSIVE, */ SimAlgo::COMBO};
+    vector<double> gap_targets{0.1, 0.03, 0.01, 0.003, 0.001, 0.0003, 0.0001, 0.00003, 0.00001};
+    vector<int> depths = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    
+    // First, compute the reference value using both algorithms with finest gap and highest depth
+    int ref_depth = depths.back();
+    double ref_gap = gap_targets.back();
+    
+    auto t_ref_recursive_start = chrono::high_resolution_clock::now();
+    EdgeResult ref_recursive = calculateEdge(shoe, rules, bet_unit, ref_depth, ref_gap, SimAlgo::RECURSIVE);
+    auto t_ref_recursive_end = chrono::high_resolution_clock::now();
+    double ref_recursive_runtime = chrono::duration<double>(t_ref_recursive_end - t_ref_recursive_start).count();
+    
+    auto t_ref_combo_start = chrono::high_resolution_clock::now();
+    EdgeResult ref_combo = calculateEdge(shoe, rules, bet_unit, ref_depth, ref_gap, SimAlgo::COMBO);
+    auto t_ref_combo_end = chrono::high_resolution_clock::now();
+    double ref_combo_runtime = chrono::duration<double>(t_ref_combo_end - t_ref_combo_start).count();
+    
+    double ref_value = (ref_recursive.ev + ref_combo.ev) / 2.0;
+    
+    cout << "Reference value (avg of RECURSIVE and COMBO at depth=" << ref_depth 
+         << ", gap=" << ref_gap << "): " << fixed << setprecision(8) << ref_value << endl;
+    cout << "  RECURSIVE: " << setprecision(8) << ref_recursive.ev << " (runtime: " << fixed << setprecision(3) << ref_recursive_runtime << " s)" << endl;
+    cout << "  COMBO:     " << setprecision(8) << ref_combo.ev << " (runtime: " << fixed << setprecision(3) << ref_combo_runtime << " s)" << endl;
+    cout << endl;
+    
+    // Iterate: algo -> depth -> gap_target
+    for (SimAlgo algo : algos) {
+        string algo_name = (algo == SimAlgo::COMBO) ? "COMBO" : "RECURSIVE";
+        
+        cout << "=" << string(120, '=') << endl;
+        cout << "Algorithm: " << algo_name << endl;
+        cout << "=" << string(120, '=') << endl;
+        
+        cout << left << setw(10) << "Depth" 
+             << setw(14) << "Gap Target"
+             << setw(14) << "Runtime (s)" 
+             << setw(20) << "EV" 
+             << setw(20) << "EV_min" 
+             << setw(20) << "EV_max"
+             << setw(20) << "Error" << endl;
+        cout << "-" << string(120, '-') << endl;
+        
+        for (int depth : depths) {
+            for (double gap_target : gap_targets) {
+                auto t_start = chrono::high_resolution_clock::now();
+                
+                EdgeResult result = calculateEdge(
+                    shoe,
+                    rules,
+                    bet_unit,
+                    depth,
+                    gap_target,
+                    algo
+                );
+                
+                auto t_end = chrono::high_resolution_clock::now();
+                double runtime = chrono::duration<double>(t_end - t_start).count();
+                
+                double error = result.ev - ref_value;
+                
+                cout << left << setw(10) << depth
+                     << setw(14) << scientific << setprecision(1) << gap_target
+                     << fixed << setprecision(3) << setw(14) << runtime
+                     << setprecision(6) << setw(20) << result.ev
+                     << setw(20) << result.ev_min
+                     << setw(20) << result.ev_max
+                     << setprecision(8) << setw(20) << error << endl;
+            }
+            cout << "-" << string(120, '-') << endl;
+        }
+        cout << endl;
+    }
 }

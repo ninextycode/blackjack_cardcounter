@@ -97,11 +97,32 @@ double runDealerCardsSimulationRecursiveInternal(
  * @param shoe The shoe (temporarily modified during simulation)
  * @param n_dealer_sim_runs Number of simulation runs
  * @param dealer_hit_soft_17 Whether dealer hits soft 17
- * @return Vector of outcomes (-1, 0, or 1 for each run)
+ * @return Mean outcome value (-1 to 1)
  */
-vector<double> runDealerCardsSimulation(
+double runDealerCardsSimulation(
     int player_value,
-    const ValueOnlyHand& dealer_hand,
+    ValueOnlyHand& dealer_hand,
+    ProbabilisticRankShoe& shoe,
+    int n_dealer_sim_runs,
+    bool dealer_hit_soft_17 = false
+);
+
+/**
+ * Simplified Monte Carlo simulation for remaining dealer cards.
+ * Uses raw value and soft flag instead of Hand object for better performance.
+ * 
+ * @param player_value The player's hand value
+ * @param dealer_value The dealer's current hand value
+ * @param is_soft Whether the dealer's hand is soft (contains an ace counted as 11)
+ * @param shoe The shoe (temporarily modified during simulation)
+ * @param n_dealer_sim_runs Number of simulation runs
+ * @param dealer_hit_soft_17 Whether dealer hits soft 17
+ * @return Mean outcome value (-1 to 1)
+ */
+double runDealerCardsSimulationSimple(
+    int player_value,
+    int dealer_value,
+    bool is_soft,
     ProbabilisticRankShoe& shoe,
     int n_dealer_sim_runs,
     bool dealer_hit_soft_17 = false
@@ -110,13 +131,22 @@ vector<double> runDealerCardsSimulation(
 /**
  * Data structure holding precomputed dealer card combinations.
  * Used for the combo algorithm optimization.
+ * 
+ * Each combo tuple contains:
+ * - vector<int>: sequence of card values
+ * - int: count/permutations of this combination
+ * - uint64_t: precomputed combo ID for cache lookup
+ * - int: dealer hand value after this combo (for stand/other combos)
+ * - bool: whether dealer hand is soft after this combo (other combos only)
  */
 struct CombinationsData {
-    // A pair for a combination (sequence of card values) and the count of such combinations
-    vector<pair<vector<int>, int>> bust_combos_data;
-    vector<pair<vector<int>, int>> stand_combos_data;
+    // (combo, count, combo_id)
+    vector<tuple<vector<int>, int, uint64_t>> bust_combos_data;
+    // (combo, count, combo_id, dealer_value)
+    vector<tuple<vector<int>, int, uint64_t, int>> stand_combos_data;
     vector<int> stand_values;
-    vector<pair<vector<int>, int>> other_combos_data;
+    // (combo, count, combo_id, dealer_value, is_soft)
+    vector<tuple<vector<int>, int, uint64_t, int, bool>> other_combos_data;
 };
 
 /**
@@ -131,10 +161,11 @@ struct CombinationsData {
  * }
  * 
  * @param json_path Path to the JSON file
+ * @param upcard The dealer's upcard value (2-11) for precomputing hand values
  * @return CombinationsData structure with loaded data
  * @throws runtime_error if file cannot be opened or parsed
  */
-CombinationsData loadCombinationsData(const string& json_path);
+CombinationsData loadCombinationsData(const string& json_path, int upcard);
 
 
 /**

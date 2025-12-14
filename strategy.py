@@ -3,9 +3,8 @@ import pandas as pd
 import os
 from blackjack.actions import PlayerAction, DealerAction
 from blackjack.blackjack_round import BJRound, BJStage
-from blackjack.shoe import ProbabilisticRankShoe
+from blackjack_py import ProbabilisticRankShoe, RandomSampler
 from blackjack.rules import BJRules
-from random_sampler import RandomSampler
 import time
 import random
 import tqdm
@@ -159,6 +158,24 @@ class DeviatedBasicStrategy:
     
 
 class CardCounter:
+    @staticmethod
+    def from_rank_count(rank_count, n_decks=0):
+        counter = CardCounter(n_decks)
+        # we know the cards remaining in the shoe, not the ones removed
+        # at the start the shoe was balanced - 
+        # 5 ranks for -1 / 3 ranks for 0 / 5 ranks for +1 
+        # shoe is positively unbalanced to the degree there are more T-A than 2-6 
+        n_26 = 0
+        n_TA = 0
+        for r, c in rank_count.items():
+            counter.remaining_cards += c 
+            if 2 <= r <= 6:
+                n_26 += c
+            elif r >= 10:
+                n_TA += c
+        counter.running_count = n_TA - n_26
+        return counter
+
     def __init__(self, n_decks, current_penetration=0):
         self.n_decks = n_decks
         self.remaining_cards = n_decks * 52

@@ -129,6 +129,10 @@ ValueOnlyHand::ValueOnlyHand(const std::vector<int>& values, bool natural_blackj
     : values_(values), best_value_cache_(std::nullopt), hard_value_cache_(0),
       natural_blackjack_possible_(natural_blackjack_possible) {}
 
+ValueOnlyHand::ValueOnlyHand(std::vector<int>&& values, bool natural_blackjack_possible)
+    : values_(std::move(values)), best_value_cache_(std::nullopt), hard_value_cache_(0),
+      natural_blackjack_possible_(natural_blackjack_possible) {}
+
 int ValueOnlyHand::size() const { return (int)values_.size(); }
 
 void ValueOnlyHand::add_value(int v) {
@@ -136,19 +140,20 @@ void ValueOnlyHand::add_value(int v) {
     reset_cache();
 }
 
-int ValueOnlyHand::pop_value() {
-    if (values_.empty()) {
-        throw std::runtime_error("Cannot pop from empty hand");
+void ValueOnlyHand::add_values(const vector<int>& v) {
+    values_.insert(values_.end(), v.begin(), v.end());
+    reset_cache();
+}
+
+int ValueOnlyHand::pop_value(size_t n) {
+    int v = values_.back();;
+    for (size_t i = 0; i < n; ++i) {
+        values_.pop_back();
     }
-    int v = values_.back();
-    values_.pop_back();
     reset_cache();
     return v;
 }
 
-ValueOnlyHand ValueOnlyHand::copy() const {
-    return ValueOnlyHand(values_, natural_blackjack_possible_);
-}
 
 std::pair<ValueOnlyHand, ValueOnlyHand> ValueOnlyHand::split() const {
     if (values_.size() != 2) throw std::runtime_error("Can only split 2-value hand");
@@ -234,15 +239,27 @@ int ValueOnlyHand::get_hard_value() const {
 
 std::string ValueOnlyHand::to_string() const {
     std::ostringstream ss;
-    ss << "[";
+    // Format matching Python: vals(value) or vals(hard/value) if soft
+    // Show "A" for ace (11), numbers for others
     for (size_t i = 0; i < values_.size(); ++i) {
         if (i) ss << ",";
-        ss << values_[i];
+        if (values_[i] == 11) {
+            ss << "A";
+        } else {
+            ss << values_[i];
+        }
     }
-    ss << "] (";
     auto bv = get_best_value();
-    if (!bv.has_value()) ss << "bust"; else ss << *bv;
-    ss << ")";
+    int hv = get_hard_value();
+    if (!bv.has_value()) {
+        ss << "(bust)";
+    } else {
+        if (*bv == hv) {
+            ss << "(" << *bv << ")";
+        } else {
+            ss << "(" << hv << "/" << *bv << ")";
+        }
+    }
     return ss.str();
 }
 

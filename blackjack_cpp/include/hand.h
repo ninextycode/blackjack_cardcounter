@@ -44,11 +44,12 @@ class ValueOnlyHand {
 public:
     ValueOnlyHand(bool natural_blackjack_possible = true);
     explicit ValueOnlyHand(const vector<int>& values, bool natural_blackjack_possible = true);
+    explicit ValueOnlyHand(vector<int>&& values, bool natural_blackjack_possible = true);
 
     int size() const;
     void add_value(int v);
-    int pop_value();
-    ValueOnlyHand copy() const;
+    void add_values(const vector<int>& v);
+    int pop_value(size_t n = 1);
     pair<ValueOnlyHand, ValueOnlyHand> split() const;
     bool is_same_rank_pair() const;       // Not determinable from values
     bool is_same_value_pair() const;

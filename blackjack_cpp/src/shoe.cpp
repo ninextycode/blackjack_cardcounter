@@ -32,17 +32,17 @@ ProbabilisticRankShoe::ProbabilisticRankShoe(int n_decks, const RandomSampler& s
 }
 
 
-ProbabilisticRankShoe::ProbabilisticRankShoe(const ProbabilisticRankShoe& other)
-    : sampler_(other.sampler_)
-{
-    n_total_ = other.n_total_;
-    value_counts_ = other.value_counts_;
-    value_probs_ = other.value_probs_;
-    given_dealer_card_is_not_value_ = other.given_dealer_card_is_not_value_;
-}
+// ProbabilisticRankShoe::ProbabilisticRankShoe(const ProbabilisticRankShoe& other)
+//     : sampler_(other.sampler_)
+// {
+//     n_total_ = other.n_total_;
+//     value_counts_ = other.value_counts_;
+//     value_probs_ = other.value_probs_;
+//     given_dealer_card_is_not_value_ = other.given_dealer_card_is_not_value_;
+// }
 
 
-ProbabilisticRankShoe::ProbabilisticRankShoe(const RankMap<int>& rank_counts, const RandomSampler& sampler):
+ProbabilisticRankShoe::ProbabilisticRankShoe(const RankCount& rank_counts, const RandomSampler& sampler):
     sampler_(sampler)
 {
     n_total_ = 0;
@@ -53,6 +53,19 @@ ProbabilisticRankShoe::ProbabilisticRankShoe(const RankMap<int>& rank_counts, co
     recomputeRawProbabilities();
     given_dealer_card_is_not_value_ = nullopt;
 }
+
+ProbabilisticRankShoe::ProbabilisticRankShoe(RankCount&& rank_counts, const RandomSampler& sampler):
+    sampler_(sampler)
+{
+    n_total_ = 0;
+    value_counts_ = std::move(rank_counts);
+    for (int i = 2; i <= 11; ++i) {
+        n_total_ += value_counts_.at(i);
+    }
+    recomputeRawProbabilities();
+    given_dealer_card_is_not_value_ = nullopt;
+}
+
 
 void ProbabilisticRankShoe::setNumberOfRankCards(
     int rank_value,
@@ -77,6 +90,12 @@ int ProbabilisticRankShoe::getNumberOfCards() const {
     return n_total_;
 }
 
+ProbabilisticRankShoe ProbabilisticRankShoe::copyResetSampler() const {
+    ProbabilisticRankShoe copy = *this;
+    copy.resetSampler();
+    return copy;
+}
+
 void ProbabilisticRankShoe::resetSampler() {
     resetSampler(RandomSampler::createNextSampler());
 }
@@ -95,6 +114,25 @@ int ProbabilisticRankShoe::sampleAndBurnRank(
     return rv;
 }
 
+ProbabilisticRankShoe ProbabilisticRankShoe::copyAndBurnRank(
+    int rank_value
+) const {
+    ProbabilisticRankShoe new_shoe(*this);
+    new_shoe.burnRankValue(rank_value);
+    return new_shoe;
+}
+
+
+void ProbabilisticRankShoe::addRankValues(
+    const vector<int>& rank_values
+) {
+    for (int rank_value : rank_values) {
+        value_counts_.at(rank_value) += 1;
+    }
+    n_total_ += rank_values.size();
+    recomputeRawProbabilities();
+}
+
 
 void ProbabilisticRankShoe::addRankValue(
     int rank_value
@@ -108,7 +146,16 @@ void ProbabilisticRankShoe::addRankValue(
 int ProbabilisticRankShoe::sampleRank(
     const optional<vector<int>>& given_rank_values_set
 ) {
-    RankProbability probs = get_rank_value_probabilities(given_rank_values_set);
+    if (!given_rank_values_set.has_value() && !isDealerCardLocked()) {
+        vector<int> counts;
+        for (int rv = 2; rv <= 11; rv++) {
+            counts.push_back(value_counts_.at(rv));
+        }
+        return sampler_.discrete_counts(counts) + 2;
+    }
+
+
+    RankProbability probs = getRankValueProbabilities(given_rank_values_set);
     vector<double> prob_vec;
     vector<int> rank_values;
     for (int rv = 2; rv <= 11; rv++) {
@@ -121,6 +168,8 @@ int ProbabilisticRankShoe::sampleRank(
     if (prob_vec.empty()) {
         throw runtime_error("No available ranks to sample from");
     }
+
+    // return sampler_.choice_counts(rank_values, prob_counts);
     return sampler_.choice(rank_values, prob_vec);
 }
 
@@ -131,6 +180,26 @@ void ProbabilisticRankShoe::recomputeRawProbabilities() {
             ? double(value_counts_.at(i)) / double(n_total_) \
             : 0.0;
     }
+}
+
+
+RankProbability ProbabilisticRankShoe::getRankValueProbabilities(
+    const optional<vector<int>>& given_rank_values_set
+) const {
+    RankProbability probabilities;
+    for (int v = 2; v <= 11; v++) {
+        probabilities.at(v) = value_probs_.at(v);
+    }
+    takeGivenDealerInfoIntoAccount(probabilities);
+    takeGivenSetIntoAccount(probabilities, given_rank_values_set);
+    return probabilities;
+}
+
+double ProbabilisticRankShoe::getRankValueProbability(
+    int rank, const optional<vector<int>>& given_rank_values_set
+) const {
+    RankProbability probabilities = getRankValueProbabilities(given_rank_values_set);
+    return probabilities.at(rank);
 }
 
 
@@ -155,8 +224,11 @@ void ProbabilisticRankShoe::takeGivenDealerInfoIntoAccount(
 
     for (int rv = 2; rv <= 11; rv++) {
         double p = probabilities.at(rv) * double(n_total_) / double(max(1, n_total_ - 1));
-        if (rv == vnot) probabilities.at(rv) = p;
-        else probabilities.at(rv) = p * coef;
+        if (rv == vnot) {
+            probabilities.at(rv) = p;
+        } else {
+            probabilities.at(rv) = p * coef;
+        }
     }
     return;
 }
@@ -184,19 +256,6 @@ void ProbabilisticRankShoe::takeGivenSetIntoAccount(
 }
 
 
-RankProbability ProbabilisticRankShoe::get_rank_value_probabilities(
-    const optional<vector<int>>& given_rank_values_set
-) const {
-    RankProbability probabilities;
-    for (int v = 2; v <= 11; v++) {
-        probabilities.at(v) = value_probs_.at(v);
-    }
-    takeGivenDealerInfoIntoAccount(probabilities);
-    takeGivenSetIntoAccount(probabilities, given_rank_values_set);
-    return probabilities;
-}
-
-
 void ProbabilisticRankShoe::burnCard(const Card& c) { 
     burnRankValue(c.rank_value()); 
 }
@@ -209,6 +268,10 @@ void ProbabilisticRankShoe::burnRankValue(int rank_value) {
     value_counts_.at(rank_value) -= 1;
     n_total_ -= 1;
     recomputeRawProbabilities();
+}
+
+RankCount ProbabilisticRankShoe::getRankCount() const {
+    return value_counts_;
 }
 
 
@@ -228,10 +291,14 @@ bool ProbabilisticRankShoe::isDealerCardLocked() {
 }
 
 string ProbabilisticRankShoe::toString() const {
+    return toStringCount();
+}
+
+string ProbabilisticRankShoe::toStringProb() const {
     ostringstream ss;
     ss << "ProbabilisticRankShoe\n";
 
-    auto probs = get_rank_value_probabilities();
+    auto probs = getRankValueProbabilities();
     for (int rv = 2; rv <= 11; rv++) {
         double p = probs.at(rv);
         if (p==0.0) {
@@ -243,6 +310,21 @@ string ProbabilisticRankShoe::toString() const {
         }
         ss << ") = " << (p*100.0) << "%\n";
     }
+    return ss.str();
+}
+
+string ProbabilisticRankShoe::toStringCount() const {
+    ostringstream ss;
+    ss << "ProbabilisticRankShoe\n";
+
+    for (int rv = 2; rv <= 11; rv++) {
+        int count = value_counts_.at(rv);
+        if (count == 0) {
+            continue;
+        }
+        ss << "  count(" << rv << ") = " << count << "\n";
+    }
+    ss << "  total = " << n_total_ << "\n";
     return ss.str();
 }
 

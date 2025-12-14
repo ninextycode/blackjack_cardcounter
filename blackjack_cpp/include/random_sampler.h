@@ -17,9 +17,15 @@ public:
     static RandomSampler createNextSampler();
 
     RandomSampler(uint64_t seed);
-    RandomSampler(const RandomSampler&);
     RandomSampler(const string& state);
-    RandomSampler& operator=(const RandomSampler& other);
+
+    RandomSampler(const RandomSampler&) = default;
+    RandomSampler& operator=(const RandomSampler& other) = default;
+    
+    RandomSampler(RandomSampler&&) noexcept = default;
+    RandomSampler& operator=(RandomSampler&& other) noexcept = default;
+
+    ~RandomSampler() = default;
 
     string getRngState() const;
 
@@ -29,6 +35,7 @@ public:
     
     // Sample from discrete distribution given probabilities
     int discrete(const vector<double>& probs);
+    int discrete_counts(const vector<int>& counts);
     
     // Sample integers in range [low, high)
     int randint(int low, int high);
@@ -39,13 +46,27 @@ public:
     // Choice - select element from array with given probabilities
     template<typename T>
     T choice(const vector<T>& values, const vector<double>& probs);
+
+
+    template<typename T>
+    T choice_counts(const vector<T>& values, const vector<int>& counts);
 private:
     static uint64_t generateSeed();
-    inline static mt19937_64 global_seed_generator{random_device{}()};
-    inline static mutex global_seed_generator_mutex;
+    inline static thread_local minstd_rand global_seed_generator{random_device{}()};
+    // inline static thread_local mutex global_seed_generator_mutex;
 
-    mt19937_64 gen;
-    uniform_real_distribution<double> uniform_dist;
+
+    inline float u01f_minstd() {
+        return std::generate_canonical<float, 24>(gen); // [0,1)
+    }
+
+    inline int fast_randint(int max) {
+        return gen() % max;
+    }
+
+    minstd_rand gen;
+    // mt19937_64 gen;
+    // uniform_real_distribution<double> uniform_dist(0, 1);
 };
 
 
@@ -58,5 +79,18 @@ T RandomSampler::choice(const vector<T>& values, const vector<double>& probs) {
         throw invalid_argument("Cannot choose from empty array");
     }
     int idx = discrete(probs);
+    return values[idx];
+}
+
+
+template<typename T>
+T RandomSampler::choice_counts(const vector<T>& values, const vector<int>& counts) {
+    if (values.size() != counts.size()) {
+        throw invalid_argument("values and counts must have same length");
+    }
+    if (values.empty()) {
+        throw invalid_argument("Cannot choose from empty array");
+    }
+    int idx = discrete_counts(counts);
     return values[idx];
 }

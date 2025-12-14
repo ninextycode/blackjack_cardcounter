@@ -10,11 +10,17 @@ project(blackjack_cpp_lib LANGUAGES CXX)
 # Find OpenMP
 find_package(OpenMP REQUIRED)
 
+# Find Boost program_options
+find_package(Boost REQUIRED COMPONENTS program_options)
+
 # Profile-guided optimization options
 set(PGO_PROFILE_DIR "/tmp/bjprof")
 option(PGO_GENERATE "Build with -fprofile-generate" OFF)
 option(PGO_USE "Build with -fprofile-use" OFF)
-
+# cmake -B build -DPGO_GENERATE=ON -DPGO_USE=OFF 
+# cmake --build build --clean-first
+# cmake -B build -DPGO_GENERATE=OFF -DPGO_USE=ON
+# cmake --build build --clean-first
 # Profiling drops runtime for edge estimation by about 20%
 if(PGO_GENERATE)
     add_compile_options(-fprofile-generate=${PGO_PROFILE_DIR})
@@ -44,7 +50,7 @@ add_executable(blackjack_exec ${CPP_EXEC_SOURCES})
 target_link_libraries(blackjack_exec PRIVATE blackjack)
 
 add_executable(edge_exec ${EDGE_EXEC_SOURCES})
-target_link_libraries(edge_exec PRIVATE blackjack)
+target_link_libraries(edge_exec PRIVATE blackjack Boost::program_options)
 
 # Build python module with pybind11
 pybind11_add_module(blackjack_py ${CMAKE_CURRENT_SOURCE_DIR}/src/pybind/pybind.cpp)

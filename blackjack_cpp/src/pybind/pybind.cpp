@@ -156,7 +156,7 @@ PYBIND11_MODULE(blackjack_py, m) {
             "get_rank_value_probabilities",
             [](const blackjack::ProbabilisticRankShoe& shoe, 
                const optional<vector<int>>& given_rank_values_set) {
-                auto rank_probs = shoe.get_rank_value_probabilities(given_rank_values_set);
+                auto rank_probs = shoe.getRankValueProbabilities(given_rank_values_set);
                 py::dict result;
                 for (int rv = 2; rv <= 11; rv++) {
                     double p = rank_probs.at(rv);
@@ -168,6 +168,19 @@ PYBIND11_MODULE(blackjack_py, m) {
             },
             py::arg("given_rank_values_set") = py::none(),
             "Get probabilities for rank values 2-11 as a dictionary"
+        )
+        .def(
+            "get_rank_value_counts",
+            [](const blackjack::ProbabilisticRankShoe& shoe) {
+                auto rank_counts = shoe.getRankCount();
+                py::dict result;
+                for (int rv = 2; rv <= 11; rv++) {
+                    int c = rank_counts.at(rv);
+                    result[py::int_(rv)] = c;
+                }
+                return result;
+            },
+            "Get counts for rank values 2-11 as a dictionary"
         )
         .def(
             "burn_rank_value",

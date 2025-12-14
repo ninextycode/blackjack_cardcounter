@@ -14,8 +14,7 @@ HitNode::HitNode(
     int max_hand_size_full_enum,
     int dealer_sim_depth,
     SimAlgo sim_algo,
-    AbstractBJTreeNode* parent,
-    int n_splits_happened
+    AbstractBJTreeNode* parent
 ) :
     FloorCeilNode(
         bj_round,
@@ -23,8 +22,7 @@ HitNode::HitNode(
         max_hand_size_full_enum,
         dealer_sim_depth,
         sim_algo,
-        parent,
-        n_splits_happened
+        parent
     ),
     rank_probabilities_(),
     cards_bust_(),
@@ -36,7 +34,7 @@ HitNode::HitNode(
     max_child_value_(static_cast<double>(bj_round_.bet_unit)),
     min_child_value_(-static_cast<double>(bj_round_.bet_unit))
 {
-    rank_probabilities_ = shoe_.get_rank_value_probabilities(nullopt);
+    rank_probabilities_ = shoe_.getRankValueProbabilities(nullopt);
     initValues();
 }
 
@@ -52,8 +50,7 @@ void HitNode::createChild(
         max_hand_size_full_enum_,
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
     children_.push_back(child);
     children_prob_.push_back(prob);
@@ -158,8 +155,7 @@ bool HitNode::addSample() {
         max_hand_size_full_enum_,
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
 
     // Find and replace the old child
@@ -191,8 +187,7 @@ bool HitNode::convertFromSampleToFull() {
             max_hand_size_full_enum_,
             dealer_sim_depth_,
             sim_algo_,
-            this,
-            n_splits_happened_
+            this
         );
         
         // Find and replace the old child
@@ -253,8 +248,7 @@ void HitNode::buildChildren() {
             max_hand_size_full_enum_,
             dealer_sim_depth_,
             sim_algo_,
-            this,
-            n_splits_happened_
+            this
         );
         double p = rank_probabilities_.at(c);
         addChild(child, c, p);

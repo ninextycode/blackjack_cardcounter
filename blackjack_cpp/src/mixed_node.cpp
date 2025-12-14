@@ -120,7 +120,7 @@ void MixedNode::buildFullChildrenPlayerCard() {
         }
     }
 
-    auto card_value_probabilities = shoe_.get_rank_value_probabilities(possible_values);
+    auto card_value_probabilities = shoe_.getRankValueProbabilities(possible_values);
 
     for (int rv : possible_values) {
         double p = card_value_probabilities.at(rv);
@@ -277,7 +277,7 @@ bool MixedNode::addPlayerCardSampleImpl() {
     all_sampled_values.insert(card);
     vector<int> all_sampled_vec(all_sampled_values.begin(), all_sampled_values.end());
     
-    auto new_probabilities = shoe_sample.get_rank_value_probabilities(all_sampled_vec);
+    auto new_probabilities = shoe_sample.getRankValueProbabilities(all_sampled_vec);
     
     // Burn the card and create child
     shoe_sample.burnRankValue(card);
@@ -385,7 +385,7 @@ bool MixedNode::convertFromSampleToFull() {
         return false;
     }
 
-    auto new_probabilities = shoe_.get_rank_value_probabilities(possible_values);
+    auto new_probabilities = shoe_.getRankValueProbabilities(possible_values);
 
     for (int new_rank_value : new_values) {
         ProbabilisticRankShoe shoe_sample(shoe_);

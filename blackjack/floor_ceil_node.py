@@ -22,12 +22,11 @@ class FloorCeilNode(AbstractBJTreeNode):
             self,
             bj_round,
             shoe,
-            max_hand_size_full_enum,
+            max_hand_size_full_enum=0,
             dealer_sim_depth=5,
             sim_algo=None,
             parent=None,
-            copy_data=True,
-            n_splits_happened=0
+            copy_data=True
         ):
         super().__init__(
             bj_round,
@@ -45,31 +44,34 @@ class FloorCeilNode(AbstractBJTreeNode):
         if hand_idx < len(hands):
             active_hand = self.bj_round.player_hands[hand_idx]
             self._active_hand_size = active_hand.size()
-        self.n_splits_happened = n_splits_happened
         self.ceil_value = None
         self.floor_value = None
 
 
     def _run_dealer_sim(self, bj_round, shoe):
         """Run dealer simulation using the configured algorithm."""
+        # split is simplified by treating the first hand of the split as having value
+        # zero and only simulating the last one        
         if self.sim_algo == 'combo':
             return run_dealer_cards_simulation_combo(
                 bj_round, shoe, None,
-                n_full_sample=self.dealer_sim_depth
+                n_full_sample=self.dealer_sim_depth,
+                simulation_for_last_hand=True
             )
         elif self.sim_algo == 'recursive':
             return run_dealer_cards_simulation_recursive(
                 bj_round, shoe, 1,
-                n_full_sample=self.dealer_sim_depth
+                n_full_sample=self.dealer_sim_depth,
+                simulation_for_last_hand=True
             )
         else:
             raise ValueError(f"Unknown sim_algo: {self.sim_algo}. Use 'combo' or 'recursive'.")
 
 
     def rebuild_children(self):
-        super().rebuild_children()
         self.ceil_value = None
         self.floor_value = None
+        super().rebuild_children()
 
 
     def get_ceil_value(self):
@@ -145,6 +147,10 @@ class FloorCeilNode(AbstractBJTreeNode):
         Whether the tree cannot be updated anymore
         It can return false just because the depth is too shallow
         to trigger change in children
+
+        Return 2 boolean values
+        First - whether node value has changed
+        Second - is_final: True if no further exploration can improve the value
         """
         if not self.tree_completed():
             raise RuntimeError(
@@ -152,15 +158,16 @@ class FloorCeilNode(AbstractBJTreeNode):
             )
 
         if depth < 0:
-            return False
+            return False, False
         
         children_changed = False
+        is_final = True
 
         stage = self.bj_round.get_stage()
         
         if stage in (BJStage.DEALER_CARD, BJStage.ROUND_OVER):
-            return False
-
+            return False, True
+        
         # convert itself
         if stage == BJStage.PLAYER_CARD:
             changed_children_self = self._convert_from_sample_to_full()
@@ -177,14 +184,20 @@ class FloorCeilNode(AbstractBJTreeNode):
                 ch.build_tree()
                 children_changed = True
 
-            child_changed = ch.convert_to_full_up_to_depth(depth - 1)
+            child_changed, child_is_final = ch.convert_to_full_up_to_depth(depth - 1)
             if child_changed:
                 children_changed = True
+            if not child_is_final:
+                is_final = False
 
+        
         if children_changed:
             self.recompute_tree_value()
-            return True
-        return False    
+            value_changed = True
+        else:
+            value_changed = False
+
+        return value_changed, is_final    
 
 
     def _convert_from_sample_to_full(self):
@@ -205,12 +218,11 @@ class DecisionNode(FloorCeilNode):
         self,
         bj_round,
         shoe,
-        max_hand_size_full_enum,
+        max_hand_size_full_enum=0,
         dealer_sim_depth=5,
         sim_algo=None,
         parent=None,
-        copy_data=True,
-        n_splits_happened=0
+        copy_data=True
     ):
         super().__init__(
             bj_round,
@@ -219,28 +231,17 @@ class DecisionNode(FloorCeilNode):
             copy_data=copy_data,
             max_hand_size_full_enum=max_hand_size_full_enum,
             dealer_sim_depth=dealer_sim_depth,
-            sim_algo=sim_algo,
-            n_splits_happened=n_splits_happened
+            sim_algo=sim_algo
         )
         # list of actions that are still possible (not yet excluded)
         # initialized from available actions, split exclusion handled in build_children
         self.possible_actions = self.bj_round.get_available_actions()
-        if (
-            PlayerAction.SPLIT in self.possible_actions
-            and self.n_splits_happened >= self.bj_round.rules.max_splits_allowed
-        ):
-            self.possible_actions.remove(PlayerAction.SPLIT)
             
 
     def rebuild_children(self):
-        super().rebuild_children()
         self.possible_actions = self.bj_round.get_available_actions()
-        if (
-            PlayerAction.SPLIT in self.possible_actions
-            and self.n_splits_happened >= self.bj_round.rules.max_splits_allowed
-        ):
-            self.possible_actions.remove(PlayerAction.SPLIT)
-            
+        super().rebuild_children()
+
 
     def _compute_floor_value(self):
         if len(self.possible_actions) > 1:
@@ -280,9 +281,11 @@ class DecisionNode(FloorCeilNode):
         child_idx = self.children_events.index(action)
         return self.children[child_idx]
 
+
     def has_decided(self):
         """Returns True if only one action remains possible."""
         return len(self.possible_actions) == 1
+
 
     def get_possible_action_children(self):
         """Returns list of (action, child) tuples for all possible actions."""
@@ -373,14 +376,17 @@ class DecisionNode(FloorCeilNode):
             shoe_copy = self.shoe.copy()
 
             if a == PlayerAction.SPLIT:
+                # the first hand of the split is set to <card>2 hand with zero value
+                # to simplify the tree only the second one is considered, it's value is doubled
+                # this is handled inside SplitNode
+                bj_round_child.take_action(PlayerAction.SPLIT)
                 child = SplitNode(
                     bj_round_child, shoe_copy,
                     max_hand_size_full_enum=self.max_hand_size_full_enum,
                     dealer_sim_depth=self.dealer_sim_depth,
                     sim_algo=self.sim_algo,
                     parent=self,
-                    copy_data=False,
-                    n_splits_happened=self.n_splits_happened + 1
+                    copy_data=False
                 )
                 self.add_child(child, PlayerAction.SPLIT)
             
@@ -392,8 +398,7 @@ class DecisionNode(FloorCeilNode):
                     dealer_sim_depth=self.dealer_sim_depth,
                     sim_algo=self.sim_algo,
                     parent=self,
-                    copy_data=False,
-                    n_splits_happened=self.n_splits_happened
+                    copy_data=False
                 )
                 self.add_child(child, PlayerAction.HIT)
             
@@ -422,8 +427,7 @@ class DecisionNode(FloorCeilNode):
                     dealer_sim_depth=self.dealer_sim_depth,
                     sim_algo=self.sim_algo,
                     parent=self,
-                    copy_data=False,
-                    n_splits_happened=self.n_splits_happened
+                    copy_data=False
                 )
                 self.add_child(child, PlayerAction.DECLINE_EARLY_SURRENDER)
             
@@ -449,7 +453,6 @@ class DecisionNode(FloorCeilNode):
             sim_algo=self.sim_algo,
             parent=self,
             copy_data=False,
-            n_splits_happened=self.n_splits_happened,
             took_insurance=True,
             insurance_offered=True
         )
@@ -461,7 +464,6 @@ class DecisionNode(FloorCeilNode):
             sim_algo=self.sim_algo,
             parent=self,
             copy_data=False,
-            n_splits_happened=self.n_splits_happened,
             took_insurance=False,
             insurance_offered=True
         )
@@ -485,24 +487,26 @@ class DecisionNode(FloorCeilNode):
             )
 
         if depth < 0:
-            return False
+            return False, False
         
         # convert children
         # should only go to the branches of possible actions
         # should recompute ceil and floor values and re-filter possible actions
 
         if self.bj_round.get_stage() == BJStage.PLAYER_OFFERED_INSURANCE:
-            children_changed = self.convert_bj_check_children_to_full_up_to_depth(depth)
-        elif not self.has_decided():
-            children_changed = self.convert_possible_children_to_full_up_to_depth(depth)
+            children_changed, is_final = \
+                self.convert_bj_check_children_to_full_up_to_depth(depth)
         else:
-            children_changed = self.convert_decision_child_to_full_up_to_depth(depth)
-        
+            children_changed, is_final = \
+                self.convert_possible_children_to_full_up_to_depth(depth)
+
         # this will build trees from the newly created children
         if children_changed:
             self.recompute_tree_value()
-            return True
-        return False    
+            return True, is_final
+        else:
+            return False, is_final
+            
 
     def convert_bj_check_children_to_full_up_to_depth(self, depth):  
         # special case - update the downstream round tree where dealer does not have bj 
@@ -512,53 +516,51 @@ class DecisionNode(FloorCeilNode):
         dealer_no_bj_round_tree = child.children[child.dealer_no_bj_child_idx]
         if isinstance(dealer_no_bj_round_tree, ValueNode):
             # case where player has bj but dealer does not - no subtree to expand
-            return False
+            return False, True
         
-        round_child_changed = dealer_no_bj_round_tree.convert_to_full_up_to_depth(depth - 2)
+        round_child_changed, child_is_final = \
+            dealer_no_bj_round_tree.convert_to_full_up_to_depth(depth - 2)
+        
         if round_child_changed:
             if not self.has_decided():
                 for ch in self.children:
                     ch.recompute_tree_value()
             else:
                 self.get_decision_choice_child().recompute_tree_value()
-            return True
+            return True, child_is_final
         else:
-            return False
+            return False, child_is_final
+        
 
     def convert_possible_children_to_full_up_to_depth(self, depth):  
         """Convert only children corresponding to possible actions."""
         children_changed = False
+        is_final = True
         for action in self.possible_actions:
             child_idx = self.children_events.index(action)
             ch = self.children[child_idx]
             if isinstance(ch, (ValueNode, DoubleNode)):
                 continue
-            child_changed = ch.convert_to_full_up_to_depth(depth - 1)
+            child_changed, child_is_final = ch.convert_to_full_up_to_depth(depth - 1)
             if child_changed:
                 children_changed = True
-        return children_changed
-    
-
-    def convert_decision_child_to_full_up_to_depth(self, depth):
-        child = self.get_decision_choice_child()
-        if not isinstance(child, (ValueNode, DoubleNode)):
-            return child.convert_to_full_up_to_depth(depth - 1)
-        return False
-
+            if not child_is_final:
+                is_final = False
+        return children_changed, is_final
+        
 
 class DealerCheckBJNode(FloorCeilNode):
     def __init__(
             self,
             bj_round,
             shoe,
-            max_hand_size_full_enum,
             took_insurance,
             insurance_offered,
+            max_hand_size_full_enum=0,
             dealer_sim_depth=5,
             sim_algo=None,
             parent=None,
-            copy_data=True,
-            n_splits_happened=0
+            copy_data=True
         ):
         super().__init__(
             bj_round,
@@ -567,8 +569,7 @@ class DealerCheckBJNode(FloorCeilNode):
             copy_data=copy_data,
             max_hand_size_full_enum=max_hand_size_full_enum,
             dealer_sim_depth=dealer_sim_depth,
-            sim_algo=sim_algo,
-            n_splits_happened=n_splits_happened
+            sim_algo=sim_algo
         )
         self.insurance_offered = insurance_offered
         self.took_insurance = took_insurance
@@ -581,6 +582,7 @@ class DealerCheckBJNode(FloorCeilNode):
         # round without insurance 
         assert bj_round.rules.dealer_checks_blackjack 
         assert self.bj_round.insurance_bet == 0
+        assert len(self.bj_round.player_hands) == 1
         self.dealer_bj_child_idx = 0
         self.dealer_no_bj_child_idx = 1
         
@@ -639,8 +641,7 @@ class DealerCheckBJNode(FloorCeilNode):
                 dealer_sim_depth=self.dealer_sim_depth,
                 sim_algo=self.sim_algo,
                 parent=self,
-                copy_data=False,
-                n_splits_happened=self.n_splits_happened
+                copy_data=False
             )
 
         p_blackjack = self.get_dealer_blackjack_chance()
@@ -709,43 +710,6 @@ class DealerCheckBJNode(FloorCeilNode):
             return super().convert_to_full_up_to_depth(depth) 
 
 
-def build_root_node(bj_round, shoe):
-    stage = bj_round.get_stage()
-
-    if bj_round.get_stage() == BJStage.DEALER_CHECK_BJ:
-        # dealer checks blackjack with ten
-        # insurance not offered
-        root_node = DealerCheckBJNode(
-            bj_round,
-            shoe,
-            max_hand_size_full_enum=1,
-            took_insurance=False,
-            insurance_offered=False,
-            dealer_sim_depth=5,
-            sim_algo="combo"
-        )
-    elif bj_round.get_stage() == BJStage.DEALER_CARD \
-        and len(bj_round.player_hands) == 1 \
-        and bj_round.player_hand[0].is_natural_blackjack():
-        # player has blackjack, insurance not offered - go to dealer card immediately
-        root_node = ValueNode(
-            bj_round.bet_unit * bj_round.rules.natural_blackjack_payout
-        )
-    else:
-        # insurance or a normal game node
-        root_node = DecisionNode(
-            bj_round,
-            shoe,
-            max_hand_size_full_enum=1,
-            dealer_sim_depth=5,
-            sim_algo="combo"
-        )
-            
-    return root_node
-
-
-
-
 class SplitNode(FloorCeilNode):
     """
     On "split" action selection, this class should receive the round object 
@@ -758,12 +722,11 @@ class SplitNode(FloorCeilNode):
             self,
             bj_round,
             shoe,
-            max_hand_size_full_enum,
+            max_hand_size_full_enum=0,
             dealer_sim_depth=5,
             sim_algo=None,
             parent=None,
-            copy_data=True,
-            n_splits_happened=0
+            copy_data=True
         ):
         super().__init__(
             bj_round,
@@ -772,27 +735,15 @@ class SplitNode(FloorCeilNode):
             copy_data=copy_data,
             max_hand_size_full_enum=max_hand_size_full_enum,
             dealer_sim_depth=dealer_sim_depth,
-            sim_algo=sim_algo,
-            n_splits_happened=n_splits_happened
+            sim_algo=sim_algo
         )
+        # the first hand of the split is set to <card>2 hand with zero value
+        # to simplify the tree only the second one is considered, it's value is doubled
+        # use 2 because it will never give 21 and "stand" will always be a legal action
+        self.bj_round.take_card(2)  # placeholder card, not accounted in the shoe
+        self.first_hand_idx = self.bj_round.active_hand_idx
+        self.bj_round.hand_bets[self.first_hand_idx] = 0
 
-        self.original_bj_round = self.bj_round
-
-        stage = self.original_bj_round.get_stage()
-        assert stage == BJStage.PLAYER_ACTION
-        assert PlayerAction.SPLIT in self.bj_round.get_available_actions()
-
-        # need to build a new bj_round object - only first player card, waiting for the second
-        subtree_rules = replace(self.bj_round.rules, ignore_player_natural_blackjack=True)
-        # on player getting "2-card 21" after split
-        # the dealer has to keep hitting until it has to stop by the rules
-        # I have to set ignore_player_natural_blackjack to true
-        # otherwise 2-card 21 will be treated like BJ so dealer will only get the second
-        subtree_bj_round = BJRound(subtree_rules)
-        subtree_bj_round.start_round(self.bj_round.bet_unit)
-        subtree_bj_round.take_card(self.bj_round.player_hands[0][0])
-        self.bj_round = subtree_bj_round
-    
 
     def create_child(self, child_bj_round, child_shoe, event, prob=0):
         stage = child_bj_round.get_stage()
@@ -801,8 +752,7 @@ class SplitNode(FloorCeilNode):
                 child_bj_round, child_shoe, parent=self, copy_data=False,
                 max_hand_size_full_enum=self.max_hand_size_full_enum,
                 dealer_sim_depth=self.dealer_sim_depth,
-                sim_algo=self.sim_algo,
-                n_splits_happened=self.n_splits_happened
+                sim_algo=self.sim_algo
             )
         elif stage == BJStage.DEALER_CARD:  # split has the value of 21
             value = self._run_dealer_sim(child_bj_round, child_shoe)
@@ -824,27 +774,14 @@ class SplitNode(FloorCeilNode):
             if prob == 0:
                 continue
             
-            # card_bj_round is supposed to represent one of the split hands 
-            # 2 split hands are approximated by it
             child_shoe = self.shoe.copy()
             child_shoe.burn_rank_value(card)
 
-            # this is wrong because I need to block blackjack evaluation
             child_bj_round = self.bj_round.copy()
-
             child_bj_round.take_card(card)
-            child_bj_round.take_card(self.original_bj_round.dealer_hand[0])
-
-            stage = child_bj_round.get_stage()
-            if stage == BJStage.PLAYER_OFFERED_INSURANCE:
-                if self.original_bj_round.insurance_bet > 0:
-                    child_bj_round.take_action(PlayerAction.TAKE_INSURANCE)
-                else:
-                    child_bj_round.take_action(PlayerAction.REFUSE_INSURANCE)
-
-            if child_bj_round.get_stage() == BJStage.DEALER_CHECK_BJ:
-                # split action would only be possible if dealer does not have blackjack
-                child_bj_round.take_action(DealerAction.CONFIRM_NO_BLACKJACK)
+            
+            # stand on the first hand - it already got a placeholder card and its value is set to zero
+            child_bj_round.take_action(PlayerAction.STAND)
 
             self.create_child(
                 child_bj_round, child_shoe, card, prob
@@ -877,12 +814,11 @@ class HitNode(FloorCeilNode):
             self,
             bj_round,
             shoe,
-            max_hand_size_full_enum,
+            max_hand_size_full_enum=0,
             dealer_sim_depth=5,
             sim_algo=None,
             parent=None,
-            copy_data=True,
-            n_splits_happened=0
+            copy_data=True
         ):
         super().__init__(
             bj_round,
@@ -891,8 +827,7 @@ class HitNode(FloorCeilNode):
             copy_data=copy_data,
             max_hand_size_full_enum=max_hand_size_full_enum,
             dealer_sim_depth=dealer_sim_depth,
-            sim_algo=sim_algo,
-            n_splits_happened=n_splits_happened
+            sim_algo=sim_algo
         )
         self.rank_probabilities = self.shoe.get_rank_value_probabilities()
         self.cards_bust = []
@@ -931,6 +866,8 @@ class HitNode(FloorCeilNode):
         else:
             # Hand is large - sample only one card, rest remain unsampled
             sample_card = self.shoe.sample_rank()
+            # we could have sampled a card that leads to bust or stand on 21
+            # self.cards_not_sampled do not include such cards 
             if sample_card in self.cards_not_sampled:
                 self.cards_not_sampled.remove(sample_card)
                 self.cards_sampled.append(sample_card)
@@ -972,8 +909,7 @@ class HitNode(FloorCeilNode):
             dealer_sim_depth=self.dealer_sim_depth,
             sim_algo=self.sim_algo,
             parent=self,
-            copy_data=False,
-            n_splits_happened=self.n_splits_happened
+            copy_data=False
         )
 
         child_idx = self.children_events.index(sample_card)
@@ -999,8 +935,7 @@ class HitNode(FloorCeilNode):
                 dealer_sim_depth=self.dealer_sim_depth,
                 sim_algo=self.sim_algo,
                 parent=self,
-                copy_data=False,
-                n_splits_happened=self.n_splits_happened
+                copy_data=False
             )
             child_idx = self.children_events.index(c)
             old_child = self.children[child_idx]
@@ -1048,8 +983,7 @@ class HitNode(FloorCeilNode):
                 dealer_sim_depth=self.dealer_sim_depth,
                 sim_algo=self.sim_algo,
                 parent=self,
-                copy_data=False,
-                n_splits_happened=self.n_splits_happened
+                copy_data=False
             )
             p = self.rank_probabilities[c]
             self.add_child(child, c, p)

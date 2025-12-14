@@ -17,7 +17,9 @@ using namespace std;
 
 
 int main() {
-    PreloadedComboData::loadAll("/home/maxim//Programming/blackjack_cardcounter/combinations/", 7);
-    testEv();
+    PreloadedComboData::loadAll(
+        "/home/maxim//Programming/blackjack_cardcounter/combinations/s16_new/", 11
+    );
+    testEdgeTimingWithGap();
     return 0;
 }

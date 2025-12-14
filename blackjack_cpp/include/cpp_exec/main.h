@@ -21,4 +21,5 @@ namespace blackjack {
     void testEdgeTiming();
     void testEv();
     void testDealerSim();
+    void testEdgeTimingWithGap();
 }

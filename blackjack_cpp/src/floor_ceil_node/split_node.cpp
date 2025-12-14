@@ -12,8 +12,7 @@ SplitNode::SplitNode(
     int max_hand_size_full_enum,
     int dealer_sim_depth,
     SimAlgo sim_algo,
-    AbstractBJTreeNode* parent,
-    int n_splits_happened
+    AbstractBJTreeNode* parent
 ) :
     FloorCeilNode(
         bj_round,
@@ -21,42 +20,16 @@ SplitNode::SplitNode(
         max_hand_size_full_enum,
         dealer_sim_depth,
         sim_algo,
-        parent,
-        n_splits_happened
+        parent
     ),
-    original_bj_round_(bj_round_)
+    first_hand_idx_(bj_round_.active_hand_idx)
 {
-    BJStage stage = original_bj_round_.getStage();
-    if (stage != BJStage::PLAYER_ACTION) {
-        throw runtime_error("SplitNode requires PLAYER_ACTION stage");
-    }
-    
-    auto available_actions = bj_round_.getAvailableActions();
-    bool split_available = false;
-    for (const auto& a : available_actions) {
-        if (a == PlayerAction::SPLIT) {
-            split_available = true;
-            break;
-        }
-    }
-    if (!split_available) {
-        throw runtime_error("SPLIT action not available in SplitNode");
-    }
-
-    // Build a new bj_round object - only first player card, waiting for the second
-    // On player getting "2-card 21" after split, dealer has to keep hitting
-    // Set ignore_player_natural_blackjack to true (no_natural_bj_on_split)
-    BJRules subtree_rules = *bj_round_.rules_;
-    subtree_rules.no_natural_bj_on_split = true;
-    subtree_rules.ignore_player_natural_blackjack = true;
-    
-    // Create new round with modified rules using shared_ptr
-    auto subtree_rules_ptr = make_shared<const BJRules>(subtree_rules);
-    BJRound subtree_bj_round(subtree_rules_ptr);
-    subtree_bj_round.startRound(bj_round_.bet_unit);
-    subtree_bj_round.takeCard(bj_round_.player_hands[0].values()[0]);
-    
-    bj_round_ = subtree_bj_round;
+    // The first hand of the split is set to <card>2 hand with zero value
+    // to simplify the tree only the second one is considered, it's value is doubled
+    // use 2 because it will never give 21 and "stand" will always be a legal action
+    bj_round_.takeCard(2);  // placeholder card, not accounted in the shoe
+    first_hand_idx_ = bj_round_.active_hand_idx;
+    bj_round_.hand_bets[first_hand_idx_] = 0;
 }
 
 void SplitNode::createChild(
@@ -76,8 +49,7 @@ void SplitNode::createChild(
             max_hand_size_full_enum_,
             dealer_sim_depth_,
             sim_algo_,
-            this,
-            n_splits_happened_
+            this
         );
     } else if (stage == BJStage::DEALER_CARD) {
         // Split has value of 21
@@ -97,7 +69,7 @@ bool SplitNode::convertFromSampleToFull() {
 }
 
 void SplitNode::buildChildren() {
-    auto card_probabilities = shoe_.get_rank_value_probabilities(nullopt);
+    auto card_probabilities = shoe_.getRankValueProbabilities(nullopt);
     
     for (int card = 2; card <= 11; ++card) {
         double prob = card_probabilities.at(card);
@@ -110,21 +82,9 @@ void SplitNode::buildChildren() {
 
         BJRound child_bj_round = bj_round_.copy();
         child_bj_round.takeCard(card);
-        child_bj_round.takeCard(original_bj_round_.dealer_hand.values()[0]);
-
-        BJStage stage = child_bj_round.getStage();
-        if (stage == BJStage::PLAYER_OFFERED_INSURANCE) {
-            if (original_bj_round_.insurance_bet > 0) {
-                child_bj_round.takeAction(PlayerAction::TAKE_INSURANCE);
-            } else {
-                child_bj_round.takeAction(PlayerAction::REFUSE_INSURANCE);
-            }
-        }
-
-        if (child_bj_round.getStage() == BJStage::DEALER_CHECK_BJ) {
-            // Split action would only be possible if dealer does not have blackjack
-            child_bj_round.takeAction(DealerAction::CONFIRM_NO_BLACKJACK);
-        }
+        
+        // Stand on the first hand - it already got a placeholder card and its value is set to zero
+        child_bj_round.takeAction(PlayerAction::STAND);
 
         createChild(child_bj_round, child_shoe, card, prob);
     }

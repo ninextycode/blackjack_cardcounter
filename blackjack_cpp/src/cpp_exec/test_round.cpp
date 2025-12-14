@@ -140,7 +140,6 @@ void blackjack::testAcePair() {
     rules.allow_double_after_split = true;
     rules.allow_double_on_soft = true;
     rules.allow_split_different_tens = true;
-    rules.no_natural_bj_on_split = true;
 
     RandomSampler::resetGlobalSeedGenerator(42);
 
