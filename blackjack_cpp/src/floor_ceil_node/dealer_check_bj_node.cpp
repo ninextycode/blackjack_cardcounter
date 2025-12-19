@@ -15,17 +15,15 @@ DealerCheckBJNode::DealerCheckBJNode(
     bool insurance_offered,
     int dealer_sim_depth,
     SimAlgo sim_algo,
-    AbstractBJTreeNode* parent,
-    int n_splits_happened
+    AbstractBJTreeNode* parent
 ) :
-    FloorCeilNode(
+    AbstractFloorCeilNode(
         bj_round,
         shoe,
         max_hand_size_full_enum,
         dealer_sim_depth,
         sim_algo,
-        parent,
-        n_splits_happened
+        parent
     ),
     dealer_bj_child_idx_(0),
     dealer_no_bj_child_idx_(1),
@@ -55,8 +53,7 @@ void DealerCheckBJNode::createChild(
         max_hand_size_full_enum_,
         dealer_sim_depth_,
         sim_algo_,
-        this,
-        n_splits_happened_
+        this
     );
     children_.push_back(child);
     children_prob_.push_back(prob);
@@ -83,7 +80,7 @@ double DealerCheckBJNode::getDealerBlackjackChance() const {
 }
 
 void DealerCheckBJNode::buildChildren() {
-    BJRound bj_round_child = bj_round_.copy();
+    BJRound bj_round_child(bj_round_);
     
     const auto& active_hand = bj_round_.player_hands[static_cast<size_t>(bj_round_.active_hand_idx)];
     bool player_has_bj = active_hand.is_natural_blackjack();
@@ -118,7 +115,7 @@ void DealerCheckBJNode::buildChildren() {
 
     auto dealer_bj_value_node = make_shared<ValueNode>(player_value_dealer_bj, this);
 
-    BJRound bj_round_no_bj_child = bj_round_child.copy();
+    BJRound bj_round_no_bj_child(bj_round_child);
     ProbabilisticRankShoe shoe_copy_no_bj(shoe_);
     bj_round_no_bj_child.takeAction(DealerAction::CONFIRM_NO_BLACKJACK);
     shoe_copy_no_bj.lockDealerCardNotTen();
@@ -135,8 +132,7 @@ void DealerCheckBJNode::buildChildren() {
             max_hand_size_full_enum_,
             dealer_sim_depth_,
             sim_algo_,
-            this,
-            n_splits_happened_
+            this
         );
     }
 
@@ -184,19 +180,7 @@ void DealerCheckBJNode::computeCeilValue() {
     } else {
         vector<double> ceil_values;
         for (const auto& ch : children_) {
-            FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(ch.get());
-            ValueNode* v_child = dynamic_cast<ValueNode*>(ch.get());
-            FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(ch.get());
-            
-            if (fc_child != nullptr) {
-                ceil_values.push_back(fc_child->getCeilValue());
-            } else if (v_child != nullptr) {
-                ceil_values.push_back(v_child->getCeilValue());
-            } else if (fcv_child != nullptr) {
-                ceil_values.push_back(fcv_child->getCeilValue());
-            } else {
-                ceil_values.push_back(ch->getValue());
-            }
+            ceil_values.push_back(ch->getCeilValue());
         }
         ceil_values[static_cast<size_t>(dealer_no_bj_child_idx_)] -= insurance_bet_;
         
@@ -213,19 +197,7 @@ void DealerCheckBJNode::computeFloorValue() {
     } else {
         vector<double> floor_values;
         for (const auto& ch : children_) {
-            FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(ch.get());
-            ValueNode* v_child = dynamic_cast<ValueNode*>(ch.get());
-            FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(ch.get());
-            
-            if (fc_child != nullptr) {
-                floor_values.push_back(fc_child->getFloorValue());
-            } else if (v_child != nullptr) {
-                floor_values.push_back(v_child->getFloorValue());
-            } else if (fcv_child != nullptr) {
-                floor_values.push_back(fcv_child->getFloorValue());
-            } else {
-                floor_values.push_back(ch->getValue());
-            }
+            floor_values.push_back(ch->getFloorValue());
         }
         floor_values[static_cast<size_t>(dealer_no_bj_child_idx_)] -= insurance_bet_;
         
@@ -236,7 +208,7 @@ void DealerCheckBJNode::computeFloorValue() {
     }
 }
 
-pair<bool, bool> DealerCheckBJNode::convertToFullUpToDepth(int depth) {
+pair<bool, bool> DealerCheckBJNode::convertToFullUpToDepth(optional<int> depth) {
     if (insurance_offered_) {
         // In the case of insurance, tree expansion and value update should be handled by
         // decision node
@@ -245,7 +217,7 @@ pair<bool, bool> DealerCheckBJNode::convertToFullUpToDepth(int depth) {
         );
     } else {
         // Case where dealer checks for bj but insurance is not offered
-        return FloorCeilNode::convertToFullUpToDepth(depth);
+        return AbstractFloorCeilNode::convertToFullUpToDepth(depth);
     }
 }
 

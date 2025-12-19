@@ -7,6 +7,8 @@
 #include <iomanip>
 #include <optional>
 #include <boost/program_options.hpp>
+#include "dealer_sim.h"
+
 
 using namespace std;
 using namespace blackjack;

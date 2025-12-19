@@ -190,19 +190,4 @@ void blackjack::testAcePair() {
 
     // Log tree structure by levels (from tree_utils)
     logTreeStructure(&root_node);
-
-    // for (int i = 0; i < 50; ++i) {
-    //     cout << endl;
-        
-    //     auto t0 = std::chrono::high_resolution_clock::now();
-    //     root_node.convertToFullUpToDepth(i);
-    //     auto t1 = std::chrono::high_resolution_clock::now();
-    //     double dt = std::chrono::duration_cast<std::chrono::milliseconds>(
-    //         t1 - t0
-    //     ).count();
-    //     cout << "Depth " << i << " full enumeration in " << dt / 1000 << " s" << endl;
-    //     cout << "Current root value (EV): " << fixed << setprecision(6) << root_node.getValue() << endl;
-
-    //     logTreeStructure(&root_node);
-    // }
 }

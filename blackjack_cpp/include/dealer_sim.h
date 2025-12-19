@@ -20,13 +20,15 @@ namespace blackjack {
  * @param shoe The shoe to draw cards from
  * @param n_dealer_sim_runs Number of Monte Carlo simulation runs (used when n_full_sample exhausted)
  * @param n_full_sample Depth of full enumeration before falling back to Monte Carlo
+ * @param simulation_for_last_hand Whether to simulate the last hand (for splits)
  * @return Expected value of the round
  */
 double runDealerCardsSimulationRecursive(
     const BJRound& bj_round,
     const ProbabilisticRankShoe& shoe,
     int n_dealer_sim_runs,
-    int n_full_sample = 5
+    int n_full_sample = 5,
+    bool simulation_for_last_hand = false
 );
 
 /**
@@ -41,6 +43,7 @@ double runDealerCardsSimulationRecursive(
  * @param n_dealer_sim_runs Number of Monte Carlo runs for "other" combos (default 1)
  * @param n_full_sample Depth of precomputed combinations to use
  * @param verbose If true, print debug info
+ * @param simulation_for_last_hand Whether to simulate the last hand (for splits)
  * @return Expected value of the round
  * @throws runtime_error if preconditions not met or data not loaded
  */
@@ -49,7 +52,8 @@ double runDealerCardsSimulationCombo(
     const ProbabilisticRankShoe& shoe,
     int n_dealer_sim_runs = 0,
     int n_full_sample = 5,
-    bool verbose = false
+    bool verbose = false,
+    bool simulation_for_last_hand = false
 );
 
 // Internal helper functions (exposed for testing)

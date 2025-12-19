@@ -1,6 +1,9 @@
 #include "floor_ceil_node.h"
 
 #include <stdexcept>
+#include <utility>
+#include <omp.h>
+#include <iostream>
 
 using namespace std;
 
@@ -14,7 +17,7 @@ SplitNode::SplitNode(
     SimAlgo sim_algo,
     AbstractBJTreeNode* parent
 ) :
-    FloorCeilNode(
+    AbstractFloorCeilNode(
         bj_round,
         shoe,
         max_hand_size_full_enum,
@@ -24,12 +27,10 @@ SplitNode::SplitNode(
     ),
     first_hand_idx_(bj_round_.active_hand_idx)
 {
-    // The first hand of the split is set to <card>2 hand with zero value
-    // to simplify the tree only the second one is considered, it's value is doubled
-    // use 2 because it will never give 21 and "stand" will always be a legal action
-    bj_round_.takeCard(2);  // placeholder card, not accounted in the shoe
-    first_hand_idx_ = bj_round_.active_hand_idx;
-    bj_round_.hand_bets[first_hand_idx_] = 0;
+    // Use fakeSplit to set up the split state
+    // This gives first hand card 2 (placeholder) and stands, moves to second hand
+    bj_round_.startFakeSplit();
+    first_hand_idx_ = bj_round_.active_hand_idx - 1;  // First hand is now at previous index
 }
 
 void SplitNode::createChild(
@@ -80,7 +81,9 @@ void SplitNode::buildChildren() {
         ProbabilisticRankShoe child_shoe(shoe_);
         child_shoe.burnRankValue(card);
 
-        BJRound child_bj_round = bj_round_.copy();
+        BJRound child_bj_round(bj_round_);
+        // first hand is already set to <card>2 hand with zero value
+        // here we take the second card for the second hand
         child_bj_round.takeCard(card);
         
         // Stand on the first hand - it already got a placeholder card and its value is set to zero
@@ -108,5 +111,66 @@ void SplitNode::computeFloorValue() {
     computeChanceNodeFloorValue();
     floor_value_ = 2.0 * floor_value_;
 }
+
+pair<bool, bool> SplitNode::convertToFullUpToDepth(optional<int> depth) {
+    if (!treeCompleted()) {
+        throw runtime_error(
+            "Cannot convert player card sample to full enum in an incomplete tree."
+        );
+    }
+
+    if (depth.has_value() && depth.value() <= 0) {
+        return make_pair(false, false);
+    }
+
+    // Pre-build vector of DecisionNodes to parallelize over
+    vector<shared_ptr<DecisionNode>> decision_children;
+    
+    for (size_t i = 0; i < children_.size(); ++i) {
+        shared_ptr<DecisionNode> d_child = dynamic_pointer_cast<DecisionNode>(children_[i]);
+        if (d_child != nullptr) {
+            decision_children.push_back(d_child);
+        }
+    }
+
+    vector<bool> child_changed(decision_children.size(), false);
+    vector<bool> child_is_final(decision_children.size(), false);
+
+    optional<int> child_depth = depth.has_value() ? make_optional(depth.value() - 1) : nullopt;
+
+    // #pragma omp parallel for schedule(dynamic) if(!omp_in_parallel()) 
+    for (size_t i = 0; i < decision_children.size(); ++i) {
+        auto [i_child_changed, i_child_is_final] = 
+            decision_children[i]->convertToFullUpToDepth(child_depth);
+        child_changed[i] = i_child_changed;
+        child_is_final[i] = i_child_is_final;
+    }
+
+    bool children_changed = false;
+    for (bool changed : child_changed) {
+        if (changed) {
+            children_changed = true;
+            break;
+        }
+    }
+    
+    bool is_final = true;
+    for (bool final : child_is_final) {
+        if (!final) {
+            is_final = false;
+            break;
+        }
+    }
+
+    bool value_changed = false;
+    if (children_changed) {
+        recomputeTreeValue();
+        value_changed = true;
+    }
+
+    return make_pair(value_changed, is_final);
+}
+
+
 
 } // namespace blackjack

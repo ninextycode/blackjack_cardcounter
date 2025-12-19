@@ -8,7 +8,7 @@ from blackjack.actions import DealerAction
 from blackjack.blackjack_round import BJRound, BJStage
 from blackjack.floor_ceil_node import DealerCheckBJNode, DecisionNode
 from blackjack.rules import BJRules
-from blackjack_py import ProbabilisticRankShoe
+from blackjack_cpp import ProbabilisticRankShoe
 
 
 def build_root_node(bj_round, shoe, sim_depth, sim_algo):

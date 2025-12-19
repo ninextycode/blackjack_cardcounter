@@ -128,7 +128,7 @@ void MixedNode::buildFullChildrenPlayerCard() {
             continue;
         }
 
-        auto bj_round_copy = bj_round_.copy();
+        BJRound bj_round_copy(bj_round_);
         ProbabilisticRankShoe shoe_copy(shoe_);
         bj_round_copy.takeCard(rv);
         shoe_copy.burnRankValue(rv);
@@ -156,7 +156,7 @@ void MixedNode::buildChildDealerBlackjack() {
     ProbabilisticRankShoe shoe_copy(shoe_);
     shoe_copy.burnRankValue(rank_value);
     
-    auto bj_round_copy = bj_round_.copy();
+    BJRound bj_round_copy(bj_round_);
     bj_round_copy.takeCard(rank_value);
     
     createChild(bj_round_copy, shoe_copy, rank_value, 1.0);
@@ -167,7 +167,7 @@ void MixedNode::runDealerCardsSimulations() {
     values.reserve(n_dealer_sim_runs_);
 
     for (size_t i = 0; i < n_dealer_sim_runs_; ++i) {
-        auto bj_round_copy = bj_round_.copy();
+        BJRound bj_round_copy(bj_round_);
         ProbabilisticRankShoe shoe_copy(shoe_);
 
         // Simulate dealer cards until round over
@@ -281,7 +281,7 @@ bool MixedNode::addPlayerCardSampleImpl() {
     
     // Burn the card and create child
     shoe_sample.burnRankValue(card);
-    auto bj_round_copy = bj_round_.copy();
+    BJRound bj_round_copy(bj_round_);
     bj_round_copy.takeCard(card);
     
     createChild(bj_round_copy, shoe_sample, card, 1.0);
@@ -391,7 +391,7 @@ bool MixedNode::convertFromSampleToFull() {
         ProbabilisticRankShoe shoe_sample(shoe_);
         shoe_sample.burnRankValue(new_rank_value);
 
-        auto bj_round_copy = bj_round_.copy();
+        BJRound bj_round_copy(bj_round_);
         bj_round_copy.takeCard(new_rank_value);
         
         createChild(bj_round_copy, shoe_sample, new_rank_value, 0.0);

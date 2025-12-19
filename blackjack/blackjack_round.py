@@ -494,10 +494,6 @@ class BJRound:
         hand = self.player_hands[idx]
         new_hand_1, new_hand_2 = hand.split()
         # replace and insert
-        # when split_order_left_right is False, the first/left card correspond 
-        # to the first hand to be player, otherwise order is reversed
-        if self.rules.split_order_reversed:
-            new_hand_1, new_hand_2 = new_hand_2, new_hand_1
         self.player_hands[idx] = new_hand_1
         self.player_hands.insert(idx + 1, new_hand_2)
         self.n_splits += 1

@@ -21,11 +21,19 @@ void ValueNode::createChild(
     const TransitionEvent&,
     double
 ) {
-    // Do nothing - ValueNode has no children
+    throw runtime_error("ValueNode is a terminal node and cannot have children");
 }
 
 void ValueNode::buildTreeLayer(optional<int>) {
-    // Do nothing - already complete
+    // do nothing - terminal node
+}
+
+void ValueNode::buildChildren() {
+    // do nothing - terminal node
+}
+
+void ValueNode::rebuildChildren() {
+    // do nothing - terminal node
 }
 
 bool ValueNode::treeCompleted() const {
@@ -49,11 +57,11 @@ double ValueNode::getFloorValue() const {
 }
 
 void ValueNode::buildChildrenPlayerCard() {
-    // Do nothing
+    throw runtime_error("ValueNode is a terminal node and cannot build children");
 }
 
 void ValueNode::buildChildrenDealerCard() {
-    // Do nothing
+    throw runtime_error("ValueNode is a terminal node and cannot build children");
 }
 
 } // namespace blackjack

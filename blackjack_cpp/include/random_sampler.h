@@ -3,8 +3,8 @@
 #include <random>
 #include <vector>
 #include <stdexcept>
-#include <mutex>
-#include <memory>
+#include <thread>
+#include <functional>
 
 using namespace std;
 
@@ -52,9 +52,22 @@ public:
     T choice_counts(const vector<T>& values, const vector<int>& counts);
 private:
     static uint64_t generateSeed();
-    inline static thread_local minstd_rand global_seed_generator{random_device{}()};
-    // inline static thread_local mutex global_seed_generator_mutex;
 
+    static seed_seq createSeederSeedSeq() {
+        random_device rd;
+        uint64_t seed = rd();
+        return createSeederSeedSeq(seed);
+    }
+    
+    static seed_seq createSeederSeedSeq(uint64_t seed) {
+        uint64_t thread_id_hash = hash<thread::id>{}(this_thread::get_id());
+        return seed_seq{seed, thread_id_hash};
+    }
+        
+    inline static thread_local minstd_rand global_seed_generator = [] {
+        auto seq = createSeederSeedSeq();   // seq is a local lvalue
+        return minstd_rand(seq);            // uses Sseq& constructor
+    }();
 
     inline float u01f_minstd() {
         return std::generate_canonical<float, 24>(gen); // [0,1)

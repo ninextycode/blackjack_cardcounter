@@ -22,11 +22,19 @@ void FloorCeilValueNode::createChild(
     const TransitionEvent&,
     double
 ) {
-    // Do nothing - FloorCeilValueNode has no children
+    throw runtime_error("FloorCeilValueNode is a terminal node and cannot have children");
 }
 
 void FloorCeilValueNode::buildTreeLayer(optional<int>) {
-    // Do nothing - already complete
+    // do nothing - terminal node
+}
+
+void FloorCeilValueNode::buildChildren() {
+    // do nothing - terminal node
+}
+
+void FloorCeilValueNode::rebuildChildren() {
+    // do nothing - terminal node
 }
 
 bool FloorCeilValueNode::treeCompleted() const {
@@ -50,11 +58,11 @@ double FloorCeilValueNode::getFloorValue() const {
 }
 
 void FloorCeilValueNode::buildChildrenPlayerCard() {
-    // Do nothing
+    throw runtime_error("FloorCeilValueNode is a terminal node and cannot build children");
 }
 
 void FloorCeilValueNode::buildChildrenDealerCard() {
-    // Do nothing
+    throw runtime_error("FloorCeilValueNode is a terminal node and cannot build children");
 }
 
 } // namespace blackjack

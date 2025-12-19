@@ -237,7 +237,7 @@ int ValueOnlyHand::get_hard_value() const {
     return hard_value_cache_;
 }
 
-std::string ValueOnlyHand::to_string() const {
+std::string ValueOnlyHand::toString() const {
     std::ostringstream ss;
     // Format matching Python: vals(value) or vals(hard/value) if soft
     // Show "A" for ace (11), numbers for others

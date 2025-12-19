@@ -53,10 +53,10 @@ add_executable(edge_exec ${EDGE_EXEC_SOURCES})
 target_link_libraries(edge_exec PRIVATE blackjack Boost::program_options)
 
 # Build python module with pybind11
-pybind11_add_module(blackjack_py ${CMAKE_CURRENT_SOURCE_DIR}/src/pybind/pybind.cpp)
-target_link_libraries(blackjack_py PRIVATE blackjack)
+pybind11_add_module(blackjack_cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/pybind/pybind.cpp)
+target_link_libraries(blackjack_cpp PRIVATE blackjack)
 
-set_target_properties(blackjack_py PROPERTIES
+set_target_properties(blackjack_cpp PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY ${PYTHON_LIBRARY_OUTPUT_DIRECTORY}
 )
 

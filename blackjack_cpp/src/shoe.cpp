@@ -275,8 +275,9 @@ RankCount ProbabilisticRankShoe::getRankCount() const {
 }
 
 
-void ProbabilisticRankShoe::lockDealerCardNotAce() { given_dealer_card_is_not_value_ = 11; }
-void ProbabilisticRankShoe::lockDealerCardNotTen() { given_dealer_card_is_not_value_ = 10; }
+void ProbabilisticRankShoe::lockDealerCardNot(int rank_value) { given_dealer_card_is_not_value_ = rank_value; }
+void ProbabilisticRankShoe::lockDealerCardNotAce() { lockDealerCardNot(11); }
+void ProbabilisticRankShoe::lockDealerCardNotTen() { lockDealerCardNot(10); }
 void ProbabilisticRankShoe::unlockDealerCard() { given_dealer_card_is_not_value_ = nullopt; }
 
 int ProbabilisticRankShoe::dealerCardLockedValue() {

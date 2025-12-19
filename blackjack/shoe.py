@@ -1,5 +1,5 @@
 from blackjack.cards import Card, Rank
-from blackjack_py import RandomSampler
+from blackjack_cpp import RandomSampler
 import numpy as np
 
 raise RuntimeError("This module is temporarily disabled")

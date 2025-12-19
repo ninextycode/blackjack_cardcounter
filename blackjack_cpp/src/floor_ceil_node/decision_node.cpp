@@ -1,6 +1,8 @@
+#include "blackjack_round.h"
 #include "floor_ceil_node.h"
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 #include <utility>
 
@@ -16,7 +18,7 @@ DecisionNode::DecisionNode(
     SimAlgo sim_algo,
     AbstractBJTreeNode* parent
 ) :
-    FloorCeilNode(
+    AbstractFloorCeilNode(
         bj_round,
         shoe,
         max_hand_size_full_enum,
@@ -24,11 +26,11 @@ DecisionNode::DecisionNode(
         sim_algo,
         parent
     ),
-    possible_actions_()
+    meaningful_actions_()
 {
-    // Initialize possible_actions from available actions
+    // Initialize meaningful_actions from available actions
     // Split exclusion is handled by the game round itself
-    possible_actions_ = bj_round_.getAvailableActions();
+    meaningful_actions_ = bj_round_.getAvailableActions();
 }
 
 void DecisionNode::createChild(
@@ -53,15 +55,15 @@ void DecisionNode::createChild(
 }
 
 void DecisionNode::rebuildChildren() {
-    FloorCeilNode::rebuildChildren();
-    possible_actions_ = bj_round_.getAvailableActions();
+    AbstractFloorCeilNode::rebuildChildren();
+    meaningful_actions_ = bj_round_.getAvailableActions();
 }
 
 void DecisionNode::computeFloorValue() {
-    if (possible_actions_.size() > 1) {
+    if (meaningful_actions_.size() > 1) {
         // Get the highest floor value among all possible actions
         double max_floor = -1e18;
-        for (const auto& action : possible_actions_) {
+        for (const auto& action : meaningful_actions_) {
             // Find child index for this action
             size_t child_idx = 0;
             for (size_t i = 0; i < children_events_.size(); ++i) {
@@ -73,19 +75,7 @@ void DecisionNode::computeFloorValue() {
             }
             
             double child_floor;
-            FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[child_idx].get());
-            ValueNode* v_child = dynamic_cast<ValueNode*>(children_[child_idx].get());
-            FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(children_[child_idx].get());
-            
-            if (fc_child != nullptr) {
-                child_floor = fc_child->getFloorValue();
-            } else if (v_child != nullptr) {
-                child_floor = v_child->getFloorValue();
-            } else if (fcv_child != nullptr) {
-                child_floor = fcv_child->getFloorValue();
-            } else {
-                child_floor = children_[child_idx]->getValue();
-            }
+            child_floor = children_[child_idx]->getFloorValue();
             
             if (child_floor > max_floor) {
                 max_floor = child_floor;
@@ -94,27 +84,15 @@ void DecisionNode::computeFloorValue() {
         floor_value_ = max_floor;
     } else {
         auto* child = getDecisionChoiceChild();
-        FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(child);
-        ValueNode* v_child = dynamic_cast<ValueNode*>(child);
-        FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(child);
-        
-        if (fc_child != nullptr) {
-            floor_value_ = fc_child->getFloorValue();
-        } else if (v_child != nullptr) {
-            floor_value_ = v_child->getFloorValue();
-        } else if (fcv_child != nullptr) {
-            floor_value_ = fcv_child->getFloorValue();
-        } else {
-            floor_value_ = child->getValue();
-        }
+        floor_value_ = child->getFloorValue();
     }
 }
 
 void DecisionNode::computeCeilValue() {
-    if (possible_actions_.size() > 1) {
+    if (meaningful_actions_.size() > 1) {
         // Get the highest ceil value among all possible actions
         double max_ceil = -1e18;
-        for (const auto& action : possible_actions_) {
+        for (const auto& action : meaningful_actions_) {
             // Find child index for this action
             size_t child_idx = 0;
             for (size_t i = 0; i < children_events_.size(); ++i) {
@@ -126,19 +104,7 @@ void DecisionNode::computeCeilValue() {
             }
             
             double child_ceil;
-            FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[child_idx].get());
-            ValueNode* v_child = dynamic_cast<ValueNode*>(children_[child_idx].get());
-            FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(children_[child_idx].get());
-            
-            if (fc_child != nullptr) {
-                child_ceil = fc_child->getCeilValue();
-            } else if (v_child != nullptr) {
-                child_ceil = v_child->getCeilValue();
-            } else if (fcv_child != nullptr) {
-                child_ceil = fcv_child->getCeilValue();
-            } else {
-                child_ceil = children_[child_idx]->getValue();
-            }
+            child_ceil = children_[child_idx]->getCeilValue();
             
             if (child_ceil > max_ceil) {
                 max_ceil = child_ceil;
@@ -147,34 +113,22 @@ void DecisionNode::computeCeilValue() {
         ceil_value_ = max_ceil;
     } else {
         auto* child = getDecisionChoiceChild();
-        FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(child);
-        ValueNode* v_child = dynamic_cast<ValueNode*>(child);
-        FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(child);
-        
-        if (fc_child != nullptr) {
-            ceil_value_ = fc_child->getCeilValue();
-        } else if (v_child != nullptr) {
-            ceil_value_ = v_child->getCeilValue();
-        } else if (fcv_child != nullptr) {
-            ceil_value_ = fcv_child->getCeilValue();
-        } else {
-            ceil_value_ = child->getValue();
-        }
+        ceil_value_ = child->getCeilValue();
     }
 }
 
 optional<PlayerAction> DecisionNode::getDecisionChoice() const {
-    if (possible_actions_.size() != 1) {
+    if (meaningful_actions_.size() != 1) {
         return nullopt;
     }
-    return possible_actions_[0];
+    return meaningful_actions_[0];
 }
 
 AbstractBJTreeNode* DecisionNode::getDecisionChoiceChild() {
-    if (possible_actions_.size() != 1) {
+    if (meaningful_actions_.size() != 1) {
         throw runtime_error("Decision choice is not yet made (multiple actions still possible).");
     }
-    PlayerAction action = possible_actions_[0];
+    PlayerAction action = meaningful_actions_[0];
     
     for (size_t i = 0; i < children_events_.size(); ++i) {
         if (holds_alternative<PlayerAction>(children_events_[i]) &&
@@ -186,12 +140,12 @@ AbstractBJTreeNode* DecisionNode::getDecisionChoiceChild() {
 }
 
 bool DecisionNode::hasDecided() const {
-    return possible_actions_.size() == 1;
+    return meaningful_actions_.size() == 1;
 }
 
 vector<pair<PlayerAction, AbstractBJTreeNode*>> DecisionNode::getPossibleActionChildren() {
     vector<pair<PlayerAction, AbstractBJTreeNode*>> result;
-    for (const auto& action : possible_actions_) {
+    for (const auto& action : meaningful_actions_) {
         for (size_t i = 0; i < children_events_.size(); ++i) {
             if (holds_alternative<PlayerAction>(children_events_[i]) &&
                 get<PlayerAction>(children_events_[i]) == action) {
@@ -204,7 +158,7 @@ vector<pair<PlayerAction, AbstractBJTreeNode*>> DecisionNode::getPossibleActionC
 }
 
 void DecisionNode::computeActionNodeValue() {
-    if (possible_actions_.empty()) {
+    if (meaningful_actions_.empty()) {
         throw runtime_error("No possible actions remaining to evaluate.");
     }
 
@@ -212,7 +166,7 @@ void DecisionNode::computeActionNodeValue() {
     vector<double> values;
     vector<size_t> child_indices;
     
-    for (const auto& action : possible_actions_) {
+    for (const auto& action : meaningful_actions_) {
         for (size_t i = 0; i < children_events_.size(); ++i) {
             if (holds_alternative<PlayerAction>(children_events_[i]) &&
                 get<PlayerAction>(children_events_[i]) == action) {
@@ -247,29 +201,14 @@ void DecisionNode::updatePossibleActions() {
     vector<double> floor_values;
     vector<double> ceil_values;
     
-    for (const auto& action : possible_actions_) {
+    for (const auto& action : meaningful_actions_) {
         for (size_t i = 0; i < children_events_.size(); ++i) {
             if (holds_alternative<PlayerAction>(children_events_[i]) &&
                 get<PlayerAction>(children_events_[i]) == action) {
                 
-                FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[i].get());
-                ValueNode* v_child = dynamic_cast<ValueNode*>(children_[i].get());
-                FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(children_[i].get());
-                
-                double child_floor, child_ceil;
-                if (fc_child != nullptr) {
-                    child_floor = fc_child->getFloorValue();
-                    child_ceil = fc_child->getCeilValue();
-                } else if (v_child != nullptr) {
-                    child_floor = v_child->getFloorValue();
-                    child_ceil = v_child->getCeilValue();
-                } else if (fcv_child != nullptr) {
-                    child_floor = fcv_child->getFloorValue();
-                    child_ceil = fcv_child->getCeilValue();
-                } else {
-                    child_floor = children_[i]->getValue();
-                    child_ceil = children_[i]->getValue();
-                }
+                // Use interface to get floor/ceil values
+                double child_floor = children_[i]->getFloorValue();
+                double child_ceil = children_[i]->getCeilValue();
                 
                 floor_values.push_back(child_floor);
                 ceil_values.push_back(child_ceil);
@@ -282,14 +221,14 @@ void DecisionNode::updatePossibleActions() {
     double max_floor = *max_element(floor_values.begin(), floor_values.end());
     
     // Exclude actions whose ceiling is below the max floor
-    vector<PlayerAction> new_possible_actions;
-    for (size_t i = 0; i < possible_actions_.size(); ++i) {
+    vector<PlayerAction> new_meaningful_actions;
+    for (size_t i = 0; i < meaningful_actions_.size(); ++i) {
         if (ceil_values[i] >= max_floor) {
-            new_possible_actions.push_back(possible_actions_[i]);
+            new_meaningful_actions.push_back(meaningful_actions_[i]);
         }
     }
     
-    possible_actions_ = new_possible_actions;
+    meaningful_actions_ = new_meaningful_actions;
 }
 
 void DecisionNode::buildChildren() {
@@ -312,15 +251,14 @@ void DecisionNode::buildChildren() {
 }
 
 void DecisionNode::buildChildrenPlayerAction() {
-    for (const auto& a : possible_actions_) {
-        BJRound bj_round_child = bj_round_.copy();
+    for (const auto& a : meaningful_actions_) {
+        BJRound bj_round_child(bj_round_);
         ProbabilisticRankShoe shoe_copy(shoe_);
 
         if (a == PlayerAction::SPLIT) {
             // The first hand of the split is set to <card>2 hand with zero value
             // to simplify the tree only the second one is considered, it's value is doubled
             // this is handled inside SplitNode
-            bj_round_child.takeAction(PlayerAction::SPLIT);
             auto child = make_shared<SplitNode>(
                 bj_round_child, shoe_copy,
                 max_hand_size_full_enum_,
@@ -381,7 +319,7 @@ void DecisionNode::buildChildrenPlayerAction() {
 }
 
 void DecisionNode::buildChildrenInsurance() {
-    BJRound bj_round_child = bj_round_.copy();
+    BJRound bj_round_child(bj_round_);
     bj_round_child.takeAction(PlayerAction::REFUSE_INSURANCE);
     
     auto accept_child = make_shared<DealerCheckBJNode>(
@@ -415,14 +353,14 @@ void DecisionNode::buildChildrenInsurance() {
     addChild(decline_child, PlayerAction::REFUSE_INSURANCE, 0.0);
 }
 
-pair<bool, bool> DecisionNode::convertToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertToFullUpToDepth(optional<int> depth) {
     if (!treeCompleted()) {
         throw runtime_error(
             "Cannot convert DecisionNode to full enum in an incomplete tree."
         );
     }
 
-    if (depth < 0) {
+    if (depth.has_value() && depth.value() <= 0) {
         return make_pair(false, false);
     }
     
@@ -439,14 +377,16 @@ pair<bool, bool> DecisionNode::convertToFullUpToDepth(int depth) {
         is_final = final;
     }
     
+    bool value_changed = false;
     if (children_changed) {
         recomputeTreeValue();
+        value_changed = true;
     }
-    
-    return make_pair(children_changed, is_final);
+
+    return make_pair(value_changed, is_final);
 }
 
-pair<bool, bool> DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertBjCheckChildrenToFullUpToDepth(optional<int> depth) {
     // Special case - update the downstream round tree where dealer does not have bj
     // both insurance children share the same no-BJ subtree
     DealerCheckBJNode* child = dynamic_cast<DealerCheckBJNode*>(children_[0].get());
@@ -462,12 +402,13 @@ pair<bool, bool> DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) 
         return make_pair(false, true);
     }
     
-    FloorCeilNode* fc_node = dynamic_cast<FloorCeilNode*>(dealer_no_bj_round_tree.get());
+    AbstractFloorCeilNode* fc_node = dynamic_cast<AbstractFloorCeilNode*>(dealer_no_bj_round_tree.get());
     if (fc_node == nullptr) {
         return make_pair(false, true);
     }
     
-    auto [round_child_changed, child_is_final] = fc_node->convertToFullUpToDepth(depth - 2);
+    optional<int> child_depth = depth.has_value() ? make_optional(depth.value() - 2) : nullopt;
+    auto [round_child_changed, child_is_final] = fc_node->convertToFullUpToDepth(child_depth);
     if (round_child_changed) {
         if (!hasDecided()) {
             for (auto& ch : children_) {
@@ -481,11 +422,11 @@ pair<bool, bool> DecisionNode::convertBjCheckChildrenToFullUpToDepth(int depth) 
     return make_pair(false, child_is_final);
 }
 
-pair<bool, bool> DecisionNode::convertPossibleChildrenToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertPossibleChildrenToFullUpToDepth(optional<int> depth) {
     bool children_changed = false;
     bool is_final = true;
     
-    for (const auto& action : possible_actions_) {
+    for (const auto& action : meaningful_actions_) {
         for (size_t i = 0; i < children_events_.size(); ++i) {
             if (holds_alternative<PlayerAction>(children_events_[i]) &&
                 get<PlayerAction>(children_events_[i]) == action) {
@@ -497,9 +438,10 @@ pair<bool, bool> DecisionNode::convertPossibleChildrenToFullUpToDepth(int depth)
                     break;
                 }
                 
-                FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[i].get());
+                AbstractFloorCeilNode* fc_child = dynamic_cast<AbstractFloorCeilNode*>(children_[i].get());
                 if (fc_child != nullptr) {
-                    auto [child_changed, child_is_final] = fc_child->convertToFullUpToDepth(depth - 1);
+                    optional<int> child_depth = depth.has_value() ? make_optional(depth.value() - 1) : nullopt;
+                    auto [child_changed, child_is_final] = fc_child->convertToFullUpToDepth(child_depth);
                     if (child_changed) {
                         children_changed = true;
                     }
@@ -514,7 +456,7 @@ pair<bool, bool> DecisionNode::convertPossibleChildrenToFullUpToDepth(int depth)
     return make_pair(children_changed, is_final);
 }
 
-pair<bool, bool> DecisionNode::convertDecisionChildToFullUpToDepth(int depth) {
+pair<bool, bool> DecisionNode::convertDecisionChildToFullUpToDepth(optional<int> depth) {
     auto* child = getDecisionChoiceChild();
     
     ValueNode* v_child = dynamic_cast<ValueNode*>(child);
@@ -524,11 +466,28 @@ pair<bool, bool> DecisionNode::convertDecisionChildToFullUpToDepth(int depth) {
         return make_pair(false, true);
     }
     
-    FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(child);
+    AbstractFloorCeilNode* fc_child = dynamic_cast<AbstractFloorCeilNode*>(child);
     if (fc_child != nullptr) {
-        return fc_child->convertToFullUpToDepth(depth - 1);
+        optional<int> child_depth = depth.has_value() ? make_optional(depth.value() - 1) : nullopt;
+        return fc_child->convertToFullUpToDepth(child_depth);
     }
     return make_pair(false, true);
+}
+
+
+pair<bool, bool> DecisionNode::convertToFullUpToDecision() {
+    bool children_changed = false;
+    bool is_final = true;
+
+    int depth = 0;
+    while (meaningful_actions_.size() > 1) {
+        auto [changed, final] = convertToFullUpToDepth(depth);
+        if (changed) { children_changed = true; }
+        if (final) { is_final = true; break; }
+        depth += 1;
+    }
+
+    return make_pair(children_changed, is_final);
 }
 
 } // namespace blackjack

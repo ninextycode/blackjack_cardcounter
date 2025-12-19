@@ -131,7 +131,7 @@ static string getNodeTypeName(AbstractBJTreeNode* node) {
     if (dynamic_cast<SplitNode*>(node)) return "Split";
     if (dynamic_cast<HitNode*>(node)) return "Hit";
     if (dynamic_cast<DoubleNode*>(node)) return "Double";
-    if (dynamic_cast<FloorCeilNode*>(node)) return "FloorCeil";
+    if (dynamic_cast<AbstractFloorCeilNode*>(node)) return "FloorCeil";
     if (dynamic_cast<ValueNode*>(node)) return "FloorCeil";
     return "Unknown";
 }
@@ -213,7 +213,7 @@ string formatNodeLine(
     }
     
     // Values
-    FloorCeilNode* fc_node = dynamic_cast<FloorCeilNode*>(node);
+    AbstractFloorCeilNode* fc_node = dynamic_cast<AbstractFloorCeilNode*>(node);
     ValueNode* sim_node = dynamic_cast<ValueNode*>(node);
     
     double value = 0.0;
@@ -253,7 +253,7 @@ string formatNodeLine(
         } else {
             oss << " (possible: ";
             bool first = true;
-            for (PlayerAction action : decision->possible_actions_) {
+            for (PlayerAction action : decision->meaningful_actions_) {
                 if (!first) oss << ", ";
                 oss << to_string(action);
                 first = false;

@@ -16,7 +16,7 @@ using namespace std;
 namespace {
 
 // Utility function to build tree and converge to target gap
-void buildAndConverge(blackjack::FloorCeilNode& node, double gap_target) {
+void buildAndConverge(blackjack::AbstractFloorCeilNode& node, double gap_target) {
     node.buildTree();
     for (int depth = 0; depth < 100; ++depth) {
         auto [value_changed, is_final] = node.convertToFullUpToDepth(depth);
@@ -67,7 +67,7 @@ optional<blackjack::PlayerAction> getBestActionFromDecisionNode(
 
 // Result struct for createRootNode
 struct RootNodeResult {
-    shared_ptr<blackjack::FloorCeilNode> node;
+    shared_ptr<blackjack::AbstractFloorCeilNode> node;
     bool is_terminal;  // true if player has natural blackjack (no tree needed)
     double terminal_ev;  // EV if terminal
 };
@@ -194,7 +194,7 @@ void blackjack::testEv() {
             auto t_start = chrono::high_resolution_clock::now();
 
             // Create root node using common function
-            auto result = createRootNode(bj_round, shoe, rules, 100, depth, algo);
+            RootNodeResult result = createRootNode(bj_round, shoe, rules, 100, depth, algo);
             
             if (!result.is_terminal && result.node) {
                 buildAndConverge(*result.node, 0.01 * 100);
@@ -262,9 +262,9 @@ void blackjack::testEdge() {
 
     const int n_decks = 6;
     const int bet_unit = 100;
-    const int sim_depth = 5;
-    const double gap_target = 0.01;
-    const SimAlgo algo = SimAlgo::RECURSIVE;
+    const int sim_depth = 9;
+    const double gap_target = 0.1;
+    const SimAlgo algo = SimAlgo::COMBO;
 
     // Generate all starting hand combinations
     struct Task {
@@ -314,7 +314,7 @@ void blackjack::testEdge() {
 
     auto t_start = chrono::high_resolution_clock::now();
 
-    #pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for schedule(dynamic) if(!omp_in_parallel())
     for (size_t i = 0; i < tasks.size(); ++i) {
         const Task& task = tasks[i];
         
@@ -507,7 +507,7 @@ void blackjack::testEdgeTiming() {
     
     const int n_decks = 6;
     const int bet_unit = 100;
-    const double gap_target = 0.01;
+    const double gap_target = 0.001;
     
     ProbabilisticRankShoe shoe(n_decks);
     
@@ -526,10 +526,10 @@ void blackjack::testEdgeTiming() {
          << setw(20) << "EV_max" << endl;
     cout << "=" << string(80, '=') << endl;
 
-    vector<int> depths = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    vector<int> depths = {/*1, 2, 3, 4, 5, 6, 7,*/ 8, 9, 10/*, 11*/};
     
     for (int depth : depths) {
-        for (SimAlgo algo : {SimAlgo::RECURSIVE, SimAlgo::COMBO}) {
+        for (SimAlgo algo : {/*SimAlgo::RECURSIVE,*/ SimAlgo::COMBO}) {
             string algo_name = (algo == SimAlgo::COMBO) ? "combo" : "recursive";
             auto t_start = chrono::high_resolution_clock::now();
             
@@ -591,7 +591,7 @@ void blackjack::testEdgeTimingWithGap() {
     
     vector<SimAlgo> algos = { /* SimAlgo::RECURSIVE, */ SimAlgo::COMBO};
     vector<double> gap_targets{0.1, 0.03, 0.01, 0.003, 0.001, 0.0003, 0.0001, 0.00003, 0.00001};
-    vector<int> depths = {2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
+    vector<int> depths = {/*2, 3, 4, 5, 6, 7,*/ 8, 9, 10/*, 11*/};
     
     // First, compute the reference value using both algorithms with finest gap and highest depth
     int ref_depth = depths.back();

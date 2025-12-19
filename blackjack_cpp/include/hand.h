@@ -59,7 +59,7 @@ public:
     bool is_soft_17() const;
     optional<int> get_best_value() const;
     int get_hard_value() const;
-    string to_string() const;
+    string toString() const;
 
     // Access underlying values
     const vector<int>& values() const;

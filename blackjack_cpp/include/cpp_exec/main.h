@@ -22,4 +22,8 @@ namespace blackjack {
     void testEv();
     void testDealerSim();
     void testEdgeTimingWithGap();
+    void testTreeWalker();
+    void testTreeWalkerWithCards();
+    void testTreeWalkerSplit();
+    void testTreeWalkerAAvA();
 }

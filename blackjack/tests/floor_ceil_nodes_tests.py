@@ -4,7 +4,7 @@ from blackjack.edge import build_root_node
 from blackjack.floor_ceil_node import DecisionNode
 from blackjack.rules import BJRules
 from blackjack.blackjack_round import BJRound
-from blackjack_py import ProbabilisticRankShoe
+from blackjack_cpp import ProbabilisticRankShoe
 
 
 class TestRoundEv(unittest.TestCase):

@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+import blackjack_cpp
+
 
 @dataclass(frozen=True)
 class BJRules:
@@ -19,7 +21,6 @@ class BJRules:
     allow_double_after_split: bool = True
     allow_double_on_soft: bool = True
     allow_split_different_tens: bool = True
-    split_order_reversed: bool = False
 
     def __str__(self):
         str_lines = ["BJRules: "]
@@ -27,3 +28,9 @@ class BJRules:
             value = getattr(self, field)
             str_lines.append(f" - {field}: {value}")
         return "\n".join(str_lines)
+
+    def to_cpp(self) -> blackjack_cpp.CppBJRules:
+        cpp_rules = blackjack_cpp.CppBJRules()
+        for field in self.__dataclass_fields__:
+            setattr(cpp_rules, field, getattr(self, field))
+        return cpp_rules

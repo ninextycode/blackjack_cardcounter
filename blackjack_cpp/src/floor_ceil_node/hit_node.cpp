@@ -16,7 +16,7 @@ HitNode::HitNode(
     SimAlgo sim_algo,
     AbstractBJTreeNode* parent
 ) :
-    FloorCeilNode(
+    AbstractFloorCeilNode(
         bj_round,
         shoe,
         max_hand_size_full_enum,
@@ -147,7 +147,7 @@ bool HitNode::addSample() {
     
     ProbabilisticRankShoe shoe_copy(shoe_);
     shoe_copy.burnRankValue(sample_card);
-    BJRound bj_round_copy = bj_round_.copy();
+    BJRound bj_round_copy(bj_round_);
     bj_round_copy.takeCard(sample_card);
     
     auto new_child = make_shared<DecisionNode>(
@@ -179,7 +179,7 @@ bool HitNode::convertFromSampleToFull() {
     for (int c : cards_not_sampled_) {
         ProbabilisticRankShoe shoe_copy(shoe_);
         shoe_copy.burnRankValue(c);
-        BJRound bj_round_copy = bj_round_.copy();
+        BJRound bj_round_copy(bj_round_);
         bj_round_copy.takeCard(c);
         
         auto new_child = make_shared<DecisionNode>(
@@ -217,7 +217,7 @@ void HitNode::buildChildren() {
     for (int c : cards_21_) {
         ProbabilisticRankShoe child_shoe(shoe_);
         child_shoe.burnRankValue(c);
-        BJRound child_bj_round = bj_round_.copy();
+        BJRound child_bj_round(bj_round_);
         child_bj_round.takeCard(c);
         
         double value_21 = runDealerSim(child_bj_round, child_shoe);
@@ -240,7 +240,7 @@ void HitNode::buildChildren() {
     for (int c : cards_sampled_) {
         ProbabilisticRankShoe child_shoe(shoe_);
         child_shoe.burnRankValue(c);
-        BJRound child_bj_round = bj_round_.copy();
+        BJRound child_bj_round(bj_round_);
         child_bj_round.takeCard(c);
         
         auto child = make_shared<DecisionNode>(

@@ -3,37 +3,29 @@
 
 
 void RandomSampler::resetGlobalSeedGenerator(uint64_t seed) {
-    // lock_guard<mutex> lock(global_seed_generator_mutex);
-    global_seed_generator.seed(seed);
+    seed_seq seq = createSeederSeedSeq(seed);
+    global_seed_generator.seed(seq);
 }
 
 
 void RandomSampler::resetGlobalSeedGenerator() {
-    // lock_guard<mutex> lock(global_seed_generator_mutex);
-    global_seed_generator.seed(random_device{}());
+    random_device rd;
+    resetGlobalSeedGenerator(rd());
 }
 
 
 uint64_t RandomSampler::generateSeed() {
-    // lock_guard<mutex> lock(global_seed_generator_mutex);
     auto seed = global_seed_generator();
-    // avoid seed 0
-    return seed ? seed : 1;
+    return seed != 0 ? seed : 1;
 }
 
 RandomSampler RandomSampler::createNextSampler() {
-    // return RandomSampler(generateSeed());
     return RandomSampler(global_seed_generator());
 }
 
 RandomSampler::RandomSampler(uint64_t seed): 
     gen(seed) {
 }
-
-// RandomSampler::RandomSampler(const RandomSampler& other):
-//     gen(other.gen),
-//     uniform_dist(other.uniform_dist) {
-// }
 
 RandomSampler::RandomSampler(const string& state) {
     istringstream iss(state);

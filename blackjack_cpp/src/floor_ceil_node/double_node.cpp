@@ -1,6 +1,5 @@
 #include "floor_ceil_node.h"
 
-#include <stdexcept>
 
 using namespace std;
 
@@ -13,14 +12,13 @@ DoubleNode::DoubleNode(
     int dealer_sim_depth,
     SimAlgo sim_algo
 ) :
-    FloorCeilNode(
+    AbstractFloorCeilNode(
         bj_round,
         shoe,
         0, // max_hand_size_full_enum not used for DoubleNode
         dealer_sim_depth,
         sim_algo,
-        parent,
-        0  // n_splits_happened not tracked for DoubleNode
+        parent
     )
 {
 }
@@ -56,7 +54,7 @@ void DoubleNode::buildChildren() {
         if (player_hand.is_bust()) {
             value = -2.0 * static_cast<double>(bj_round_.bet_unit);
         } else {
-            BJRound bj_round_copy = bj_round_.copy();
+            BJRound bj_round_copy(bj_round_);
             ProbabilisticRankShoe shoe_copy(shoe_);
             bj_round_copy.takeCard(card);
             shoe_copy.burnRankValue(card);
@@ -88,6 +86,13 @@ double DoubleNode::getCeilValue() const {
 
 double DoubleNode::getFloorValue() const {
     return getValue();
+}
+
+pair<bool, bool> DoubleNode::convertToFullUpToDepth(optional<int> depth) {
+    // is already a final node
+    bool has_changed = false;
+    bool is_final = true;
+    return make_pair(has_changed, is_final);
 }
 
 } // namespace blackjack

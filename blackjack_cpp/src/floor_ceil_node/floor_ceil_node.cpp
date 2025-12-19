@@ -1,15 +1,15 @@
 #include "floor_ceil_node.h"
 
-#include <algorithm>
 #include <stdexcept>
-#include <numeric>
 #include <utility>
+#include "dealer_sim.h"
+#include <iostream>
 
 using namespace std;
 
 namespace blackjack {
 
-FloorCeilNode::FloorCeilNode(
+AbstractFloorCeilNode::AbstractFloorCeilNode(
     const BJRound& bj_round,
     const ProbabilisticRankShoe& shoe,
     int max_hand_size_full_enum,
@@ -35,13 +35,13 @@ FloorCeilNode::FloorCeilNode(
     }
 }
 
-void FloorCeilNode::createChild(
+void AbstractFloorCeilNode::createChild(
     const BJRound& child_bj_round,
     const ProbabilisticRankShoe& child_shoe,
     const TransitionEvent& event,
     double prob
 ) {
-    auto child = make_shared<FloorCeilNode>(
+    auto child = make_shared<AbstractFloorCeilNode>(
         child_bj_round,
         child_shoe,
         max_hand_size_full_enum_,
@@ -54,109 +54,91 @@ void FloorCeilNode::createChild(
     children_events_.push_back(event);
 }
 
-double FloorCeilNode::runDealerSim(const BJRound& bj_round, const ProbabilisticRankShoe& shoe) {
+double AbstractFloorCeilNode::runDealerSim(const BJRound& bj_round, const ProbabilisticRankShoe& shoe) {
+    bool simulation_for_last_hand = true;  // way to handle splits
+
     if (sim_algo_ == SimAlgo::COMBO) {
+        bool verbose = false;
         return runDealerCardsSimulationCombo(
-            bj_round, shoe, 0,
-            dealer_sim_depth_
+            bj_round, shoe, 1,
+            dealer_sim_depth_,
+            verbose,
+            simulation_for_last_hand
         );
     } else if (sim_algo_ == SimAlgo::RECURSIVE) {
         return runDealerCardsSimulationRecursive(
             bj_round, shoe, 1,
-            dealer_sim_depth_
+            dealer_sim_depth_,
+            simulation_for_last_hand
         );
     } else {
         throw runtime_error("Unknown sim_algo. Use COMBO or RECURSIVE.");
     }
 }
 
-void FloorCeilNode::rebuildChildren() {
+void AbstractFloorCeilNode::rebuildChildren() {
     AbstractBJTreeNode::rebuildChildren();
     ceil_value_ = 0.0;
     floor_value_ = 0.0;
 }
 
-double FloorCeilNode::getCeilValue() const {
+double AbstractFloorCeilNode::getCeilValue() const {
     if (!has_completed_tree_) {
         throw runtime_error("Ceil value not computed.");
     }
     return ceil_value_;
 }
 
-double FloorCeilNode::getFloorValue() const {
+double AbstractFloorCeilNode::getFloorValue() const {
     if (!has_completed_tree_) {
         throw runtime_error("Floor value not computed.");
     }
     return floor_value_;
 }
 
-void FloorCeilNode::computeFloorValue() {
+double AbstractFloorCeilNode::getCurrentValueGap() const {
+    return getCeilValue() - getFloorValue();
+}
+
+void AbstractFloorCeilNode::computeFloorValue() {
     throw runtime_error("computeFloorValue must be implemented by subclass");
 }
 
-void FloorCeilNode::computeCeilValue() {
+void AbstractFloorCeilNode::computeCeilValue() {
     throw runtime_error("computeCeilValue must be implemented by subclass");
 }
 
-void FloorCeilNode::computeChanceNodeCeilValue() {
+void AbstractFloorCeilNode::computeChanceNodeCeilValue() {
     if (!has_built_children_) {
         throw runtime_error("Cannot get ceil value before building children.");
     }
     double ceil_val = 0.0;
     for (size_t i = 0; i < children_.size(); ++i) {
-        // Try to get ceil value from child
-        FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[i].get());
-        ValueNode* v_child = dynamic_cast<ValueNode*>(children_[i].get());
-        FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(children_[i].get());
-        
-        double child_ceil;
-        if (fc_child != nullptr) {
-            child_ceil = fc_child->getCeilValue();
-        } else if (v_child != nullptr) {
-            child_ceil = v_child->getCeilValue();
-        } else if (fcv_child != nullptr) {
-            child_ceil = fcv_child->getCeilValue();
-        } else {
-            child_ceil = children_[i]->getValue();
-        }
+        double child_ceil = children_[i]->getCeilValue();
         ceil_val += children_prob_[i] * child_ceil;
     }
     ceil_value_ = ceil_val;
 }
 
-void FloorCeilNode::computeChanceNodeFloorValue() {
+void AbstractFloorCeilNode::computeChanceNodeFloorValue() {
     if (!has_built_children_) {
         throw runtime_error("Cannot get floor value before building children.");
     }
     double floor_val = 0.0;
     for (size_t i = 0; i < children_.size(); ++i) {
-        // Try to get floor value from child
-        FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(children_[i].get());
-        ValueNode* v_child = dynamic_cast<ValueNode*>(children_[i].get());
-        FloorCeilValueNode* fcv_child = dynamic_cast<FloorCeilValueNode*>(children_[i].get());
-        
-        double child_floor;
-        if (fc_child != nullptr) {
-            child_floor = fc_child->getFloorValue();
-        } else if (v_child != nullptr) {
-            child_floor = v_child->getFloorValue();
-        } else if (fcv_child != nullptr) {
-            child_floor = fcv_child->getFloorValue();
-        } else {
-            child_floor = children_[i]->getValue();
-        }
+        double child_floor = children_[i]->getFloorValue();
         floor_val += children_prob_[i] * child_floor;
     }
     floor_value_ = floor_val;
 }
 
-void FloorCeilNode::computeNodeValue() {
+void AbstractFloorCeilNode::computeNodeValue() {
     AbstractBJTreeNode::computeNodeValue();
     computeCeilValue();
     computeFloorValue();
 }
 
-void FloorCeilNode::buildChildrenDealerCard() {
+void AbstractFloorCeilNode::buildChildrenDealerCard() {
     if (bj_round_.dealerExpectsToShowBlackjack()) {
         buildChildDealerBlackjack();
     } else {
@@ -170,7 +152,7 @@ void FloorCeilNode::buildChildrenDealerCard() {
     has_built_children_ = true;
 }
 
-void FloorCeilNode::buildChildDealerBlackjack() {
+void AbstractFloorCeilNode::buildChildDealerBlackjack() {
     auto possible_ranks_opt = bj_round_.getPossibleNextCardRanks();
     if (!possible_ranks_opt.has_value() || possible_ranks_opt.value().empty()) {
         throw runtime_error("No possible ranks for dealer blackjack");
@@ -180,24 +162,26 @@ void FloorCeilNode::buildChildDealerBlackjack() {
     ProbabilisticRankShoe shoe_copy(shoe_);
     shoe_copy.burnRankValue(rank_value);
     
-    auto bj_round_copy = bj_round_.copy();
+    BJRound bj_round_copy(bj_round_);
     bj_round_copy.takeCard(rank_value);
     
     createChild(bj_round_copy, shoe_copy, rank_value, 1.0);
 }
 
-void FloorCeilNode::buildChildrenPlayerCard() {
+void AbstractFloorCeilNode::buildChildrenPlayerCard() {
     throw runtime_error("buildChildrenPlayerCard must be implemented by subclass");
 }
 
-pair<bool, bool> FloorCeilNode::convertToFullUpToDepth(int depth) {
+pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToDepth(optional<int> depth) {
     if (!treeCompleted()) {
         throw runtime_error(
             "Cannot convert player card sample to full enum in an incomplete tree."
         );
     }
 
-    if (depth < 0) {
+    // strict inequality is intentional - 
+    // the depth 0 is valid - convert only self to full
+    if (depth.has_value() && depth.value() < 0) {
         return make_pair(false, false);
     }
     
@@ -227,9 +211,9 @@ pair<bool, bool> FloorCeilNode::convertToFullUpToDepth(int depth) {
             continue;
         }
         
-        FloorCeilNode* fc_child = dynamic_cast<FloorCeilNode*>(ch.get());
+        AbstractFloorCeilNode* fc_child = dynamic_cast<AbstractFloorCeilNode*>(ch.get());
         if (fc_child == nullptr) {
-            continue;
+            continue;  // TODO should it throw an error?
         }
         
         // If there is a new child that doesn't have a tree - build the tree
@@ -238,7 +222,11 @@ pair<bool, bool> FloorCeilNode::convertToFullUpToDepth(int depth) {
             children_changed = true;
         }
 
-        auto [child_changed, child_is_final] = fc_child->convertToFullUpToDepth(depth - 1);
+        optional<int> child_depth = depth.has_value() \
+            ? make_optional(depth.value() - 1) \
+            : nullopt;
+
+        auto [child_changed, child_is_final] = fc_child->convertToFullUpToDepth(child_depth);
         if (child_changed) {
             children_changed = true;
         }
@@ -256,7 +244,31 @@ pair<bool, bool> FloorCeilNode::convertToFullUpToDepth(int depth) {
     return make_pair(value_changed, is_final);
 }
 
-bool FloorCeilNode::convertFromSampleToFull() {
+pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToGap(double value_gap) {
+    int depth = 0;
+    bool any_value_changed = false;
+    // Otherwise, will be set in the loop
+    
+    double current_gap = getCeilValue() - getFloorValue(); 
+    bool is_final = (current_gap == 0.0);
+    
+    while (current_gap > value_gap) {
+        auto [this_value_changed, this_is_final] = convertToFullUpToDepth(depth);
+        current_gap = getCeilValue() - getFloorValue(); 
+        if (this_value_changed) {
+            any_value_changed = true;
+        }
+        is_final = this_is_final;
+        if (is_final) {
+            break;
+        }
+        depth += 1;
+    }
+    
+    return make_pair(any_value_changed, is_final);
+}
+
+bool AbstractFloorCeilNode::convertFromSampleToFull() {
     throw runtime_error("convertFromSampleToFull must be implemented by subclass");
 }
 
@@ -300,5 +312,43 @@ shared_ptr<AbstractBJTreeNode> buildRootNode(
         );
     }
 }
+
+// Factory function
+shared_ptr<AbstractFloorCeilNode> buildNonFinalRootNode(
+    const BJRound& bj_round,
+    const ProbabilisticRankShoe& shoe,
+    int max_hand_size_full_enum,
+    int dealer_sim_depth,
+    SimAlgo sim_algo
+) {
+    BJStage stage = bj_round.getStage();
+    if (stage == BJStage::DEALER_CARD || stage == BJStage::ROUND_OVER) {
+        throw runtime_error("buildNonFinalRootNode: round is in its final stage");
+    }
+
+    if (stage == BJStage::DEALER_CHECK_BJ) {
+        // dealer checks blackjack with ten
+        // insurance not offered
+        return make_shared<DealerCheckBJNode>(
+            bj_round,
+            shoe,
+            max_hand_size_full_enum,
+            false, // took_insurance
+            false, // insurance_offered
+            dealer_sim_depth,
+            sim_algo
+        );
+    } else {
+        // insurance or a normal game node
+        return make_shared<DecisionNode>(
+            bj_round,
+            shoe,
+            max_hand_size_full_enum,
+            dealer_sim_depth,
+            sim_algo
+        );
+    }
+}
+
 
 } // namespace blackjack

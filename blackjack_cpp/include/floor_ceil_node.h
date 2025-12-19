@@ -3,21 +3,17 @@
 #include <memory>
 #include <vector>
 #include <optional>
-#include <string>
-#include <set>
-
 #include "abstract_node.h"
 #include "blackjack_round.h"
 #include "shoe.h"
 #include "actions.h"
-#include "dealer_sim.h"
 
 using namespace std;
 
 namespace blackjack {
 
 // Forward declarations
-class FloorCeilNode;
+class AbstractFloorCeilNode;
 class DecisionNode;
 class HitNode;
 class SplitNode;
@@ -48,11 +44,13 @@ public:
     ) override;
 
     void buildTreeLayer(optional<int> depth) override;
+    void buildChildren() override;
+    void rebuildChildren() override;
     bool treeCompleted() const override;
     bool childrenTreesCompleted() const override;
     double getValue() const override;
-    double getCeilValue() const;
-    double getFloorValue() const;
+    double getCeilValue() const override;
+    double getFloorValue() const override;
 
 protected:
     void buildChildrenPlayerCard() override;
@@ -75,11 +73,13 @@ public:
     ) override;
 
     void buildTreeLayer(optional<int> depth) override;
+    void buildChildren() override;
+    void rebuildChildren() override;
     bool treeCompleted() const override;
     bool childrenTreesCompleted() const override;
     double getValue() const override;
-    double getCeilValue() const;
-    double getFloorValue() const;
+    double getCeilValue() const override;
+    double getFloorValue() const override;
 
 protected:
     void buildChildrenPlayerCard() override;
@@ -91,12 +91,12 @@ private:
 };
 
 /**
- * FloorCeilNode - base class for floor/ceiling value computation.
+ * AbstractFloorCeilNode - base class for floor/ceiling value computation.
  * Matches Python floor_ceil_node.py FloorCeilNode class.
  */
-class FloorCeilNode : public AbstractBJTreeNode {
+class AbstractFloorCeilNode : public AbstractBJTreeNode {
 public:
-    FloorCeilNode(
+    AbstractFloorCeilNode(
         const BJRound& bj_round,
         const ProbabilisticRankShoe& shoe,
         int max_hand_size_full_enum,
@@ -105,7 +105,7 @@ public:
         AbstractBJTreeNode* parent = nullptr
     );
 
-    virtual ~FloorCeilNode() = default;
+    virtual ~AbstractFloorCeilNode() = default;
 
     // Override abstract methods
     void createChild(
@@ -115,18 +115,21 @@ public:
         double prob = 0.0
     ) override;
 
+    double getCurrentValueGap() const;
+
     // Floor/ceil value accessors
-    virtual double getCeilValue() const;
-    virtual double getFloorValue() const;
+    virtual double getCeilValue() const override;
+    virtual double getFloorValue() const override;
 
     // Override rebuild
-    virtual void rebuildChildren();
+    virtual void rebuildChildren() override;
 
     // Tree conversion methods
     // Returns pair<bool, bool>: (value_changed, is_final)
     // value_changed: whether the node value changed
     // is_final: whether no further exploration can improve the value
-    virtual pair<bool, bool> convertToFullUpToDepth(int depth);
+    virtual pair<bool, bool> convertToFullUpToDepth(optional<int> depth);
+    virtual pair<bool, bool> convertToFullUpToGap(double value_gap);
 
     // Configuration
     int max_hand_size_full_enum_;
@@ -162,7 +165,7 @@ protected:
  * DecisionNode - represents game state before player makes decision.
  * Matches Python floor_ceil_node.py DecisionNode class.
  */
-class DecisionNode : public FloorCeilNode {
+class DecisionNode : public AbstractFloorCeilNode {
 public:
     DecisionNode(
         const BJRound& bj_round,
@@ -194,13 +197,15 @@ public:
 
     // Tree conversion
     // Returns pair<bool, bool>: (value_changed, is_final)
-    pair<bool, bool> convertToFullUpToDepth(int depth) override;
-    pair<bool, bool> convertBjCheckChildrenToFullUpToDepth(int depth);
-    pair<bool, bool> convertPossibleChildrenToFullUpToDepth(int depth);
-    pair<bool, bool> convertDecisionChildToFullUpToDepth(int depth);
+    pair<bool, bool> convertToFullUpToDepth(optional<int> depth) override;
+    pair<bool, bool> convertBjCheckChildrenToFullUpToDepth(optional<int> depth);
+    pair<bool, bool> convertPossibleChildrenToFullUpToDepth(optional<int> depth);
+    pair<bool, bool> convertDecisionChildToFullUpToDepth(optional<int> depth);
 
-    // Possible actions tracking
-    vector<PlayerAction> possible_actions_;
+    pair<bool, bool> convertToFullUpToDecision();
+    
+    // Meaningful actions tracking - actions that can be the best
+    vector<PlayerAction> meaningful_actions_;
 
 protected:
     void computeFloorValue() override;
@@ -217,7 +222,7 @@ protected:
  * DealerCheckBJNode - handles dealer blackjack check with insurance.
  * Matches Python floor_ceil_node.py DealerCheckBJNode class.
  */
-class DealerCheckBJNode : public FloorCeilNode {
+class DealerCheckBJNode : public AbstractFloorCeilNode {
 public:
     DealerCheckBJNode(
         const BJRound& bj_round,
@@ -242,7 +247,7 @@ public:
     double getDealerBlackjackChance() const;
 
     // Returns pair<bool, bool>: (value_changed, is_final)
-    pair<bool, bool> convertToFullUpToDepth(int depth) override;
+    pair<bool, bool> convertToFullUpToDepth(optional<int> depth) override;
 
     // Child indices
     int dealer_bj_child_idx_;
@@ -261,7 +266,7 @@ protected:
  * SplitNode - handles split action simulation.
  * Matches Python floor_ceil_node.py SplitNode class.
  */
-class SplitNode : public FloorCeilNode {
+class SplitNode : public AbstractFloorCeilNode {
 public:
     SplitNode(
         const BJRound& bj_round,
@@ -284,6 +289,9 @@ public:
     // Index of the first hand (placeholder hand with bet=0)
     int first_hand_idx_;
 
+    // override to add OpenMP support
+    virtual pair<bool, bool> convertToFullUpToDepth(optional<int> depth) override;
+
 protected:
     void computeNodeValue() override;
     void computeCeilValue() override;
@@ -295,7 +303,7 @@ protected:
  * HitNode - represents game state after player hits.
  * Matches Python floor_ceil_node.py HitNode class.
  */
-class HitNode : public FloorCeilNode {
+class HitNode : public AbstractFloorCeilNode {
 public:
     HitNode(
         const BJRound& bj_round,
@@ -339,7 +347,7 @@ protected:
  * DoubleNode - handles double down action.
  * Matches Python floor_ceil_node.py DoubleNode class.
  */
-class DoubleNode : public FloorCeilNode {
+class DoubleNode : public AbstractFloorCeilNode {
 public:
     DoubleNode(
         const BJRound& bj_round,
@@ -361,6 +369,7 @@ public:
     double getCeilValue() const override;
     double getFloorValue() const override;
 
+    pair<bool, bool> convertToFullUpToDepth(optional<int> depth) override;
 protected:
     void computeNodeValue() override;
 };
@@ -370,6 +379,14 @@ protected:
  * Matches Python floor_ceil_node.py build_root_node function.
  */
 shared_ptr<AbstractBJTreeNode> buildRootNode(
+    const BJRound& bj_round,
+    const ProbabilisticRankShoe& shoe,
+    int max_hand_size_full_enum = 1,
+    int dealer_sim_depth = 5,
+    SimAlgo sim_algo = SimAlgo::RECURSIVE
+);
+
+shared_ptr<AbstractFloorCeilNode> buildNonFinalRootNode(
     const BJRound& bj_round,
     const ProbabilisticRankShoe& shoe,
     int max_hand_size_full_enum = 1,

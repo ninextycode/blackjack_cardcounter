@@ -1,11 +1,39 @@
 #include "abstract_node.h"
 #include <algorithm>
 #include <stdexcept>
-#include <numeric>
+
 
 using namespace std;
 
 namespace blackjack {
+
+
+string to_string(const TransitionEvent& event) {
+    if (holds_alternative<int>(event)) {
+        return to_string_card(get<int>(event));
+    } else if (holds_alternative<PlayerAction>(event)) {
+        return to_string(get<PlayerAction>(event));
+    } else if (holds_alternative<DealerAction>(event)) {
+        return to_string(get<DealerAction>(event));
+    }
+    return "UNKNOWN";
+}
+
+string to_string_card(const int& card) {
+    switch (card) {
+        case 2: return "2";
+        case 3: return "3";
+        case 4: return "4";
+        case 5: return "5";
+        case 6: return "6";
+        case 7: return "7";
+        case 8: return "8";
+        case 9: return "9";
+        case 10: return "T";
+        case 11: return "A";
+        default: return "?(" + to_string(card) + ")";
+    }
+}
 
 AbstractBJTreeNode::AbstractBJTreeNode(
     const BJRound &bj_round,
@@ -174,6 +202,8 @@ void AbstractBJTreeNode::computeTerminalNodeValue() {
 }
 
 void AbstractBJTreeNode::buildChildren() {
+    if (has_built_children_) { return; }
+    
     BJStage stage = bj_round_.getStage();
 
     if (stage == BJStage::ROUND_OVER) {
@@ -225,10 +255,10 @@ void AbstractBJTreeNode::buildChildrenDealerCheckBj() {
         throw runtime_error("Dealer cannot check blackjack with value other than 10 or 11");
     }
 
-    auto bj_round_dealer_bj = bj_round_.copy();
+    auto bj_round_dealer_bj = BJRound(bj_round_);
     bj_round_dealer_bj.takeAction(DealerAction::CONFIRM_BLACKJACK);
 
-    auto bj_round_no_dealer_bj = bj_round_.copy();
+    auto bj_round_no_dealer_bj = BJRound(bj_round_);
     bj_round_no_dealer_bj.takeAction(DealerAction::CONFIRM_NO_BLACKJACK);
 
     createChild(
@@ -250,7 +280,7 @@ void AbstractBJTreeNode::buildChildrenPlayerAction() {
     auto actions = bj_round_.getAvailableActions();
 
     for (const auto& action : actions) {
-        BJRound bj_round_copy = bj_round_.copy();
+        BJRound bj_round_copy = BJRound(bj_round_);
         bj_round_copy.takeAction(action);
 
         createChild(bj_round_copy, shoe_, action, 0.0);
@@ -262,6 +292,16 @@ double AbstractBJTreeNode::getValue() const {
         throw runtime_error("Cannot get value before completing the tree");
     }
     return value_;
+}
+
+double AbstractBJTreeNode::getFloorValue() const {
+    // Default implementation throws - subclasses must override
+    throw runtime_error("getFloorValue() not implemented for this node type");
+}
+
+double AbstractBJTreeNode::getCeilValue() const {
+    // Default implementation throws - subclasses must override
+    throw runtime_error("getCeilValue() not implemented for this node type");
 }
 
 } // namespace blackjack

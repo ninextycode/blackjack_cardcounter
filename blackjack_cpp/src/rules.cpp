@@ -21,7 +21,6 @@ BJRules getDefaultRules() {
     rules.allow_double_after_split = true;
     rules.allow_double_on_soft = true;
     rules.allow_split_different_tens = true;
-    rules.split_order_reversed = false;
     return rules;
 }
 
@@ -44,7 +43,6 @@ std::string BJRules::to_string() const {
     ss << " allow_double_after_split: " << allow_double_after_split << "\n";
     ss << " allow_double_on_soft: " << allow_double_on_soft << "\n";
     ss << " allow_split_different_tens: " << allow_split_different_tens << "\n";
-    ss << " split_order_reversed: " << split_order_reversed << "\n";
     return ss.str();
 }
 

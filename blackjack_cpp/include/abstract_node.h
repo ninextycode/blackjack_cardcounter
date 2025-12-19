@@ -4,6 +4,7 @@
 #include <vector>
 #include <optional>
 #include <variant>
+#include <stdexcept>
 
 #include "blackjack_round.h"
 #include "shoe.h"
@@ -19,7 +20,32 @@ class AbstractBJTreeNode;
 // Transition event type
 using TransitionEvent = variant<int, PlayerAction, DealerAction>;
 
-class AbstractBJTreeNode {
+string to_string(const TransitionEvent& event);
+string to_string_card(const int& card);
+
+/**
+ * ValueNodeInterface - interface for nodes that can return values.
+ * All nodes can return a value, and optionally provide floor/ceil values.
+ * By default, getFloorValue() and getCeilValue() throw exceptions.
+ * Only ValueNode overrides them to return getValue().
+ */
+class ValueNodeInterface {
+public:
+    virtual ~ValueNodeInterface() = default;
+    virtual double getValue() const = 0;
+    
+    // Default implementations throw exceptions
+    // Subclasses must override to provide actual floor/ceil values
+    virtual double getFloorValue() const {
+        throw runtime_error("getFloorValue() not implemented for this node type");
+    }
+    
+    virtual double getCeilValue() const {
+        throw runtime_error("getCeilValue() not implemented for this node type");
+    }
+};
+
+class AbstractBJTreeNode : public ValueNodeInterface {
 public:
     AbstractBJTreeNode(
         const BJRound &bj_round,
@@ -40,7 +66,12 @@ public:
     virtual bool childrenTreesCompleted() const;
 
     // Value access
-    virtual double getValue() const;
+    virtual double getValue() const override;
+    
+    // Floor/ceil value access (default implementations throw exceptions)
+    // Subclasses must override to provide implementations
+    virtual double getFloorValue() const override;
+    virtual double getCeilValue() const override;
 
     // Child creation (pure virtual)
     virtual void createChild(

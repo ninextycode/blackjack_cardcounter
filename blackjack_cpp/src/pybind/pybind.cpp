@@ -4,10 +4,26 @@
 
 #include "random_sampler.h"
 #include "shoe.h"
-#include "cards.h"
+#include "rules.h"
+#include "actions.h"
+#include "tree_walker.h"
+#include "dealer_sim.h"
 
 
 namespace py = pybind11;
+
+// Helper function to convert Python dict to RankCount
+blackjack::RankCount dictToRankCount(const py::dict& d) {
+    blackjack::RankCount rank_count;
+    for (int rv = 2; rv <= 11; rv++) {
+        if (d.contains(py::int_(rv))) {
+            rank_count.at(rv) = d[py::int_(rv)].cast<int>();
+        } else {
+            rank_count.at(rv) = 0;
+        }
+    }
+    return rank_count;
+}
 
 py::object choiceArray(
     RandomSampler* sampler,
@@ -45,7 +61,7 @@ py::object choiceArray(
 }
 
 
-PYBIND11_MODULE(blackjack_py, m) {
+PYBIND11_MODULE(blackjack_cpp, m) {
     py::class_<RandomSampler, shared_ptr<RandomSampler>>(m, "RandomSampler")
         .def(py::init<uint64_t>(), py::arg("seed") = 0)
         .def(
@@ -121,6 +137,13 @@ PYBIND11_MODULE(blackjack_py, m) {
             },
             "Create a copy of the shoe"
         )
+        .def(
+            "copy_reset_sampler",
+            [](const blackjack::ProbabilisticRankShoe& self) {
+                return blackjack::ProbabilisticRankShoe(self.copyResetSampler());
+            },
+            "Create a copy of the shoe with a reset sampler"
+        )
         .def(py::pickle(
             // __getstate__
             [](blackjack::ProbabilisticRankShoe& shoe) {
@@ -170,7 +193,7 @@ PYBIND11_MODULE(blackjack_py, m) {
             "Get probabilities for rank values 2-11 as a dictionary"
         )
         .def(
-            "get_rank_value_counts",
+            "get_rank_count",
             [](const blackjack::ProbabilisticRankShoe& shoe) {
                 auto rank_counts = shoe.getRankCount();
                 py::dict result;
@@ -217,6 +240,12 @@ PYBIND11_MODULE(blackjack_py, m) {
             "Lock dealer card to not be a ten"
         )
         .def(
+            "lock_dealer_card_not",
+            &blackjack::ProbabilisticRankShoe::lockDealerCardNot,
+            py::arg("rank_value"),
+            "Lock dealer card to not be the given rank value"
+        )
+        .def(
             "unlock_dealer_card",
             &blackjack::ProbabilisticRankShoe::unlockDealerCard,
             "Unlock dealer card constraint"
@@ -259,5 +288,184 @@ PYBIND11_MODULE(blackjack_py, m) {
             py::arg("rank_value"),
             py::arg("number"),
             "Set the number of cards with the given rank value"
+        )
+        .def(
+            "get_number_of_cards",
+            &blackjack::ProbabilisticRankShoe::getNumberOfCards,
+            "Get the number of cards in the shoe"
+        )
+        .def(
+            "__len__",
+            &blackjack::ProbabilisticRankShoe::getNumberOfCards,
+            "Get the number of cards in the shoe"
         );
+
+    // Expose BJRules as CppBJRules
+    py::class_<blackjack::BJRules>(m, "CppBJRules")
+        .def(py::init<>())
+        .def_readwrite("dealer_checks_blackjack", &blackjack::BJRules::dealer_checks_blackjack)
+        .def_readwrite("dealer_hits_soft_17", &blackjack::BJRules::dealer_hits_soft_17)
+        .def_readwrite("allow_late_surrender", &blackjack::BJRules::allow_late_surrender)
+        .def_readwrite("allow_early_surrender_on_ten", &blackjack::BJRules::allow_early_surrender_on_ten)
+        .def_readwrite("allow_early_surrender_on_ace", &blackjack::BJRules::allow_early_surrender_on_ace)
+        .def_readwrite("allow_early_surrender_on_all", &blackjack::BJRules::allow_early_surrender_on_all)
+        .def_readwrite("dealer_shows_card_on_surrender", &blackjack::BJRules::dealer_shows_card_on_surrender)
+        .def_readwrite("allow_insurance_vs_ace", &blackjack::BJRules::allow_insurance_vs_ace)
+        .def_readwrite("natural_blackjack_payout", &blackjack::BJRules::natural_blackjack_payout)
+        .def_readwrite("surrender_payout", &blackjack::BJRules::surrender_payout)
+        .def_readwrite("insurance_payout", &blackjack::BJRules::insurance_payout)
+        .def_readwrite("max_splits_allowed", &blackjack::BJRules::max_splits_allowed)
+        .def_readwrite("allow_action_on_split_aces", &blackjack::BJRules::allow_action_on_split_aces)
+        .def_readwrite("allow_double_after_split", &blackjack::BJRules::allow_double_after_split)
+        .def_readwrite("allow_double_on_soft", &blackjack::BJRules::allow_double_on_soft)
+        .def_readwrite("allow_split_different_tens", &blackjack::BJRules::allow_split_different_tens)
+        .def("__str__", &blackjack::BJRules::to_string);
+
+    m.def("getDefaultRules", &blackjack::getDefaultRules, "Get the default blackjack rules");
+
+    // Expose SimAlgo enum
+    py::enum_<blackjack::SimAlgo>(m, "SimAlgo")
+        .value("COMBO", blackjack::SimAlgo::COMBO)
+        .value("RECURSIVE", blackjack::SimAlgo::RECURSIVE);
+
+    // Module-level function for convenient combo data loading
+    m.def(
+        "load_combo_data",
+        [](const string& base_path, int max_depth) {
+            if (!blackjack::PreloadedComboData::isLoaded()) {
+                blackjack::PreloadedComboData::loadAll(base_path, max_depth);
+            }
+        },
+        py::arg("base_path"),
+        py::arg("max_depth") = 8,
+        "Load precomputed combo data if not already loaded (required for SimAlgo.COMBO)"
+    );
+
+    // Expose ValueEstimate struct
+    py::class_<blackjack::ValueEstimate>(m, "ValueEstimate")
+        .def(py::init<>())
+        .def_readwrite("ev", &blackjack::ValueEstimate::ev)
+        .def_readwrite("ev_min", &blackjack::ValueEstimate::ev_min)
+        .def_readwrite("ev_max", &blackjack::ValueEstimate::ev_max)
+        .def("__repr__", [](const blackjack::ValueEstimate& v) {
+            return "ValueEstimate(" + to_string(v.ev) + ", "
+                    " [" + to_string(v.ev_min) + ", " + to_string(v.ev_max) + "])";
+        });
+
+    // Expose TreeWalker class
+    py::class_<blackjack::TreeWalker>(m, "TreeWalker")
+        .def_static(
+            "build_initial",
+            [](
+                pair<int, int> player_cards,
+                int dealer_card,
+                const blackjack::BJRules& rules,
+                py::dict shoe_rank_count_dict,
+                int max_hand_size_full_enum,
+                int dealer_sim_depth,
+                blackjack::SimAlgo sim_algo,
+                int bet_unit,
+                bool initial_cards_burned
+            ) {
+                return blackjack::TreeWalker::buildInitialTreeWalker(
+                    player_cards,
+                    dealer_card,
+                    rules,
+                    dictToRankCount(shoe_rank_count_dict),
+                    max_hand_size_full_enum,
+                    dealer_sim_depth,
+                    sim_algo,
+                    bet_unit,
+                    initial_cards_burned
+                );
+            },
+            py::arg("player_cards"),
+            py::arg("dealer_card"),
+            py::arg("rules"),
+            py::arg("shoe_rank_count"),
+            py::arg("max_hand_size_full_enum") = 0,
+            py::arg("dealer_sim_depth") = 9,
+            py::arg("sim_algo") = blackjack::SimAlgo::COMBO,
+            py::arg("bet_unit") = 100,
+            py::arg("initial_cards_burned") = true,
+            "Build an initial TreeWalker from player cards, dealer card, rules, and shoe counts"
+        )
+        .def("need_card", &blackjack::TreeWalker::needCard, "Check if the walker needs a card")
+        .def("need_player_action", &blackjack::TreeWalker::needPlayerAction, "Check if the walker needs a player action")
+        .def("need_dealer_action", &blackjack::TreeWalker::needDealerAction, "Check if the walker needs a dealer action")
+        .def("finished", &blackjack::TreeWalker::finished, "Check if the round is finished")
+        .def(
+            "get_available_player_actions",
+            [](const blackjack::TreeWalker& walker) {
+                auto actions = walker.getAvailablePlayerActions();
+                py::list result;
+                for (const auto& action : actions) {
+                    result.append(blackjack::to_string(action));
+                }
+                return result;
+            },
+            "Get available player actions as strings"
+        )
+        .def(
+            "get_available_dealer_actions",
+            [](const blackjack::TreeWalker& walker) {
+                auto actions = walker.getAvailableDealerActions();
+                py::list result;
+                for (const auto& action : actions) {
+                    result.append(blackjack::to_string(action));
+                }
+                return result;
+            },
+            "Get available dealer actions as strings"
+        )
+        .def(
+            "get_possible_next_card_ranks",
+            &blackjack::TreeWalker::getPossibleNextCardRanks,
+            "Get possible next card ranks"
+        )
+        .def("take_card", &blackjack::TreeWalker::takeCard, py::arg("card_value"), "Take a card")
+        .def(
+            "take_player_action",
+            [](blackjack::TreeWalker& walker, const string& action_str) {
+                walker.takePlayerAction(blackjack::player_action_from_string(action_str));
+            },
+            py::arg("action"),
+            "Take a player action (as string: HIT, STAND, DOUBLE, SPLIT, SURRENDER, etc.)"
+        )
+        .def(
+            "take_dealer_action",
+            [](blackjack::TreeWalker& walker, const string& action_str) {
+                walker.takeDealerAction(blackjack::dealer_action_from_string(action_str));
+            },
+            py::arg("action"),
+            "Take a dealer action (as string: CONFIRM_BLACKJACK, CONFIRM_NO_BLACKJACK)"
+        )
+        .def(
+            "get_best_actions",
+            [](const blackjack::TreeWalker& walker) {
+                auto actions = walker.getBestActions();
+                py::list result;
+                for (const auto& [action, estimate] : actions) {
+                    result.append(py::make_tuple(blackjack::to_string(action), estimate));
+                }
+                return result;
+            },
+            "Get best actions sorted by expected value, returns list of (action_str, ValueEstimate)"
+        )
+        .def(
+            "get_best_action",
+            [](const blackjack::TreeWalker& walker) {
+                return blackjack::to_string(walker.getBestAction());
+            },
+            "Get the best action as a string"
+        )
+        .def("get_value_estimate", &blackjack::TreeWalker::getValueEstimate, "Get the current value estimate")
+        .def(
+            "tighten_value_estimate_gap",
+            &blackjack::TreeWalker::tightenValueEstimateGap,
+            py::arg("relative_gap"),
+            "Tighten the value estimate gap"
+        )
+        .def("get_state_info", &blackjack::TreeWalker::getStateInfo, "Get current state info as string")
+        .def("__str__", &blackjack::TreeWalker::getStateInfo);
 }

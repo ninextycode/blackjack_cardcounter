@@ -1,4 +1,5 @@
 #include "blackjack_round.h"
+#include "abstract_node.h"
 #include <stdexcept>
 #include <algorithm>
 #include <sstream>
@@ -32,31 +33,6 @@ BJRound::BJRound(shared_ptr<const BJRules> rules):
 }
 
 
-BJRound BJRound::copy() const {
-    BJRound n(rules_);
-    n.stage_ = stage_;
-    n.dealer_hand = dealer_hand;
-    n.player_hands = player_hands;
-    n.active_hand_idx = active_hand_idx;
-    n.dealer_checked_blackjack = dealer_checked_blackjack;
-    n.dealer_has_bj_after_check = dealer_has_bj_after_check;
-    n.bet_unit = bet_unit;
-    n.total_player_bet = total_player_bet;
-    n.total_player_got = total_player_got;
-    n.player_value = player_value;
-    n.n_splits = n_splits;
-    n.split_origin_idx = split_origin_idx;
-    n.pending_double_bet = pending_double_bet;
-    n.is_hand_in_progress = is_hand_in_progress;
-    n.hand_bets = hand_bets;
-    n.insurance_bet = insurance_bet;
-    n.surrendered = surrendered;
-    n.early_surrendered = early_surrendered;
-    n.last_action = last_action;
-    n.last_card = last_card;
-    return n;
-}
-
 void BJRound::startRound(int bet_unit_) {
     if (stage_ != BJStage::NOT_STARTED) throw runtime_error("Cannot restart the round");
     bet_unit = bet_unit_;
@@ -66,6 +42,8 @@ void BJRound::startRound(int bet_unit_) {
 }
 
 BJStage BJRound::getStage() const { return stage_; }
+const ValueOnlyHand& BJRound::getActivePlayerHand() const { return player_hands[active_hand_idx]; }
+
 bool BJRound::needCard() const { return stage_==BJStage::PLAYER_CARD || stage_==BJStage::DEALER_CARD; }
 bool BJRound::needAction() const { return needPlayerAction() || needDealerAction(); }
 bool BJRound::needPlayerAction() const { return stage_==BJStage::PLAYER_ACTION || stage_==BJStage::PLAYER_OFFERED_INSURANCE || stage_==BJStage::PLAYER_OFFERED_EARLY_SURRENDER; }
@@ -258,7 +236,9 @@ void BJRound::takeAction(PlayerAction action) {
         return;
     }
 
-    if (stage_ != BJStage::PLAYER_ACTION) throw runtime_error("Cannot take player action in stage");
+    if (stage_ != BJStage::PLAYER_ACTION) {
+        throw runtime_error("Cannot take player action in stage " + blackjack::to_string(stage_));
+    }
     if (!is_hand_in_progress[active_hand_idx]) throw runtime_error("Current hand has already been completed");
 
     if (action == PlayerAction::STAND) actionStand();
@@ -305,13 +285,8 @@ void BJRound::actionSplit() {
     if (active_hand_idx >= (int)player_hands.size()) throw runtime_error("Invalid hand index");
     auto h = player_hands[active_hand_idx];
     auto p = h.split();
-    // when split_order_reversed is False, the first/left card corresponds 
-    // to the first hand to be played, otherwise order is reversed
-    ValueOnlyHand new_hand_1 = p.first;
-    ValueOnlyHand new_hand_2 = p.second;
-    if (rules_->split_order_reversed) {
-        std::swap(new_hand_1, new_hand_2);
-    }
+    ValueOnlyHand& new_hand_1 = p.first;
+    ValueOnlyHand& new_hand_2 = p.second;
     player_hands[active_hand_idx] = new_hand_1;
     player_hands.insert(player_hands.begin() + active_hand_idx + 1, new_hand_2);
     is_hand_in_progress.insert(is_hand_in_progress.begin() + active_hand_idx + 1, true);
@@ -326,6 +301,30 @@ void BJRound::actionLateSurrender() {
     if (!rules_->dealer_shows_card_on_surrender) { calculateValue(); stage_ = BJStage::ROUND_OVER; }
     else { stage_ = BJStage::DEALER_CARD; }
 }
+
+void BJRound::startFakeSplit() {
+    // For game tree modelling: simulate split where first hand gets card 2 and stands
+    // Use public interface: split, take card, then stand
+    takeAction(PlayerAction::SPLIT);
+    
+    // Give first hand card 2 (placeholder, not in shoe)
+    takeCard(2);
+    
+    // Zero bet for placeholder hand (no public method for this, so direct manipulation)
+    hand_bets[active_hand_idx] = 0;
+    
+    // Do not Stand on first hand - we expect the second hand to receive a card first
+    // takeAction(PlayerAction::STAND);
+}
+
+void BJRound::finalizeFakeSplit(int card_value) {
+    takeCard(card_value);
+    // round can be over if the player has 21 after split
+    if (stage_ != BJStage::ROUND_OVER) {
+        takeAction(PlayerAction::STAND);
+    }
+}
+
 
 void BJRound::advanceToNextOrDealer() {
     active_hand_idx += 1; sameHandOrNextOrDealer();
@@ -440,7 +439,7 @@ vector<PlayerAction> BJRound::getAvailableActions() const {
     return actions;
 }
 
-std::string BJRound::toString() const {
+std::string BJRound::toString(bool with_last_action) const {
     std::string result;
     
     // Helper to convert hand values to string (like Python hand_to_str)
@@ -452,12 +451,14 @@ std::string BJRound::toString() const {
         return s;
     };
     
-    // Add last action/card information
-    if (last_action.has_value()) {
-        result += "Last action: " + to_string(last_action.value()) + "\n";
-    }
-    if (last_card.has_value()) {
-        result += "Last card: " + std::to_string(last_card.value()) + "\n";
+    if (with_last_action) {
+        // Add last action/card information
+        if (last_action.has_value()) {
+            result += "Last action: " + to_string(last_action.value()) + "\n";
+        }
+        if (last_card.has_value()) {
+            result += "Last card: " + std::to_string(last_card.value()) + "\n";
+        }
     }
     
     // Dealer line
@@ -466,7 +467,7 @@ std::string BJRound::toString() const {
     if (dealer_hand.size() == 0) {
         dealer_line += " (no cards)";
     } else if (dealer_hand.size() == 1) {
-        dealer_line += " " + std::to_string(dealer_hand.values()[0]) + "X";
+        dealer_line += " " + blackjack::to_string_card(dealer_hand.values()[0]) + "X";
         
         if (insurance_bet > 0) {
             dealer_line += " (insurance " + std::to_string(insurance_bet) + ")";

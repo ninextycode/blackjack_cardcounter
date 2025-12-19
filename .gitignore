@@ -12,3 +12,5 @@ scrcpy/
 !digits/*png
 !suits_table/*png
 .cache/
+sklearn_models/
+.clangd

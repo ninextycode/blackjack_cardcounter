@@ -10,7 +10,7 @@
 #include <fstream>     
 #include <filesystem>    
 #include "cpp_exec/main.h"
-
+#include "dealer_sim.h"
 using namespace blackjack;
 using namespace std;
 
@@ -20,6 +20,11 @@ int main() {
     PreloadedComboData::loadAll(
         "/home/maxim//Programming/blackjack_cardcounter/combinations/s16_new/", 11
     );
-    testEdgeTimingWithGap();
+    // testTreeWalker();
+    // testTreeWalkerWithCards();
+    // testTreeWalkerSplit();
+    // testTreeWalkerAAvA();
+
+    testEdgeTiming();
     return 0;
 }

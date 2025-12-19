@@ -140,6 +140,22 @@ class FloorCeilNode(AbstractBJTreeNode):
         self.create_child(bj_round_copy, shoe_copy, card, 1)
 
 
+    def convert_to_full_up_to_gap(self, value_gap):
+        depth = 0
+        any_value_changed = False
+        while self.get_ceil_value() - self.get_floor_value() > value_gap:
+            this_value_changed, is_final = self.convert_to_full_up_to_depth(depth)
+            if this_value_changed:
+                any_value_changed = True
+            if is_final:
+                break
+            depth += 1
+        return any_value_changed, is_final
+        
+
+    def convert_to_full(self):
+        return self.convert_to_full_up_to_depth(float('inf'))
+
 
     def convert_to_full_up_to_depth(self, depth):
         """
@@ -379,7 +395,6 @@ class DecisionNode(FloorCeilNode):
                 # the first hand of the split is set to <card>2 hand with zero value
                 # to simplify the tree only the second one is considered, it's value is doubled
                 # this is handled inside SplitNode
-                bj_round_child.take_action(PlayerAction.SPLIT)
                 child = SplitNode(
                     bj_round_child, shoe_copy,
                     max_hand_size_full_enum=self.max_hand_size_full_enum,
@@ -740,6 +755,7 @@ class SplitNode(FloorCeilNode):
         # the first hand of the split is set to <card>2 hand with zero value
         # to simplify the tree only the second one is considered, it's value is doubled
         # use 2 because it will never give 21 and "stand" will always be a legal action
+        self.bj_round.take_action(PlayerAction.SPLIT)
         self.bj_round.take_card(2)  # placeholder card, not accounted in the shoe
         self.first_hand_idx = self.bj_round.active_hand_idx
         self.bj_round.hand_bets[self.first_hand_idx] = 0

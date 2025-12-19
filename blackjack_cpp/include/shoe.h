@@ -80,6 +80,7 @@ public:
     int getNumberOfRankCards(int rank_value) const;
     int getNumberOfCards() const;
 
+    void lockDealerCardNot(int rank_value);
     void lockDealerCardNotAce();
     void lockDealerCardNotTen();
     void unlockDealerCard();

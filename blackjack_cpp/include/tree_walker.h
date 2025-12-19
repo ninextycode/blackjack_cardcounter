@@ -15,183 +15,102 @@ using namespace std;
 
 namespace blackjack {
 
+
+struct ValueEstimate {
+    double ev;
+    double ev_min;
+    double ev_max;
+};
+
 /**
  * TreeWalker - High-level interface to interact with nodes of the floor_ceil_node family.
  * 
  * This class provides a convenient way to:
  * - Navigate through the game tree by providing cards or actions
- * - Build the tree until a target gap is reached
+ * - Build the tree until the best action is found
  * - Get best actions when expecting player decisions
  * - Handle split situations carefully
  */
 class TreeWalker {
 public:
-    /**
-     * Constructor
-     * @param root_node The root node to start from (must be a FloorCeilNode or subclass)
-     * @param target_gap Optional target gap between floor and ceil values. If provided,
-     *                   the tree will be built until the gap is tight enough.
-     */
-    TreeWalker(
-        shared_ptr<AbstractBJTreeNode> root_node,
-        optional<double> target_gap = nullopt
+    static TreeWalker buildInitialTreeWalker(
+        pair<int, int> player_cards,
+        int dealer_card,
+        const BJRules& rules,
+        RankCount shoe_rank_count,
+        int max_hand_size_full_enum = 0,
+        int dealer_sim_depth = 9,
+        SimAlgo sim_algo = SimAlgo::COMBO,
+        int bet_unit = 100,
+        bool initial_cards_burned = true
     );
 
     /**
-     * Get the current node
+     * Constructor
+     * @param root_node The root node to start from (must be a FloorCeilNode or subclass)
      */
+    TreeWalker(
+        shared_ptr<AbstractFloorCeilNode> root_node
+    );
+
     shared_ptr<AbstractBJTreeNode> getCurrentNode() const { return current_node_; }
-
-    /**
-     * Get the current round state
-     */
-    const BJRound& getCurrentRound() const { return current_node_->bj_round_; }
-
-    /**
-     * Get the current shoe state
-     */
     const ProbabilisticRankShoe& getCurrentShoe() const { return current_node_->shoe_; }
 
-    /**
-     * Check if we're expecting a card next (player or dealer)
-     */
-    bool expectsCard() const;
+    bool needCard() const;
+    bool needPlayerAction() const;
+    bool needDealerAction() const;
+    bool finished() const;
 
-    /**
-     * Check if we're expecting a player action next
-     */
-    bool expectsPlayerAction() const;
+    vector<PlayerAction> getAvailablePlayerActions() const;
+    vector<DealerAction> getAvailableDealerActions() const;
+    vector<int> getPossibleNextCardRanks() const;
 
-    /**
-     * Check if we're expecting a dealer action next
-     */
-    bool expectsDealerAction() const;
+    void takeCard(int card_value);
+    void takePlayerAction(PlayerAction action);
+    void takeDealerAction(DealerAction action);
 
-    /**
-     * Provide the next card and navigate to the corresponding child node.
-     * @param card_value The card value (2-11)
-     * @throws runtime_error if not expecting a card or if the card is invalid
-     */
-    void provideCard(int card_value);
 
-    /**
-     * Provide the next player action and navigate to the corresponding child node.
-     * @param action The player action
-     * @throws runtime_error if not expecting a player action or if the action is invalid
-     */
-    void providePlayerAction(PlayerAction action);
+    vector<pair<PlayerAction, ValueEstimate>> getBestActions() const;
+    PlayerAction getBestAction() const;
+    ValueEstimate getEventValueEstimate(const TransitionEvent& event) const;
+    ValueEstimate getValueEstimate() const;
 
-    /**
-     * Provide the next dealer action and navigate to the corresponding child node.
-     * @param action The dealer action
-     * @throws runtime_error if not expecting a dealer action or if the action is invalid
-     */
-    void provideDealerAction(DealerAction action);
-
-    /**
-     * Get the best actions when expecting a player action.
-     * Returns a vector of (action, value) pairs, sorted from best to worst.
-     * @throws runtime_error if not expecting a player action
-     */
-    vector<pair<PlayerAction, double>> getBestActions() const;
-
-    /**
-     * Build the tree until the gap between floor and ceil is tight enough.
-     * This will recursively build layers until the gap at the current node
-     * is less than or equal to the target gap.
-     * @param max_depth Maximum depth to build (safety limit)
-     * @returns true if gap target was reached, false if max_depth was hit
-     */
-    bool buildUntilGapTight(int max_depth = 100);
-
-    /**
-     * Get the current gap (ceil - floor) at the current node.
-     * Returns 0.0 if the node doesn't support floor/ceil values.
-     */
-    double getCurrentGap() const;
-
-    /**
-     * Check if the current gap is tight enough (<= target_gap_)
-     */
-    bool isGapTightEnough() const;
-
-    /**
-     * Get information about the current state
-     */
+    void tightenValueEstimateGap(double relative_gap);
+    
     string getStateInfo() const;
 
 private:
-    shared_ptr<AbstractBJTreeNode> root_node_;
-    shared_ptr<AbstractBJTreeNode> current_node_;
-    optional<double> target_gap_;
+    shared_ptr<AbstractFloorCeilNode> current_node_;
 
-    // Split tracking state
-    struct SplitState {
-        int first_hand_idx;
-        int second_hand_idx;
-        int second_hand_initial_card;  // The card that goes to the second hand
-        vector<int> first_hand_cards;  // Cards used in the first hand
-        shared_ptr<AbstractBJTreeNode> first_hand_tree_root;
-        shared_ptr<AbstractBJTreeNode> second_hand_tree_root;
-        bool first_hand_complete;
-        ProbabilisticRankShoe original_shoe;  // Shoe before split
-    };
-    optional<SplitState> split_state_;
+    // Common shoe maintained across all split hands
+    ProbabilisticRankShoe common_shoe_;
 
-    /**
-     * Find child node corresponding to a given event
-     */
+    // Stack of split hands (each is a pair<int, int> representing the two cards)
+    // First card is set when split occurs, second card starts as -1
+    // When we provide a card to the current round, we set the second card in the top stack entry
+    // When a round finishes, we pop from this stack and create a new round
+    vector<BJRound> split_hand_rounds_stack_;
+
+    // To be taken from the root node in constructor
+    // so that we can use the same parameters for all split rounds
+    int max_hand_size_full_enum_;
+    int dealer_sim_depth_;
+    SimAlgo sim_algo_;
+
+    // indicates if we are waiting for the second cards for the split hands
+    bool is_split_pending_;
+
+    // actual round object, not used in tree walking
+    BJRound reference_round_;  
+
     shared_ptr<AbstractBJTreeNode> findChildByEvent(const TransitionEvent& event) const;
+    void moveToChild(TransitionEvent event);
 
-    /**
-     * Navigate to a child node
-     */
-    void navigateToChild(shared_ptr<AbstractBJTreeNode> child);
+    void convertToFullUpToDecision();
 
-    /**
-     * Build tree layer and check gap
-     */
-    void buildLayerAndCheckGap();
-
-    /**
-     * Handle split situation - initialize split state and build first hand tree
-     */
-    void handleSplit(shared_ptr<SplitNode> split_node);
-
-    /**
-     * Extract cards used in a hand from the round state
-     */
-    vector<int> extractHandCards(const BJRound& round, int hand_idx) const;
-
-    /**
-     * Build a complete tree for the first split hand
-     */
-    void buildFirstSplitHandTree();
-
-    /**
-     * Build a complete tree for the second split hand
-     */
-    void buildSecondSplitHandTree();
-
-    /**
-     * Check if we're currently navigating through a split hand tree
-     */
-    bool isInSplitHandTree() const;
-
-    /**
-     * Get value from a node (handles different node types)
-     */
-    double getNodeValue(AbstractBJTreeNode* node) const;
-
-    /**
-     * Get floor value from a node (handles different node types)
-     */
-    double getNodeFloorValue(AbstractBJTreeNode* node) const;
-
-    /**
-     * Get ceil value from a node (handles different node types)
-     */
-    double getNodeCeilValue(AbstractBJTreeNode* node) const;
+    void handleSplitAction();
+    void handleSplitCard(int card_value);
+    void buildSplitRound();
 };
 
 } // namespace blackjack

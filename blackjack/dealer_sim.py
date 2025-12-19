@@ -1,7 +1,7 @@
 # from blackjack.shoe import ProbabilisticRankShoe
 import numpy as np
 from blackjack.hand import ValueOnlyHand
-from blackjack_py import ProbabilisticRankShoe, RandomSampler
+from blackjack_cpp import ProbabilisticRankShoe, RandomSampler
 import time
 from blackjack.blackjack_round import BJRound, BJStage
 from itertools import combinations_with_replacement, product
@@ -82,7 +82,7 @@ def _get_dealer_cards_probability(
         probs = base_shoe.get_rank_value_probabilities(possible_first_card)
         prob = probs.get(comb_id, 0.0)
         
-        rank_count = base_shoe.get_rank_value_counts()
+        rank_count = base_shoe.get_rank_count()
         rank_count[comb_id] = max(0, rank_count[comb_id] - 1)
         
         shoe_cache[comb_id] = (prob, rank_count)

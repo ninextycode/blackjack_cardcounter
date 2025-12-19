@@ -159,7 +159,8 @@ double runDealerCardsSimulationCombo(
     const ProbabilisticRankShoe& shoe,
     int n_dealer_sim_runs,
     int n_full_sample,
-    bool verbose
+    bool verbose,
+    bool simulation_for_last_hand
 ) {
     // Validate preconditions (matching Python asserts)
     ValueOnlyHand dealer_hand = bj_round.dealer_hand;
@@ -168,13 +169,21 @@ double runDealerCardsSimulationCombo(
     if (dealer_hand.size() != 1) {
         throw runtime_error("Dealer hand must have exactly 1 card");
     }
-    if (bj_round.player_hands.size() != 1) {
-        throw runtime_error("Must have exactly 1 player hand");
+    
+    ValueOnlyHand player_hand;
+    if (simulation_for_last_hand) {
+        player_hand = bj_round.player_hands.back();
+    } else {
+        if (bj_round.player_hands.size() != 1) {
+            throw runtime_error("Must have exactly 1 player hand");
+        }    
+        player_hand = bj_round.player_hands[0];
     }
+    
     if (bj_round.getStage() != BJStage::DEALER_CARD) {
         throw runtime_error("Stage must be DEALER_CARD");
     }
-    if (bj_round.player_hands[0].is_natural_blackjack()) {
+    if (player_hand.is_natural_blackjack()) {
         throw runtime_error("Player has natural blackjack");
     }
     
@@ -188,7 +197,7 @@ double runDealerCardsSimulationCombo(
         shoe_copy.unlockDealerCard();
     }
     
-    auto player_best_value_opt = bj_round.player_hands[0].get_best_value();
+    auto player_best_value_opt = player_hand.get_best_value();
     if (!player_best_value_opt.has_value()) {
         throw runtime_error("Player hand is bust");
     }
@@ -403,7 +412,8 @@ double runDealerCardsSimulationRecursive(
     const BJRound& bj_round,
     const ProbabilisticRankShoe& shoe,
     int n_dealer_sim_runs,
-    int n_full_sample
+    int n_full_sample,
+    bool simulation_for_last_hand
 ) {
     BJStage stage = bj_round.getStage();
     
@@ -411,13 +421,20 @@ double runDealerCardsSimulationRecursive(
         return static_cast<double>(bj_round.getPlayerValue());
     }
     
-    if (bj_round.player_hands.size() != 1) {
-        throw runtime_error("Dealer simulation requires exactly one player hand");
+    ValueOnlyHand player_hand;
+    if (simulation_for_last_hand) {
+        player_hand = bj_round.player_hands.back();
+    } else {
+        if (bj_round.player_hands.size() != 1) {
+            throw runtime_error("Dealer simulation requires exactly one player hand");
+        }
+        player_hand = bj_round.player_hands[0];
     }
+
     if (stage != BJStage::DEALER_CARD) {
         throw runtime_error("Dealer simulation requires DEALER_CARD stage");
     }
-    if (bj_round.player_hands[0].is_natural_blackjack()) {
+    if (player_hand.is_natural_blackjack()) {
         throw runtime_error("Player has natural blackjack - should not run dealer sim");
     }
     
@@ -428,7 +445,7 @@ double runDealerCardsSimulationRecursive(
     
     auto possible_ranks = bj_round.getPossibleNextCardRanks();
     
-    auto player_best_value = bj_round.player_hands[0].get_best_value();
+    auto player_best_value = player_hand.get_best_value();
     if (!player_best_value.has_value()) {
         throw runtime_error("Player hand is bust - should not run dealer sim");
     }

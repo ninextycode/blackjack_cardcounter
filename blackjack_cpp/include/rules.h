@@ -22,7 +22,6 @@ namespace blackjack {
         bool allow_double_after_split = true;
         bool allow_double_on_soft = true;
         bool allow_split_different_tens = true;
-        bool split_order_reversed = false;
 
         string to_string() const;
     };
@@ -30,3 +29,5 @@ namespace blackjack {
     BJRules getDefaultRules();
 
 } // namespace blackjack
+
+

@@ -3,7 +3,7 @@ import pandas as pd
 import os
 from blackjack.actions import PlayerAction, DealerAction
 from blackjack.blackjack_round import BJRound, BJStage
-from blackjack_py import ProbabilisticRankShoe, RandomSampler
+from blackjack_cpp import ProbabilisticRankShoe, RandomSampler
 from blackjack.rules import BJRules
 import time
 import random
@@ -27,70 +27,63 @@ def actions_str_to_list(actions_str):
 
 class DeviationStrategy:
     def __init__(self, folder):
-        hard_alt_path = os.path.join(folder, "hard_deviations.csv")
-        soft_alt_path = os.path.join(folder, "soft_deviations.csv")
-        pair_alt_path = os.path.join(folder, "pair_deviations.csv")
-        insurance_path = os.path.join(folder, "insurance.csv")
-        self.hard_alt_table = pd.read_csv(hard_alt_path)
-        self.soft_alt_table = pd.read_csv(soft_alt_path)
-        self.pair_alt_table = pd.read_csv(pair_alt_path)
-        self.insurance_table = pd.read_csv(insurance_path)
-        fill_tc_limits(self.hard_alt_table)
-        fill_tc_limits(self.soft_alt_table)
-        fill_tc_limits(self.pair_alt_table)
-        fill_tc_limits(self.insurance_table)
-
+        hard_alt_table = pd.read_csv(os.path.join(folder, "hard_deviations.csv"))
+        soft_alt_table = pd.read_csv(os.path.join(folder, "soft_deviations.csv"))
+        pair_alt_table = pd.read_csv(os.path.join(folder, "pair_deviations.csv"))
+        insurance_table = pd.read_csv(os.path.join(folder, "insurance.csv"))
+        fill_tc_limits(hard_alt_table)
+        fill_tc_limits(soft_alt_table)
+        fill_tc_limits(pair_alt_table)
+        fill_tc_limits(insurance_table)
+        
+        # Build lookup dicts: (player, dealer) -> (tc_min, tc_max, actions_str)
+        self._hard_dev = {
+            (row["player"], row["dealer"]): (row["tc_min"], row["tc_max"], row["action"])
+            for _, row in hard_alt_table.iterrows()
+        }
+        self._soft_dev = {
+            (row["player"], row["dealer"]): (row["tc_min"], row["tc_max"], row["action"])
+            for _, row in soft_alt_table.iterrows()
+        }
+        self._pair_dev = {
+            (row["card_value"], row["dealer"]): (row["tc_min"], row["tc_max"], row["action"])
+            for _, row in pair_alt_table.iterrows()
+        }
+        # Insurance bounds
+        self._insurance_tc_min = insurance_table.loc[0, "tc_min"]
+        self._insurance_tc_max = insurance_table.loc[0, "tc_max"]
 
     def split_action(self, hand_value, dealer_value, true_count):
         """
         returns an action that should override split/no-split decision
         returns none if should stick to basic strategy
         """
-        if hand_value == 12:
-            card_value = 11
-        else:
-            card_value = hand_value // 2
-
+        card_value = 11 if hand_value == 12 else hand_value // 2
         true_count_int = int(true_count)
-        idx = (
-            (self.pair_alt_table["card_value"] == card_value)
-            & (self.pair_alt_table["dealer"] == dealer_value)
-        )
-        row = self.pair_alt_table.loc[idx, ["tc_min", "tc_max", "action"]].values
-        if len(row) > 0:
-            tc_min, tc_max, actions_str = row[0]
-            if tc_min <= true_count_int <= tc_max:
-                assert len(actions_str) == 1
-                return actions_str_to_list(actions_str[0])
-        return None
         
+        dev = self._pair_dev.get((card_value, dealer_value))
+        if dev is not None:
+            tc_min, tc_max, actions_str = dev
+            if tc_min <= true_count_int <= tc_max:
+                return actions_str_to_list(actions_str)
+        return None
 
     def get_deviated_actions(self, player_value, is_soft, is_pair, dealer_value, true_count):
         actions = []
-
         true_count_int = int(true_count)
-        insurance_tc_min, insurance_tc_max = self.insurance_table.loc[0, ["tc_min", "tc_max"]].values
-        if insurance_tc_min <= true_count_int <= insurance_tc_max:
+        
+        if self._insurance_tc_min <= true_count_int <= self._insurance_tc_max:
             actions.append(PlayerAction.TAKE_INSURANCE)
         
         if is_pair:
             split_actions = self.split_action(player_value, dealer_value, true_count)
             if split_actions is not None:
                 actions.extend(split_actions)
-                
-        if is_soft:
-            dev_table = self.soft_alt_table
-        else:
-            dev_table = self.hard_alt_table
         
-        idx = (
-            dev_table["player"] == player_value
-            & (dev_table["dealer"] == dealer_value)
-        )
-        row = dev_table.loc[idx, ["tc_min", "tc_max", "action"]].values
-
-        if len(row) > 0:
-            tc_min, tc_max, actions_str = row[0]
+        lookup = self._soft_dev if is_soft else self._hard_dev
+        dev = lookup.get((player_value, dealer_value))
+        if dev is not None:
+            tc_min, tc_max, actions_str = dev
             if tc_min <= true_count_int <= tc_max:
                 actions.extend(actions_str_to_list(actions_str))
 
@@ -99,44 +92,36 @@ class DeviationStrategy:
 
 class BasicStrategy:
     def __init__(self, folder):
-        hard_path = os.path.join(folder, "s17_hard.csv")
-        soft_path = os.path.join(folder, "s17_soft.csv")
-        split_path = os.path.join(folder, "s17_split.csv")
-        self.hard_table = pd.read_csv(hard_path)
-        self.soft_table = pd.read_csv(soft_path)
-        self.split_table = pd.read_csv(split_path)
-
-
-    def should_split(self, hand_value, dealer_value):
-        if hand_value == 12:
-            card_value = 11
-        else:
-            card_value = hand_value // 2
-
-        val_series = self.split_table.loc[
-            self.split_table["card_value"] == card_value, str(dealer_value)
-        ]
-        assert len(val_series) == 1
-        return val_series.iat[0] == "p" 
-
+        hard_table = pd.read_csv(os.path.join(folder, "s17_hard.csv"))
+        soft_table = pd.read_csv(os.path.join(folder, "s17_soft.csv"))
+        split_table = pd.read_csv(os.path.join(folder, "s17_split.csv"))
+        
+        # Build lookup dicts: (player/card_value, dealer) -> actions_str or bool
+        self._hard = {
+            (row["player"], d): row[str(d)]
+            for _, row in hard_table.iterrows()
+            for d in range(2, 12)
+        }
+        self._soft = {
+            (row["player"], d): row[str(d)]
+            for _, row in soft_table.iterrows()
+            for d in range(2, 12)
+        }
+        self._split = {
+            (row["card_value"], d): row[str(d)] == "p"
+            for _, row in split_table.iterrows()
+            for d in range(2, 12)
+        }
 
     def get_actions(self, player_value, is_soft, is_pair, dealer_value, true_count):
         actions = [PlayerAction.REFUSE_INSURANCE]
         if is_pair:
-            if self.should_split(player_value, dealer_value):
+            card_value = 11 if player_value == 12 else player_value // 2
+            if self._split[(card_value, dealer_value)]:
                 actions.append(PlayerAction.SPLIT)
         
-        if is_soft:
-            table = self.soft_table
-        else:
-            table = self.hard_table
-
-        actions_str_entry = table.loc[
-            table["player"] == player_value, 
-            str(dealer_value)
-        ]
-        assert len(actions_str_entry) == 1
-        actions.extend(actions_str_to_list(actions_str_entry.iat[0]))
+        lookup = self._soft if is_soft else self._hard
+        actions.extend(actions_str_to_list(lookup[(player_value, dealer_value)]))
         return actions
     
 

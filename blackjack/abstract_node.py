@@ -3,7 +3,7 @@ from blackjack.blackjack_round import BJStage, BJRound
 from blackjack.actions import DealerAction
 import numpy as np
 
-from blackjack_py import ProbabilisticRankShoe
+from blackjack_cpp import ProbabilisticRankShoe
 
 
 class AbstractBJTreeNode(ABC):

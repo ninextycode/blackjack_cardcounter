@@ -22,6 +22,21 @@ enum class BJStage {
     ROUND_OVER
 };
 
+inline string to_string(BJStage stage) {
+    switch(stage) {
+        case BJStage::NOT_STARTED: return "NOT_STARTED";
+        case BJStage::PLAYER_OFFERED_INSURANCE: return "PLAYER_OFFERED_INSURANCE";
+        case BJStage::PLAYER_OFFERED_EARLY_SURRENDER: return "PLAYER_OFFERED_EARLY_SURRENDER";
+        case BJStage::PLAYER_ACTION: return "PLAYER_ACTION";
+        case BJStage::PLAYER_CARD: return "PLAYER_CARD";
+        case BJStage::DEALER_CHECK_BJ: return "DEALER_CHECK_BJ";
+        case BJStage::DEALER_CARD: return "DEALER_CARD";
+        case BJStage::ROUND_OVER: return "ROUND_OVER";
+    }
+    return "UNKNOWN_BJ_STAGE";
+}
+
+
 class BJRound {
 public:
     BJRound(shared_ptr<const BJRules> rules);
@@ -29,9 +44,10 @@ public:
     BJRound(BJRound&& round) = default;
     BJRound& operator=(const BJRound& round) = default;
     BJRound& operator=(BJRound&& round) = default;
-    BJRound copy() const;
-    void startRound(int bet_unit);
+
+    void startRound(int bet_unit = 100);
     BJStage getStage() const;
+    const ValueOnlyHand& getActivePlayerHand() const;
     bool needCard() const;
     bool needAction() const;
     bool needPlayerAction() const;
@@ -47,7 +63,22 @@ public:
     // Check if dealer expects to show blackjack (matching Python API)
     bool dealerExpectsToShowBlackjack() const;
     // String representation matching Python __str__
-    string toString() const;
+    string toString(bool with_last_action = false) const;
+
+    /**
+     * startFakeSplit - For game tree modelling purposes.
+     * Simulates a split where the first hand gets card value 2 and stands.
+     * This is used to model split scenarios in game trees where we need to
+     * track the first hand separately but don't want to build its full tree.
+     */
+    void startFakeSplit();
+    void finalizeFakeSplit(int card_value);
+
+    /**
+     * setStageForTreeBuilding - For tree building: allow setting stage directly.
+     * This is needed when creating rounds from split hand stack.
+     */
+    // void setStageForTreeBuilding(BJStage stage);
 
     // Public state used by game tree builder
     shared_ptr<const BJRules> rules_;

@@ -10,10 +10,10 @@ namespace blackjack {
 namespace {
 
 // Utility function to build tree and converge to target gap
-void buildAndConverge(FloorCeilNode& node, double gap_target_absolute) {
+void buildAndConverge(AbstractFloorCeilNode& node, double gap_target_absolute) {
     node.buildTree();
     for (int depth = 0; depth < 100; ++depth) {
-        auto [value_changed, is_final] = node.convertToFullUpToDepth(depth);
+        auto [value_changed, is_final] = node.convertToFullUpToDepth(make_optional(depth));
         if (is_final || node.getCeilValue() - node.getFloorValue() < gap_target_absolute) {
             break;
         }
@@ -22,7 +22,7 @@ void buildAndConverge(FloorCeilNode& node, double gap_target_absolute) {
 
 // Result struct for createRootNode
 struct RootNodeResult {
-    shared_ptr<FloorCeilNode> node;
+    shared_ptr<AbstractFloorCeilNode> node;
     bool is_terminal;  // true if player has natural blackjack (no tree needed)
     double terminal_ev;  // EV if terminal
 };
@@ -127,7 +127,7 @@ EdgeResult calculateEdge(
     vector<double> ev_mins(tasks.size());
     vector<double> ev_maxs(tasks.size());
 
-    #pragma omp parallel for schedule(dynamic)
+    #pragma omp parallel for schedule(dynamic) if(!omp_in_parallel())
     for (size_t i = 0; i < tasks.size(); ++i) {
         const Task& task = tasks[i];
         
