@@ -2,6 +2,7 @@
 #include <sstream>
 #include <algorithm>
 #include <stdexcept>
+#include <format>
 
 using namespace std;
 
@@ -314,18 +315,48 @@ string ProbabilisticRankShoe::toStringProb() const {
     return ss.str();
 }
 
-string ProbabilisticRankShoe::toStringCount() const {
+string ProbabilisticRankShoe::toStringCount(bool compact) const {
+    if (compact) {
+        return toStringCountCompact();
+    } else {
+        return toStringCountFull();
+    }
+}
+
+string ProbabilisticRankShoe::toStringCountCompact() const {
+    ostringstream ss;
+    ss << "ProbabilisticRankShoe: " << endl;
+    ss << " 2,  3,  4,  5,  6,  7,  8,  9, 10, 11" << endl;
+
+    for (int rv = 2; rv <= 11; rv++) {
+        int count = value_counts_.at(rv);
+        string digit_str = format("{:2}", count);
+        ss << digit_str;
+        if (rv != 11) {
+            ss << ", ";
+        }
+    }
+    ss << " (total: " << n_total_ << ")" << endl;
+    return ss.str();
+}
+
+string ProbabilisticRankShoe::toStringCountFull() const {
     ostringstream ss;
     ss << "ProbabilisticRankShoe\n";
 
     for (int rv = 2; rv <= 11; rv++) {
         int count = value_counts_.at(rv);
+
+
         if (count == 0) {
             continue;
         }
+
         ss << "  count(" << rv << ") = " << count << "\n";
     }
     ss << "  total = " << n_total_ << "\n";
+    return ss.str();
+
     return ss.str();
 }
 

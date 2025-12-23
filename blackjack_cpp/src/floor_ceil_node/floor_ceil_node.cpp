@@ -23,7 +23,9 @@ AbstractFloorCeilNode::AbstractFloorCeilNode(
     sim_algo_(sim_algo),
     active_hand_size_(nullopt),
     ceil_value_(0.0),
-    floor_value_(0.0)
+    floor_value_(0.0),
+    full_tree_finished_up_to_depth_(0),
+    is_full_tree_finished_(false)
 {
     // each brach is independent
     this->shoe_.resetSampler();
@@ -80,6 +82,8 @@ void AbstractFloorCeilNode::rebuildChildren() {
     AbstractBJTreeNode::rebuildChildren();
     ceil_value_ = 0.0;
     floor_value_ = 0.0;
+    full_tree_finished_up_to_depth_ = -1;
+    is_full_tree_finished_ = false;
 }
 
 double AbstractFloorCeilNode::getCeilValue() const {
@@ -179,6 +183,13 @@ pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToDepth(optional<int> dep
         );
     }
 
+    if (is_full_tree_finished_) {
+        return make_pair(false, true);
+    }
+    if (depth.has_value() && depth.value() <= full_tree_finished_up_to_depth_) {
+        return make_pair(false, false);
+    }
+
     // strict inequality is intentional - 
     // the depth 0 is valid - convert only self to full
     if (depth.has_value() && depth.value() < 0) {
@@ -240,11 +251,18 @@ pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToDepth(optional<int> dep
         recomputeTreeValue();
         value_changed = true;
     }
+
+    if (is_final) {
+        is_full_tree_finished_ = true;
+    }
+    if (depth.has_value() && depth.value() > full_tree_finished_up_to_depth_) {
+        full_tree_finished_up_to_depth_ = depth.value();
+    }
     
     return make_pair(value_changed, is_final);
 }
 
-pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToGap(double value_gap) {
+pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToGap(double absolute_value_gap) {
     int depth = 0;
     bool any_value_changed = false;
     // Otherwise, will be set in the loop
@@ -252,7 +270,7 @@ pair<bool, bool> AbstractFloorCeilNode::convertToFullUpToGap(double value_gap) {
     double current_gap = getCeilValue() - getFloorValue(); 
     bool is_final = (current_gap == 0.0);
     
-    while (current_gap > value_gap) {
+    while (current_gap > absolute_value_gap) {
         auto [this_value_changed, this_is_final] = convertToFullUpToDepth(depth);
         current_gap = getCeilValue() - getFloorValue(); 
         if (this_value_changed) {

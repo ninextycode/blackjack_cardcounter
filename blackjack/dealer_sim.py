@@ -2,6 +2,7 @@
 import numpy as np
 from blackjack.hand import ValueOnlyHand
 from blackjack_cpp import ProbabilisticRankShoe, RandomSampler
+from pathlib import Path
 import time
 from blackjack.blackjack_round import BJRound, BJStage
 from itertools import combinations_with_replacement, product
@@ -546,12 +547,16 @@ def _load_and_precompute_combo_data(filepath: str) -> dict:
     return precomputed
 
 
+
+
+_this_directory = Path(__file__).parent
+
 # Precompute all combo data at import time
 precomputed_combinations_with_counts_no_bj = _load_and_precompute_combo_data(
-    "combinations/combinations_with_counts_no_bj_d13.pkl"
+    _this_directory / "../combinations/combinations_with_counts_no_bj_d13.pkl"
 )
 precomputed_combinations_with_counts = _load_and_precompute_combo_data(
-    "combinations/combinations_with_counts_d13.pkl"
+    _this_directory / "../combinations/combinations_with_counts_d13.pkl"
 )
 
 

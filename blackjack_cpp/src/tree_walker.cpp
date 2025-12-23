@@ -71,7 +71,14 @@ TreeWalker::TreeWalker(
     convertToFullUpToDecision();
 }
 
-void TreeWalker::convertToFullUpToDecision() {
+void TreeWalker::convertToFullUpToDecision() {    
+    if (current_node_ == nullptr) {
+        throw runtime_error("TreeWalker: Cannot convert to full up to decision in finished state - current node is nullptr"); 
+    }
+    // make sure every child is built, not just a sample
+    // this also avoids FloorCeilValueNode placeholders as children
+    current_node_->convertToFullUpToDepth(0);  
+
     shared_ptr<DecisionNode> current_node_decision_cast = \
         dynamic_pointer_cast<DecisionNode>(current_node_);
     if (current_node_decision_cast != nullptr) {
@@ -152,9 +159,6 @@ void TreeWalker::takeCard(int card_value) {
         handleSplitCard(card_value); 
         return;
     }
-
-    // make sure every child is built, not just a sample
-    current_node_->convertToFullUpToDepth(0);  
 
     // Find child corresponding to this card
     TransitionEvent card_event = card_value;
@@ -254,26 +258,20 @@ void TreeWalker::moveToChild(TransitionEvent event) {
     current_node_ = dynamic_pointer_cast<AbstractFloorCeilNode>(child);
     if (current_node_ == nullptr && !split_hand_rounds_stack_.empty()) {
         buildSplitRound();
+    } else if (current_node_ != nullptr) {
+        convertToFullUpToDecision();
     }
-
-    convertToFullUpToDecision();
 }
 
 
-PlayerAction TreeWalker::getBestAction() const {
+optional<PlayerAction> TreeWalker::getBestAction() const {
     shared_ptr<DecisionNode> current_node_decision_cast = \
         dynamic_pointer_cast<DecisionNode>(current_node_);
     if (current_node_decision_cast == nullptr) {
-        throw runtime_error("TreeWalker: Current node is not a decision node");
+        return nullopt;
     }
     
-    optional<PlayerAction> best_action = \
-        current_node_decision_cast->getDecisionChoice();
-    if (!best_action.has_value()) {
-        throw runtime_error("TreeWalker: No best action found");
-    }
-
-    return best_action.value();
+    return current_node_decision_cast->getDecisionChoice();
 }
 
 
@@ -338,7 +336,8 @@ string TreeWalker::getStateInfo() const {
     oss << "  Expected: " << expected << "\n";
     
     // Shoe counts
-    oss << "  Shoe: " << common_shoe_.toStringCount() << "\n";
+    bool compact = true;
+    oss << "  Shoe: " << common_shoe_.toStringCount(compact) << "\n";
     
     if (current_node_ == nullptr) {
         oss << "  Round finished (no current node)\n";
@@ -357,18 +356,11 @@ string TreeWalker::getStateInfo() const {
         oss << "  Children events and values:\n";
         for (size_t i = 0; i < current_node_->children_events_.size() && i < current_node_->children_.size(); ++i) {
             const TransitionEvent& event = current_node_->children_events_[i];
-            // hack
-            shared_ptr<FloorCeilValueNode> floor_ceil_child = \
-                dynamic_pointer_cast<FloorCeilValueNode>(current_node_->children_[i]);
+
             shared_ptr<AbstractBJTreeNode> child = current_node_->children_[i];
             if (child) {
                 double child_value;
-                if (floor_ceil_child != nullptr) {
-                    child_value = nan("");
-                } else {
-                    child_value = child->getValue();
-                }
-                
+                child_value = child->getValue();                
                 double child_ceil = child->getCeilValue();
                 double child_floor = child->getFloorValue();
                 oss << "    " << to_string(event) << ": " << fixed << setprecision(6) << child_value 

@@ -8,6 +8,7 @@
 #include "actions.h"
 #include "tree_walker.h"
 #include "dealer_sim.h"
+#include "edge.h"
 
 
 namespace py = pybind11;
@@ -352,6 +353,17 @@ PYBIND11_MODULE(blackjack_cpp, m) {
                     " [" + to_string(v.ev_min) + ", " + to_string(v.ev_max) + "])";
         });
 
+    // Expose EdgeResult struct
+    py::class_<blackjack::ValueResult>(m, "EdgeResult")
+        .def(py::init<>())
+        .def_readwrite("ev", &blackjack::ValueResult::ev)
+        .def_readwrite("ev_min", &blackjack::ValueResult::ev_min)
+        .def_readwrite("ev_max", &blackjack::ValueResult::ev_max)
+        .def("__repr__", [](const blackjack::ValueResult& v) {
+            return "EdgeResult(" + to_string(v.ev) + ", "
+                    " [" + to_string(v.ev_min) + ", " + to_string(v.ev_max) + "])";
+        });
+
     // Expose TreeWalker class
     py::class_<blackjack::TreeWalker>(m, "TreeWalker")
         .def_static(
@@ -454,10 +466,14 @@ PYBIND11_MODULE(blackjack_cpp, m) {
         )
         .def(
             "get_best_action",
-            [](const blackjack::TreeWalker& walker) {
-                return blackjack::to_string(walker.getBestAction());
+            [](const blackjack::TreeWalker& walker) -> py::object {
+                auto best_action = walker.getBestAction();
+                if (!best_action.has_value()) {
+                    return py::none();
+                }
+                return py::str(blackjack::to_string(best_action.value()));
             },
-            "Get the best action as a string"
+            "Get the best action as a string, or None if no conclusive best action"
         )
         .def("get_value_estimate", &blackjack::TreeWalker::getValueEstimate, "Get the current value estimate")
         .def(
@@ -468,4 +484,61 @@ PYBIND11_MODULE(blackjack_cpp, m) {
         )
         .def("get_state_info", &blackjack::TreeWalker::getStateInfo, "Get current state info as string")
         .def("__str__", &blackjack::TreeWalker::getStateInfo);
+
+    // Expose EdgeCalculator class
+    py::class_<blackjack::EdgeCalculator>(m, "EdgeCalculator")
+        .def(
+            py::init<const blackjack::BJRules&, int>(),
+            py::arg("rules"),
+            py::arg("bet_unit") = 100,
+            "Create an EdgeCalculator with rules and bet unit"
+        )
+        .def(
+            "calculate_edge",
+            &blackjack::EdgeCalculator::calculateEdge,
+            py::arg("shoe"),
+            py::arg("sim_depth") = 9,
+            py::arg("gap_target") = 0.03,
+            py::arg("algo") = blackjack::SimAlgo::COMBO,
+            py::arg("parallel") = true,
+            "Calculate edge and cache trees for TreeWalker creation"
+        )
+        .def(
+            "get_edge_result",
+            [](const blackjack::EdgeCalculator& calc) -> py::object {
+                if (!calc.hasEdgeResult()) {
+                    return py::none();
+                }
+                return py::cast(calc.getEdgeResult());
+            },
+            "Get the last edge result, or None if not calculated"
+        )
+        .def(
+            "tighten_value_estimate_gap",
+            &blackjack::EdgeCalculator::tightenValueEstimateGap,
+            py::arg("relative_gap"),
+            py::arg("parallel") = true,
+            "Tighten value estimate gap for cached nodes and recompute edge"
+        )
+        .def(
+            "create_tree_walker",
+            &blackjack::EdgeCalculator::createTreeWalker,
+            py::arg("player_cards"),
+            py::arg("dealer_card"),
+            "Create a TreeWalker for a starting hand (consumes cached tree)"
+        )
+        .def(
+            "can_create_tree_walker",
+            &blackjack::EdgeCalculator::canCreateTreeWalker,
+            py::arg("player_cards"),
+            py::arg("dealer_card"),
+            "Check if a TreeWalker can be created with the current shoe"
+        )
+        .def(
+            "has_cached_tree",
+            &blackjack::EdgeCalculator::hasCachedTree,
+            py::arg("player_cards"),
+            py::arg("dealer_card"),
+            "Check if a cached tree exists for the given starting hand"
+        );
 }

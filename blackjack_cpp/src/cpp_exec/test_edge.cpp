@@ -533,7 +533,7 @@ void blackjack::testEdgeTiming() {
             string algo_name = (algo == SimAlgo::COMBO) ? "combo" : "recursive";
             auto t_start = chrono::high_resolution_clock::now();
             
-            EdgeResult result = calculateEdge(
+            ValueResult result = calculateEdge(
                 shoe,
                 rules,
                 bet_unit,
@@ -598,12 +598,12 @@ void blackjack::testEdgeTimingWithGap() {
     double ref_gap = gap_targets.back();
     
     auto t_ref_recursive_start = chrono::high_resolution_clock::now();
-    EdgeResult ref_recursive = calculateEdge(shoe, rules, bet_unit, ref_depth, ref_gap, SimAlgo::RECURSIVE);
+    ValueResult ref_recursive = calculateEdge(shoe, rules, bet_unit, ref_depth, ref_gap, SimAlgo::RECURSIVE);
     auto t_ref_recursive_end = chrono::high_resolution_clock::now();
     double ref_recursive_runtime = chrono::duration<double>(t_ref_recursive_end - t_ref_recursive_start).count();
     
     auto t_ref_combo_start = chrono::high_resolution_clock::now();
-    EdgeResult ref_combo = calculateEdge(shoe, rules, bet_unit, ref_depth, ref_gap, SimAlgo::COMBO);
+    ValueResult ref_combo = calculateEdge(shoe, rules, bet_unit, ref_depth, ref_gap, SimAlgo::COMBO);
     auto t_ref_combo_end = chrono::high_resolution_clock::now();
     double ref_combo_runtime = chrono::duration<double>(t_ref_combo_end - t_ref_combo_start).count();
     
@@ -636,7 +636,7 @@ void blackjack::testEdgeTimingWithGap() {
             for (double gap_target : gap_targets) {
                 auto t_start = chrono::high_resolution_clock::now();
                 
-                EdgeResult result = calculateEdge(
+                ValueResult result = calculateEdge(
                     shoe,
                     rules,
                     bet_unit,

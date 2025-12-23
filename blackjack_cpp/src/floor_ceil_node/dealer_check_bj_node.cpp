@@ -209,16 +209,24 @@ void DealerCheckBJNode::computeFloorValue() {
 }
 
 pair<bool, bool> DealerCheckBJNode::convertToFullUpToDepth(optional<int> depth) {
-    if (insurance_offered_) {
-        // In the case of insurance, tree expansion and value update should be handled by
-        // decision node
-        throw runtime_error(
-            "Cannot convert DealerCheckBJNode with insurance to full enumeration directly."
-        );
-    } else {
-        // Case where dealer checks for bj but insurance is not offered
-        return AbstractFloorCeilNode::convertToFullUpToDepth(depth);
+    // if depth is 0, return, all direct children are built
+    if (depth.has_value() && depth.value() <= full_tree_finished_up_to_depth_) {
+        bool is_final = false;
+        bool value_changed = false;
+        return make_pair(value_changed, is_final);
     }
+
+    // Case where dealer checks for bj but insurance is not offered
+    auto [value_changed, is_final] = AbstractFloorCeilNode::convertToFullUpToDepth(depth);
+    
+    if (is_final) {
+        is_full_tree_finished_ = true;
+    }
+    if (depth.has_value() && depth.value() > full_tree_finished_up_to_depth_) {
+        full_tree_finished_up_to_depth_ = depth.value();
+    }
+
+    return make_pair(value_changed, is_final);
 }
 
 } // namespace blackjack

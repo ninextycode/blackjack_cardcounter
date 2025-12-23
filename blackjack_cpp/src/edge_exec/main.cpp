@@ -136,7 +136,7 @@ void run(const RunOptions& opts) {
     ProbabilisticRankShoe shoe(rank_counts, RandomSampler::createNextSampler());
     BJRules rules = getDefaultRules();
     
-    EdgeResult result = calculateEdge(
+    ValueResult result = calculateEdge(
         shoe,
         rules,
         100,    // bet_unit

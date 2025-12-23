@@ -53,7 +53,7 @@ public:
         shared_ptr<AbstractFloorCeilNode> root_node
     );
 
-    shared_ptr<AbstractBJTreeNode> getCurrentNode() const { return current_node_; }
+    // shared_ptr<AbstractBJTreeNode> getCurrentNode() const { return current_node_; }
     const ProbabilisticRankShoe& getCurrentShoe() const { return current_node_->shoe_; }
 
     bool needCard() const;
@@ -71,7 +71,7 @@ public:
 
 
     vector<pair<PlayerAction, ValueEstimate>> getBestActions() const;
-    PlayerAction getBestAction() const;
+    optional<PlayerAction> getBestAction() const;
     ValueEstimate getEventValueEstimate(const TransitionEvent& event) const;
     ValueEstimate getValueEstimate() const;
 

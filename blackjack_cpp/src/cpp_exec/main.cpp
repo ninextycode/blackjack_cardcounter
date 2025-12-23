@@ -18,13 +18,18 @@ using namespace std;
 
 int main() {
     PreloadedComboData::loadAll(
-        "/home/maxim//Programming/blackjack_cardcounter/combinations/s16_new/", 11
+        "/home/maxim//Programming/blackjack_cardcounter/combinations/", 11
     );
     // testTreeWalker();
     // testTreeWalkerWithCards();
     // testTreeWalkerSplit();
     // testTreeWalkerAAvA();
 
-    testEdgeTiming();
+    // testEdgeTiming();
+    // testEdgeCalculatorBasic();
+    // testEdgeCalculatorCache();
+    // testEdgeCalculatorTightenGap();
+    testEdgeCalculatorCountSkew();
+    
     return 0;
 }

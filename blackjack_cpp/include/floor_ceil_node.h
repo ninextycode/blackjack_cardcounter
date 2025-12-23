@@ -129,7 +129,7 @@ public:
     // value_changed: whether the node value changed
     // is_final: whether no further exploration can improve the value
     virtual pair<bool, bool> convertToFullUpToDepth(optional<int> depth);
-    virtual pair<bool, bool> convertToFullUpToGap(double value_gap);
+    virtual pair<bool, bool> convertToFullUpToGap(double absolute_value_gap);
 
     // Configuration
     int max_hand_size_full_enum_;
@@ -159,6 +159,8 @@ protected:
     optional<int> active_hand_size_;
     double ceil_value_;
     double floor_value_;
+    int full_tree_finished_up_to_depth_;
+    bool is_full_tree_finished_;
 };
 
 /**

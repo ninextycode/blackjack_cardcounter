@@ -60,3 +60,13 @@ set_target_properties(blackjack_cpp PROPERTIES
 	LIBRARY_OUTPUT_DIRECTORY ${PYTHON_LIBRARY_OUTPUT_DIRECTORY}
 )
 
+# --- Testing ---
+include(GoogleTest)
+enable_testing()
+
+# Testing
+file(GLOB TEST_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/src/tests/*.cpp")
+add_executable(test_main ${TEST_SOURCES})
+target_link_libraries(test_main PRIVATE GTest::gtest_main)
+target_link_libraries(test_main PRIVATE blackjack)
+gtest_discover_tests(test_main)

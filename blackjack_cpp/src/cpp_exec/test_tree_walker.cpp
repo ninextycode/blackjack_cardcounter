@@ -67,7 +67,12 @@ void blackjack::testTreeWalker() {
         }
 
         // Get best action directly
-        PlayerAction best_action = walker.getBestAction();
+        auto best_action_opt = walker.getBestAction();
+        if (!best_action_opt.has_value()) {
+            cout << "No best action found" << endl;
+            return;
+        }
+        PlayerAction best_action = best_action_opt.value();
         cout << "\nBest action: " << to_string(best_action) << endl;
         auto best_estimate = walker.getEventValueEstimate(TransitionEvent(best_action));
         cout << "Best action EV: " << fixed << setprecision(6) 

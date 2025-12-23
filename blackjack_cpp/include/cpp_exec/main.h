@@ -26,4 +26,10 @@ namespace blackjack {
     void testTreeWalkerWithCards();
     void testTreeWalkerSplit();
     void testTreeWalkerAAvA();
+
+
+    void testEdgeCalculatorBasic();
+    void testEdgeCalculatorCache();
+    void testEdgeCalculatorTightenGap();
+    void testEdgeCalculatorCountSkew();
 }

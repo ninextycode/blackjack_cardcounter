@@ -98,7 +98,11 @@ public:
 
     string toString() const;
     string toStringProb() const;
-    string toStringCount() const;
+    string toStringCount(bool compact = false) const;
+    string toStringCountFull() const;
+    string toStringCountCompact() const;
+
+
     string getSamplerRngState() const;
 private:
     void recomputeRawProbabilities();

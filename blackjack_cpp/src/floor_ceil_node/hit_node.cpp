@@ -34,6 +34,8 @@ HitNode::HitNode(
     max_child_value_(static_cast<double>(bj_round_.bet_unit)),
     min_child_value_(-static_cast<double>(bj_round_.bet_unit))
 {
+    // the node itself does not have all the children built by default
+    full_tree_finished_up_to_depth_ = -1;  
     rank_probabilities_ = shoe_.getRankValueProbabilities(nullopt);
     initValues();
 }
@@ -95,6 +97,14 @@ void HitNode::initValues() {
                 cards_sampled_.push_back(sample_card);
             }
         }
+    }
+
+    if (cards_not_sampled_.empty()) {
+        // all cards are sampled, so the tree is complete at depth 0
+        full_tree_finished_up_to_depth_ = 0;
+    } else {
+        // the tree is not complete at depth 0
+        full_tree_finished_up_to_depth_ = -1;
     }
 }
 
@@ -226,7 +236,8 @@ void HitNode::buildChildren() {
         addChild(child, c, p);
         
         // Update max_child_value with value of 21 node
-        max_child_value_ = value_21;
+        // Use the lowest value of 21 nodes as the max child value
+        max_child_value_ = min(max_child_value_, value_21);
     }
 
     // Build children for bust cards

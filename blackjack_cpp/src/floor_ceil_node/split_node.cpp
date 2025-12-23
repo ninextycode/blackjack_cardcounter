@@ -119,7 +119,10 @@ pair<bool, bool> SplitNode::convertToFullUpToDepth(optional<int> depth) {
         );
     }
 
-    if (depth.has_value() && depth.value() <= 0) {
+    if (is_full_tree_finished_) {
+        return make_pair(false, true);
+    }
+    if (depth.has_value() && depth.value() <= full_tree_finished_up_to_depth_) {
         return make_pair(false, false);
     }
 
@@ -166,6 +169,13 @@ pair<bool, bool> SplitNode::convertToFullUpToDepth(optional<int> depth) {
     if (children_changed) {
         recomputeTreeValue();
         value_changed = true;
+    }
+
+    if (is_final) {
+        is_full_tree_finished_ = true;
+    }
+    if (depth.has_value() && depth.value() > full_tree_finished_up_to_depth_) {
+        full_tree_finished_up_to_depth_ = depth.value();
     }
 
     return make_pair(value_changed, is_final);
