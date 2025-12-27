@@ -1,6 +1,7 @@
 import logging
 import uiautomator2 as u2
 from blackjack.actions import PlayerAction
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -138,8 +139,6 @@ class AndroidBJTabletActor:
         # self.device.click(*self._leave_table_yet_loc)
         # self.device.click(*self._leave_table_exit_loc)
 
-    
-
     def create_private_table(self):
         self.click(*self._create_private_table_loc)
 
@@ -158,7 +157,9 @@ class AndroidBJTabletActor:
                 if bet_val_units > bet_units:
                     continue
                 bet_loc = self._bet_locs[i]
+                self.sleep(1)
                 self.click(*bet_loc)
+                self.sleep(1)
                 self.click(*self._add_bet_loc)
                 bet_units -= bet_val_units
                 success = True
@@ -167,10 +168,6 @@ class AndroidBJTabletActor:
                 raise RuntimeError("Failed to place bet")
     
 
-    def rebuy(self):
+    def start_rebuy(self):
         self.click(*self._player_loc)
         self.click(*self._rebuy_wheel_loc)
-        self.sleep(1)
-        self.click(*self._rebuy_play_btn_loc)
-        self.sleep(0.5)
-        self.click(*self._rebuy_ok_btn_loc)

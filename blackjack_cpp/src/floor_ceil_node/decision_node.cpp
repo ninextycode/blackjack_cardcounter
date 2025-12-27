@@ -2,7 +2,6 @@
 #include "floor_ceil_node.h"
 
 #include <algorithm>
-#include <iostream>
 #include <stdexcept>
 #include <utility>
 

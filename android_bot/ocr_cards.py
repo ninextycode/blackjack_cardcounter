@@ -1,9 +1,11 @@
 import cv2
 import numpy as np
 import pytesseract
-import image_utils
+from android_bot import image_utils
 import glob
 import os
+from android_bot.image_assets import ImageAssets
+
 
 # psm 7 - single text line
 pytesseract_config = "--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789JQKA"
@@ -11,12 +13,13 @@ pytesseract_config = "--oem 3 --psm 7 -c tessedit_char_whitelist=0123456789JQKA"
 
 def _load_digits():
     digit_images = {}
-    for filepath in glob.glob("digits/*_16x16.png"):
+    filepaths = glob.glob(str(ImageAssets.root_dir / "digits" / "*.png"))
+    for filepath in filepaths:
         # Extract digit/character from filename (e.g., "2" from "digits/2_16x16.png")
         filename = os.path.basename(filepath)
         digit_char = filename.split("_")[0]
         img = image_utils.load_rdb(filepath)
-        digit_images[digit_char] = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)
+        digit_images[digit_char] = cv2.cvtColor(img, cv2.COLOR_RGB2GRAY)   
     return digit_images
 
 digit_images = _load_digits()

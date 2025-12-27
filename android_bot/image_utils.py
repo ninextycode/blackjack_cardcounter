@@ -108,11 +108,18 @@ def find_template_middle_positions(game_img, templates, threshold=0.8, allow_ove
     matches, n_matches = find_subimages(
         game_img, templates, threshold=threshold
     )
+    # Sort by score descending (best matches first)
+    all_matches = sorted(
+        itertools.chain.from_iterable(matches.values()),
+        key=lambda m: m[2], # score
+        reverse=True
+    )
     mid_positions = []
 
-    for match in itertools.chain.from_iterable(matches.values()):
+    for match in all_matches:
         top_left = match[0]
         bottom_right = match[1]
+        
         cross_area = game_img[top_left[1]:bottom_right[1], top_left[0]:bottom_right[0]]
         hsv = cv2.cvtColor(cross_area, cv2.COLOR_RGB2HSV)
         brightness = hsv[..., 2].mean()

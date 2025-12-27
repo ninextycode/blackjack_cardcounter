@@ -3,7 +3,6 @@
 #include <stdexcept>
 #include <utility>
 #include "dealer_sim.h"
-#include <iostream>
 
 using namespace std;
 

@@ -334,14 +334,9 @@ TreeWalker EdgeCalculator::createTreeWalker(
         throw runtime_error("No cached tree for this hand - terminal result");
     }
 
-    shared_ptr<AbstractFloorCeilNode> node = std::move(get<shared_ptr<AbstractFloorCeilNode>>(result));
-    if (!node) {
-        throw runtime_error("Cached tree already consumed");
-    }
-
-    result = node->getValue();
-    hand_index_.erase(it);
-    return TreeWalker(node);
+    // copy the node to a new shared_ptr
+    auto node_ptr = get<shared_ptr<AbstractFloorCeilNode>>(result);
+    return TreeWalker(node_ptr);
 }
 
 

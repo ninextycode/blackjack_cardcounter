@@ -338,7 +338,7 @@ PYBIND11_MODULE(blackjack_cpp, m) {
             }
         },
         py::arg("base_path"),
-        py::arg("max_depth") = 8,
+        py::arg("max_depth") = 11,
         "Load precomputed combo data if not already loaded (required for SimAlgo.COMBO)"
     );
 
@@ -485,6 +485,7 @@ PYBIND11_MODULE(blackjack_cpp, m) {
         .def("get_state_info", &blackjack::TreeWalker::getStateInfo, "Get current state info as string")
         .def("__str__", &blackjack::TreeWalker::getStateInfo);
 
+        
     // Expose EdgeCalculator class
     py::class_<blackjack::EdgeCalculator>(m, "EdgeCalculator")
         .def(

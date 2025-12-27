@@ -3,6 +3,7 @@ old_blackjack
 __pycache__
 frames*/
 *png
+!ui_elements/*png
 logs/*
 **/build/
 **/python_lib/

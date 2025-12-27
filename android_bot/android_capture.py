@@ -1,5 +1,7 @@
 import cv2
-import image_utils 
+import queue
+import threading
+from android_bot import image_utils 
 from datetime import datetime
 
 
@@ -11,6 +13,11 @@ class ScreenCapture:
         # Reduce latency:
         self.cap.set(cv2.CAP_PROP_BUFFERSIZE, 1)
         self.save_folder = save_folder
+        self._save_queue = queue.Queue()
+        self._save_thread = None
+        if self.save_folder is not None:
+            self._save_thread = threading.Thread(target=self._save_loop, daemon=True)
+            self._save_thread.start()
 
     def get_screen(self):
         if not self.cap.isOpened():
@@ -21,13 +28,25 @@ class ScreenCapture:
             raise RuntimeError("Failed to read frame from v4l2 device")
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         
-        if self.save_folder is not None:
-            dt_tag = datetime.now().strftime("%Y%m%d_%H%M%S")
-            filename = f"{self.save_folder}/frame_{dt_tag}.png"
-            image_utils.save_rgb_png(frame, filename)        
+        if self._save_thread is not None:
+            self._save_queue.put((frame, datetime.now()))
         return frame
 
+    def _save_loop(self):
+        while True:
+            item = self._save_queue.get()
+            if item is None:
+                break
+            frame, timestamp = item
+            dt_tag = timestamp.strftime("%Y%m%d_%H%M%S_%f")
+            filename = f"{self.save_folder}/frame_{dt_tag}.png"
+            image_utils.save_rgb_png(frame, filename)
+
     def close(self):
+        if self._save_thread is not None:
+            self._save_queue.put(None)
+            self._save_thread.join()
+            self._save_thread = None
         self.cap.release()
 
     def __enter__(self):

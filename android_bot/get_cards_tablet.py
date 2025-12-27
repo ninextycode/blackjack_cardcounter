@@ -1,9 +1,9 @@
 import numpy as np
-import image_utils
-import ocr_cards
+from android_bot import image_utils
+from android_bot import ocr_cards
 from enum import Enum
 import cv2
-from image_assets import ImageAssets
+from android_bot.image_assets import ImageAssets
 import itertools
 
 
@@ -245,8 +245,15 @@ def is_tournament_ad(game_img):
 
 def is_table_empty(game_img):
     empty_table = ImageAssets.empty_table
+    empty_table_2 = ImageAssets.empty_table_2
     empty_table_area = (slice(550, 775), slice(1000, 1375))
     area_img = game_img[empty_table_area]
+    match_2 = image_utils.get_best_match(
+        area_img, empty_table_2
+    )
+    if match_2 > 0.9:
+        return True
+    
     match = image_utils.get_best_match(
         area_img, empty_table
     )
@@ -316,7 +323,7 @@ def find_close_ad_crosses(game_img):
         "small_cross": ImageAssets.ad_cross_small
     }
     return image_utils.find_template_middle_positions(
-        game_img, templates, threshold=0.7
+        game_img, templates, threshold=0.8
     )
 
 

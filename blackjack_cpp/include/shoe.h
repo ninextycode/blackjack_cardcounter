@@ -98,7 +98,7 @@ public:
 
     string toString() const;
     string toStringProb() const;
-    string toStringCount(bool compact = false) const;
+    string toStringCount(bool compact = true) const;
     string toStringCountFull() const;
     string toStringCountCompact() const;
 

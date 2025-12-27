@@ -188,9 +188,9 @@ public:
      * in subdirectories: dealer_checked_no_bj/ and bj_not_checked/
      * 
      * @param base_path Base directory containing the subdirectories
-     * @param max_depth Maximum depth to load (default 8)
+     * @param max_depth Maximum depth to load (default 11)
      */
-    static void loadAll(const string& base_path, int max_depth = 8);
+    static void loadAll(const string& base_path, int max_depth = 11);
 
     /**
      * Get preloaded combination data for given parameters.

@@ -1,10 +1,11 @@
 import logging
+import threading
 from blackjack.cards import Rank
 from blackjack.rules import BJRules
 from blackjack.blackjack_round import BJRound, BJStage
 from blackjack.actions import PlayerAction, DealerAction
 from blackjack.hand import ValueOnlyHand
-import get_cards_tablet
+from android_bot import get_cards_tablet
 import time
 
 logger = logging.getLogger(__name__)
@@ -36,13 +37,47 @@ class Player:
 
     def __init__(self, actor, scr_taker, card_counter, strategy):
         self.actor = actor
-        self.scr_taker = scr_taker  # "/media/maxim/T7/frames/")
+        self.scr_taker = scr_taker
         self.round = BJRound(Player.rules)
         self.card_counter = card_counter
         self.strategy = strategy
 
+        # Thread-safe screen capture
+        self._screen_lock = threading.Lock()
+        self._current_screen = None
+        self._capture_thread = None
+        self._stop_capture = threading.Event()
+
+    def start_screen_capture(self):
+        """Start the background screen capture thread."""
+        self._stop_capture.clear()
+        self._capture_thread = threading.Thread(target=self._capture_loop, daemon=True)
+        self._capture_thread.start()
+        # Wait for first frame to be captured
+        while self.get_screen() is None:
+            time.sleep(0.01)
+
+    def stop_screen_capture(self):
+        """Stop the background screen capture thread."""
+        self._stop_capture.set()
+        if self._capture_thread:
+            self._capture_thread.join()
+            self._capture_thread = None
+
+    def _capture_loop(self):
+        """Background loop that continuously captures the screen."""
+        while not self._stop_capture.is_set():
+            screen = self.scr_taker.get_screen()
+            with self._screen_lock:
+                self._current_screen = screen
+
+    def get_screen(self):
+        """Get the current screen image (thread-safe)."""
+        with self._screen_lock:
+            return self._current_screen
+
     def is_pre_shuffle(self):
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         return get_cards_tablet.is_pre_shuffle(game_img)
 
     def reset_round(self):
@@ -58,10 +93,10 @@ class Player:
 
 
     def initial_stage_round(self, bet):
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         while not get_cards_tablet.is_table_empty(game_img):
             time.sleep(0.5)
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
         self.round.start_round(bet)
         self.actor.place_bet(bet)
         time.sleep(0.5)
@@ -161,7 +196,7 @@ class Player:
         self.wait_for_action_btn()
         self.btn_action_delay()
         self.actor.take_action(action)
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         # failed to register action - try again
         # should choose a different approach with stand on split pair
         # when standing on the first pair of hand
@@ -225,7 +260,7 @@ class Player:
 
     def wait_for_action_btn(self):
         while True:
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
             can_stand = get_cards_tablet.can_hit_stand(game_img)
             if can_stand:
                 break
@@ -240,7 +275,7 @@ class Player:
 
     def wait_for_initial_cards(self):
         logger.info("wait_for_initial_cards")
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
         middle_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_player_cards_middle(game_img))
 
@@ -256,7 +291,7 @@ class Player:
             ):
                 break
 
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
             dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
             middle_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_player_cards_middle(game_img))
 
@@ -284,17 +319,17 @@ class Player:
 
     def wait_for_insurance_option(self):
         logger.info("wait_for_insurance_option")
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         while not get_cards_tablet.is_insurance_offered(game_img):
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
 
 
     def wait_for_action_request(self):
         logger.info("wait_for_action_request")
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         active_hand_position = get_cards_tablet.get_active_hand(game_img)
         while active_hand_position == get_cards_tablet.HandPosition.NONE:
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
             active_hand_position = get_cards_tablet.get_active_hand(game_img)
 
 
@@ -307,7 +342,7 @@ class Player:
             # and this was confirmed when checking initial cards
             return
         
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
         dealer_cards_last = dealer_cards_new
         
@@ -325,7 +360,7 @@ class Player:
                 action_request = True
                 break
                 
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
             active_hand_position = get_cards_tablet.get_active_hand(game_img)
             dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
             
@@ -347,7 +382,7 @@ class Player:
         if only_two_cards and len(self.round.get_dealer_hand()) >= 2:
             return
         
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
 
         dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
         dealer_cards_last = dealer_cards_new
@@ -365,7 +400,7 @@ class Player:
                     if current_hand.is_bust() or current_hand.get_best_value() >= 17:
                         break
         
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
             dealer_cards_new = card_list_str_to_rank_values(get_cards_tablet.get_dealer_cards(game_img))
             # print(dealer_cards_new)
             if dealer_cards_new == dealer_cards_last:
@@ -418,7 +453,7 @@ class Player:
         # no need to adjust slice, just take the last (current) line
         
         visible_old_tail = tuple(hand[visible_tail_idx])
-        game_img = self.scr_taker.get_screen()
+        game_img = self.get_screen()
         hand_cards_new = card_list_str_to_rank_values(
             get_cards_tablet.get_player_cards(game_img, active_hand_position)
         )
@@ -434,7 +469,7 @@ class Player:
             ):
                 break
 
-            game_img = self.scr_taker.get_screen()
+            game_img = self.get_screen()
             hand_cards_new = card_list_str_to_rank_values(
                 get_cards_tablet.get_player_cards(game_img, active_hand_position)
             )
